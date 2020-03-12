@@ -1,0 +1,16 @@
+includes:
+	- phpstan.baseline.neon
+parameters:
+	ignoreErrors:
+	autoload_directories:
+	universalObjectCratesClasses:
+		- stdClass
+		- DOMElement
+		- SimpleXMLElement
+	inferPrivatePropertyTypeFromConstructor: true
+	reportUnmatchedIgnoredErrors: false
+	level: 7
+	paths:
+		- src/
+		- tests/
+	tmpDir: /tmp/phpstan
