@@ -4,6 +4,10 @@
     {
       "name": "Jan Machala",
       "email": "jan.machala125@gmail.com"
+    },
+    {
+      "name": "Honza Trtik",
+      "email": "honza.trtik@gmail.com"
     }
   ],
   "description": "Collections library with focus on immutability and functional approach",
