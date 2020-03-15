@@ -46,9 +46,15 @@
     ]
   },
   "scripts": {
+    "phpstan": [
+      "bin/phpstan --ansi analyse"
+    ],
+    "phpunit": [
+      "bin/phpunit --colors=always"
+    ],
     "test": [
-      "bin/phpunit",
-      "bin/phpstan analyse"
+      "@phpunit",
+      "@phpstan"
     ]
   }
 }
