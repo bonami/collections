@@ -1,5 +1,7 @@
 {
   "name": "bonami/collections",
+  "type": "library",
+  "description": "Collections library with focus on immutability and functional approach",
   "authors": [
     {
       "name": "Jan Machala",
@@ -10,32 +12,38 @@
       "email": "honza.trtik@gmail.com"
     }
   ],
-  "description": "Collections library with focus on immutability and functional approach",
-  "type": "library",
   "require": {
     "php": ">=7.2",
     "ext-json": "*"
   },
+  "require-dev": {
+    "ergebnis/composer-normalize": "^2.0.2",
+    "phpstan/phpstan": "^0.12",
+    "phpunit/phpunit": "^8.5"
+  },
   "config": {
     "bin-dir": "bin"
-  },
-  "require-dev": {
-    "phpunit/phpunit": "^8.5",
-    "phpstan/phpstan": "^0.12"
-  },
-  "autoload": {
-    "psr-4": {
-      "": ["src", "tests"]
-    },
-    "files": ["src/Bonami/Collection/helpers.php"]
-  },
-  "autoload-dev": {
-    "files": ["tests/Bonami/Collection/helpers.php"]
   },
   "extra": {
     "branch-alias": {
       "dev-master": "v1.0.x-dev"
     }
+  },
+  "autoload": {
+    "psr-4": {
+      "": [
+        "src",
+        "tests"
+      ]
+    },
+    "files": [
+      "src/Bonami/Collection/helpers.php"
+    ]
+  },
+  "autoload-dev": {
+    "files": [
+      "tests/Bonami/Collection/helpers.php"
+    ]
   },
   "scripts": {
     "test": [
