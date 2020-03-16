@@ -97,5 +97,8 @@ jobs:
       - name: "Install dependencies"
         run: "composer update --no-suggest --no-interaction --prefer-dist --no-progress"
 
-      - name: "Composer Normalize"
+      - name: "Normalize composer"
         run: "composer normalize"
+
+      - name: "Check code styles"
+        run: "composer phpcs"

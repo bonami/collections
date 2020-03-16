@@ -19,7 +19,8 @@
   "require-dev": {
     "ergebnis/composer-normalize": "^2.0.2",
     "phpstan/phpstan": "^0.12",
-    "phpunit/phpunit": "^8.5"
+    "phpunit/phpunit": "^8.5",
+    "bonami/coding-standards": "^0.1-dev"
   },
   "config": {
     "bin-dir": "bin"
@@ -52,9 +53,16 @@
     "phpunit": [
       "bin/phpunit --colors=always"
     ],
+    "phpcs": [
+      "bin/phpcs --standard=./vendor/bonami/coding-standards/BonamiCodingStandards/ruleset.xml -p ./src ./tests"
+    ],
+    "phpcbf": [
+      "bin/phpcbf --standard=./vendor/bonami/coding-standards/BonamiCodingStandards/ruleset.xml -p ./src ./tests"
+    ],
     "test": [
       "@phpunit",
-      "@phpstan"
+      "@phpstan",
+      "@phpcs"
     ]
   }
 }

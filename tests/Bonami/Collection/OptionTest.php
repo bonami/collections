@@ -225,12 +225,12 @@ class OptionTest extends TestCase {
 	}
 
 	public function testOrElse(): void {
-	    $some42 = Option::some(5);
-	    $some666 = Option::some(666);
-	    $none = Option::none();
+		$some42 = Option::some(5);
+		$some666 = Option::some(666);
+		$none = Option::none();
 
-	    $this->equals($some42, $some42->orElse($some666));
-	    $this->equals($some666, $none->orElse($some666));
+		$this->equals($some42, $some42->orElse($some666));
+		$this->equals($some666, $none->orElse($some666));
 	}
 
 	public function testLaws(): void {
