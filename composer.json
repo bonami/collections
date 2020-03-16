@@ -26,7 +26,7 @@
   },
   "extra": {
     "branch-alias": {
-      "dev-master": "v1.0.x-dev"
+      "dev-master": "v0.1.x-dev"
     }
   },
   "autoload": {
