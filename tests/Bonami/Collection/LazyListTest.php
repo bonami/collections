@@ -142,7 +142,7 @@ class LazyListTest extends TestCase {
 				ArrayList::of(1, 'a'),
 				ArrayList::of(2, 'a'),
 				ArrayList::of(1, 'b'),
-				ArrayList::of(2, 'b')
+				ArrayList::of(2, 'b'),
 			],
 			LazyList::traverse([LazyList::of(1, 2), LazyList::of('a', 'b')])->toArray()
 		);

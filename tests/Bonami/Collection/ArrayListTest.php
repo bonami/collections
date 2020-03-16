@@ -10,7 +10,7 @@ use stdClass;
 class ArrayListTest extends TestCase {
 
 	public function testFromEmpty(): void {
-	    $this->assertEquals(new ArrayList([]), ArrayList::fromEmpty());
+		$this->assertEquals(new ArrayList([]), ArrayList::fromEmpty());
 	}
 
 	public function testFromItems(): void {
@@ -51,13 +51,13 @@ class ArrayListTest extends TestCase {
 	}
 
 	public function testIsEmpty(): void {
-	    $this->assertTrue(ArrayList::fromEmpty()->isEmpty());
-	    $this->assertFalse(ArrayList::of(1, 2)->isEmpty());
+		$this->assertTrue(ArrayList::fromEmpty()->isEmpty());
+		$this->assertFalse(ArrayList::of(1, 2)->isEmpty());
 	}
 
 	public function testIsNotEmpty(): void {
-	    $this->assertFalse(ArrayList::fromEmpty()->isNotEmpty());
-	    $this->assertTrue(ArrayList::of(1, 2)->isNotEmpty());
+		$this->assertFalse(ArrayList::fromEmpty()->isNotEmpty());
+		$this->assertTrue(ArrayList::of(1, 2)->isNotEmpty());
 	}
 
 	public function testMap(): void {
@@ -334,7 +334,7 @@ class ArrayListTest extends TestCase {
 	public function testMin(): void {
 		$this->assertEquals(Option::some(1), ArrayList::of(3, 1, 2)->min(comparator()));
 		$this->assertEquals(Option::some(3), ArrayList::of(3, 3, 3)->min(comparator()));
-		$this->assertEquals(Option::none(),ArrayList::fromEmpty()->min(comparator()));
+		$this->assertEquals(Option::none(), ArrayList::fromEmpty()->min(comparator()));
 	}
 
 	public function testMinWithNoCallback(): void {
@@ -389,8 +389,8 @@ class ArrayListTest extends TestCase {
 	}
 
 	public function testWithoutNulls(): void {
-	    $this->assertEquals(
-	    	ArrayList::of(1),
+		$this->assertEquals(
+			ArrayList::of(1),
 			ArrayList::of(null, 1, null)->withoutNulls()
 		);
 	}

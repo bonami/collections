@@ -35,13 +35,13 @@ class LambdaTest extends TestCase {
 	}
 
 	public function testCurryVarArg(): void {
-		$curried = Lambda::of(function (string $greeting,int ...$ints): string {
+		$curried = Lambda::of(function (string $greeting, int ...$ints): string {
 			return $greeting . join(',', $ints);
 		});
 
 		self::assertIsCallable($curried);
 		self::assertIsCallable($curried("Hello"));
-		self::assertEquals("Hello1,2,3", $curried("Hello")(1,2,3));
+		self::assertEquals("Hello1,2,3", $curried("Hello")(1, 2, 3));
 	}
 
 	public function testMap(): void {

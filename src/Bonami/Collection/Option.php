@@ -68,7 +68,7 @@ abstract class Option implements IHashable, IteratorAggregate {
 			}
 
 			public function __toString(): string {
-			    return 'None';
+				return 'None';
 			}
 
 		};
