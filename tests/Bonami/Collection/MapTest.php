@@ -184,6 +184,13 @@ class MapTest extends TestCase {
 		$this->assertEquals(new Map([[$two, 6], [$three, 5], [$seven, 8]]), $result);
 	}
 
+	public function testSortValues(): void {
+		$map = new Map([['a', 8], ['b', 2], ['c', 3]]);
+		$result = $map->sortValues();
+
+		$this->assertEquals(new Map([['a', 8], ['c', 3], ['b', 2]]), $result);
+	}
+
 	public function testWithoutKeys(): void {
 		$map = new Map([[1, 2], [3, 4], [5, 6]]);
 		$this->assertEquals(new Map([[1, 2]]), $map->withoutKeys(new ArrayList([3, 5, 6])));

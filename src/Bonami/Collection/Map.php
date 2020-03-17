@@ -699,6 +699,26 @@ class Map implements Countable, IteratorAggregate {
 	}
 
 	/**
+	 * Creates a Map containing all pairs sorted by values
+	 * by given comparison callback
+	 *
+	 * Pairing between keys and values is kept
+	 *
+	 * Complexity: o(n*log(n))
+	 *
+	 * @param callable|null $comparator - A standard comparator expecting two arguments returning values -1, 0 or 1.
+	 * 									When no comparator is passed, standard <=> operator is used to between values.
+	 *
+	 * @return static
+	 */
+	public function sortValues(?callable $comparator = null) {
+		$comparator = $comparator ?? comparator();
+		return static::fromIterable(
+			$this->pairs()->sort(function (array $a, array $b) use ($comparator) { return $comparator($a[1], $b[1]); })
+		);
+	}
+
+	/**
 	 * Reduces Map value-key pairs into single product.
 	 *
 	 * Complexity: o(n)
