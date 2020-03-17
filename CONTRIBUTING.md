@@ -22,8 +22,6 @@ Initially you need to have Docker installed on your system. Afterwards run `make
 - `make coding-standards` - check code style
 - `make coding-standards-fix` - automatically fix your code style
 
-**TODO** make targets for coding-standard are long
-
 ### Without Docker
 
 You need to have PHP and Composer installed globally on your system. Afterwards run `composer update` in order to download dependencies.

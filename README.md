@@ -58,9 +58,6 @@ $names = $persons
 // $names = "Arthur;Jacob"
 ```
 
-
-**TODO** link on more examples into separate repository
-
 ### Generating combinations
 
 ```php
@@ -127,8 +124,6 @@ $top10 = frequencyAnalysis($text)
 - `\Bonami\Collection\TrySafe` - Immutable structure for representing,  that you have value or error generated upon the way. It provides safe (functional) approach to handle errors without side effects.
 - `\Bonami\Collection\Lambda` - Wrapper around callable providing currying. Currying is very useful for some functional patterns
 
-**TODO** links on specific structure documentations 
-
 ### Type classes
 
 - `\Bonami\Collection\ArrayList`, `\Bonami\Collection\LazyList`, `\Bonami\Collection\Option`, `\Bonami\Collection\TrySafe` are Monads, which means that they support
@@ -166,9 +161,6 @@ $sumThree(7, 42, 666);
 ```
 
 All invocations will yield the same result.
- 
-
-- **TODO** (lifting, traversing ...)
 
 ## License
 
