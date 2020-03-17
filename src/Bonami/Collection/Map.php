@@ -535,6 +535,21 @@ class Map implements Countable, IteratorAggregate {
 	}
 
 	/**
+	 * Takes specified number of items from start
+	 *
+	 * Complexity: o(n) - where n is `$size`
+	 *
+	 * @return static
+	 */
+	public function take(int $size) {
+		return static::fromIterable(array_map(
+			null,
+			array_slice($this->keys, 0, $size, true),
+			array_slice($this->values, 0, $size, true)
+		));
+	}
+
+	/**
 	 * Returns true when first value-key pair matches predicate, false otherwise.
 	 *
 	 * Complexity: o(n) - stops when predicate matches

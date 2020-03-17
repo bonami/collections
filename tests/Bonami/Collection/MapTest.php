@@ -114,6 +114,14 @@ class MapTest extends TestCase {
 		);
 	}
 
+	public function testTake(): void {
+		$this->assertEquals(Map::fromEmpty(), Map::fromEmpty()->take(1));
+		$this->assertEquals(
+			Map::fromIterable([['a', 1], ['b', 2]]),
+			Map::fromIterable([['a', 1], ['b', 2], ['c', 3]])->take(2)
+		);
+	}
+
 	public function testWithoutNulls(): void {
 		$map = new Map([
 			[1, "a"],
