@@ -165,9 +165,7 @@ class MapTest extends TestCase {
 
 	public function testSortKeysScalarKeys(): void {
 		$map = new Map([[3, 5], [2, 6], [7, 8]]);
-		$result = $map->sortKeys(function($key1, $key2) {
-			return $key1 - $key2;
-		});
+		$result = $map->sortKeys(comparator());
 
 		$this->assertEquals(new Map([[2, 6], [3, 5], [7, 8]]), $result);
 	}
@@ -178,7 +176,7 @@ class MapTest extends TestCase {
 		$seven = $this->createObject(7);
 		$map = new Map([[$three, 5], [$two, 6], [$seven, 8]]);
 		$result = $map->sortKeys(function($key1, $key2) {
-			return $key1->prop - $key2->prop;
+			return $key1->prop <=> $key2->prop;
 		});
 
 		$this->assertEquals(new Map([[$two, 6], [$three, 5], [$seven, 8]]), $result);
