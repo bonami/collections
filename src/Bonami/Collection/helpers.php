@@ -12,6 +12,10 @@ function comparator(): callable {
 	return static function ($a, $b): int { return $a <=> $b; };
 }
 
+function descendingComparator(): callable {
+	return static function ($a, $b): int { return $b <=> $a; };
+}
+
 function tautology(): callable {
 	return static function (): bool { return true; };
 }

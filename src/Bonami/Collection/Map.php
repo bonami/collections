@@ -535,6 +535,21 @@ class Map implements Countable, IteratorAggregate {
 	}
 
 	/**
+	 * Takes specified number of items from start
+	 *
+	 * Complexity: o(n) - where n is `$size`
+	 *
+	 * @return static
+	 */
+	public function take(int $size) {
+		return static::fromIterable(array_map(
+			null,
+			array_slice($this->keys, 0, $size, true),
+			array_slice($this->values, 0, $size, true)
+		));
+	}
+
+	/**
 	 * Returns true when first value-key pair matches predicate, false otherwise.
 	 *
 	 * Complexity: o(n) - stops when predicate matches
@@ -681,6 +696,26 @@ class Map implements Countable, IteratorAggregate {
 	 */
 	public function sortKeys(?callable $comparator = null) {
 		return $this->getByKeys($this->keys()->sort($comparator));
+	}
+
+	/**
+	 * Creates a Map containing all pairs sorted by values
+	 * by given comparison callback
+	 *
+	 * Pairing between keys and values is kept
+	 *
+	 * Complexity: o(n*log(n))
+	 *
+	 * @param callable|null $comparator - A standard comparator expecting two arguments returning values -1, 0 or 1.
+	 * 									When no comparator is passed, standard <=> operator is used to between values.
+	 *
+	 * @return static
+	 */
+	public function sortValues(?callable $comparator = null) {
+		$comparator = $comparator ?? comparator();
+		return static::fromIterable(
+			$this->pairs()->sort(function (array $a, array $b) use ($comparator) { return $comparator($a[1], $b[1]); })
+		);
 	}
 
 	/**

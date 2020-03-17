@@ -1271,6 +1271,11 @@ parameters:
 			path: src/Bonami/Collection/Map.php
 
 		-
+			message: "#^Method Bonami\\\\Collection\\\\Map\\:\\:take\\(\\) return type has no value type specified in iterable type static\\(Bonami\\\\Collection\\\\Map\\)\\.$#"
+			count: 1
+			path: src/Bonami/Collection/Map.php
+
+		-
 			message: "#^Method Bonami\\\\Collection\\\\Map\\:\\:withoutNulls\\(\\) return type has no value type specified in iterable type static\\(Bonami\\\\Collection\\\\Map\\)\\.$#"
 			count: 1
 			path: src/Bonami/Collection/Map.php
@@ -1302,6 +1307,11 @@ parameters:
 
 		-
 			message: "#^Method Bonami\\\\Collection\\\\Map\\:\\:sortKeys\\(\\) return type has no value type specified in iterable type static\\(Bonami\\\\Collection\\\\Map\\)\\.$#"
+			count: 1
+			path: src/Bonami/Collection/Map.php
+
+		-
+			message: "#^Method Bonami\\\\Collection\\\\Map\\:\\:sortValues\\(\\) return type has no value type specified in iterable type static\\(Bonami\\\\Collection\\\\Map\\)\\.$#"
 			count: 1
 			path: src/Bonami/Collection/Map.php
 
