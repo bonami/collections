@@ -3,7 +3,15 @@
 [![Latest Stable Version](https://poser.pugx.org/bonami/collections/v/stable)](https://packagist.org/packages/bonami/collections)
 [![License](https://poser.pugx.org/bonami/collections/license)](https://packagist.org/packages/bonami/collections)
 
-**TODO** table of contents
+## Table of contents
+- [Motivation](#motivation)
+- [Show me the code!](#motivation)
+- [Features](#features)
+    - [Structures](#structures)
+    - [Type classes](#type-classes)
+    - [Currying](#currying)
+- [License](#features)
+- [Contributing](#features)
 
 ## Motivation
 
