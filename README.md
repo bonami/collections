@@ -1,4 +1,7 @@
 # Collections for PHP with focus on Immutability and Functional Programming
+![Build Status](https://github.com/bonami/collections/workflows/CI/badge.svg)
+[![Latest Stable Version](https://poser.pugx.org/bonami/collections/v/stable)](https://packagist.org/packages/bonami/collections)
+[![License](https://poser.pugx.org/bonami/collections/license)](https://packagist.org/packages/bonami/collections)
 
 **TODO** table of contents
 
