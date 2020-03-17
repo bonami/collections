@@ -2,6 +2,7 @@
   "name": "bonami/collections",
   "type": "library",
   "description": "Collections library with focus on immutability and functional approach",
+  "license": "MIT",
   "authors": [
     {
       "name": "Jan Machala",
