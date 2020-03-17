@@ -131,6 +131,10 @@ $top10 = frequencyAnalysis($text)
 
 **TODO** link on specifics about collections and doctrine
 
+## License
+
+This package is released under the [MIT license](LICENSE).
+
 ## Contributing
 
-**TODO** composer tasks, makefile, docker, pipeline, MR policies
+If you wish to contribute to the project, please read the [CONTRIBUTING notes](CONTRIBUTING.md).
