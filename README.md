@@ -162,10 +162,6 @@ All invocations will yield the same result.
 
 - **TODO** (lifting, traversing ...)
 
-## Doctrine
-
-**TODO** link on specifics about collections and doctrine
-
 ## License
 
 This package is released under the [MIT license](LICENSE).
