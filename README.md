@@ -1,18 +1,18 @@
-## Collections for PHP with focus on Immutability and Functional Programming
+# Collections for PHP with focus on Immutability and Functional Programming
 
 **TODO** table of contents
 
-### Motivation
+## Motivation
 
 Why yet another collections library for PHP? Native PHP arrays or SPL structures like SplFixedArray or SplObjectStorage(and other) are mutable and has very strange interfaces and behaviors. They often represent more data structures at once (eg. SplObjectStorage represents both Set and Map) and theirs interfaces are designed for classic imperative approach.
 
 We tried to design interfaces of our structures to be focused on declarative approach leveraging functional programing. For more safety, we designed structures to be immutable (we have some mutables as well, because sometime it is necessary for performance reasons)
 
-### Show me the code!
+## Show me the code!
 
 A code example is worth a thousand words, so here are some simple examples:
 
-#### Filtering Person DTOs and extracting some information 
+### Filtering Person DTOs and extracting some information 
 
 ```php
 use Bonami\Collection\ArrayList;
@@ -50,7 +50,7 @@ $names = $persons
 
 **TODO** link on more examples into separate repository
 
-#### Generating combinations
+### Generating combinations
 
 ```php
 use Bonami\Collection\ArrayList;
@@ -64,7 +64,7 @@ $coloredObjects = ArrayList::fromIterable($colors)
 // $coloredObjects = ArrayList::of('red car', 'red pencil', 'green car', 'green pencil', 'blue car', 'blue pencil')
 ```
 
-#### Generating combinations with lift
+### Generating combinations with lift
 
 ```php
 use Bonami\Collection\ArrayList;
@@ -73,7 +73,7 @@ $concat = fn (string $first, string $second) => "{$first} {$second}";
 $coloredObjects = ArrayList::lift($concat)($colors, $objects);
 ```
 
-#### Character frequency analysis
+### Character frequency analysis
 
 ```php
 use Bonami\Collection\ArrayList;
@@ -102,9 +102,9 @@ $top10 = frequencyAnalysis($text)
     ->take(10);
 ```
 
-### Features
+## Features
 
-#### Structures
+### Structures
 
 - `\Bonami\Collection\ArrayList` - An immutable (non associative) array wrapper, meant for sequential processing.
 - `\Bonami\Collection\Map` - An immutable key-value structure. It can contain any kind of object as keys (with some limitation, see further info in docs).
@@ -118,7 +118,7 @@ $top10 = frequencyAnalysis($text)
 
 **TODO** links on specific structure documentations 
 
-#### Functional features
+### Functional features
 
 - `\Bonami\Collection\ArrayList`, `\Bonami\Collection\LazyList`, `\Bonami\Collection\Option`, `\Bonami\Collection\TrySafe` are Monads, which means that they support
     - `->map` with functorial laws
@@ -127,10 +127,10 @@ $top10 = frequencyAnalysis($text)
     - on top of that they support many friendly functional methods (like `exists`, `all`, `find` etc.) 
 - **TODO** (currying, lifting, traversing ...)
 
-### Doctrine
+## Doctrine
 
 **TODO** link on specifics about collections and doctrine
 
-### Contributing
+## Contributing
 
 **TODO** composer tasks, makefile, docker, pipeline, MR policies
