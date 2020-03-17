@@ -121,7 +121,7 @@ $top10 = frequencyAnalysis($text)
 
 **TODO** links on specific structure documentations 
 
-### Functional features
+### Type classes
 
 - `\Bonami\Collection\ArrayList`, `\Bonami\Collection\LazyList`, `\Bonami\Collection\Option`, `\Bonami\Collection\TrySafe` are Monads, which means that they support
     - `->map` with functorial laws
