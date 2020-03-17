@@ -128,7 +128,39 @@ $top10 = frequencyAnalysis($text)
     - `::of` (pure) and `->ap` (apply) with applicative laws
     - `->flatMap` (bind) with monadic laws
     - on top of that they support many friendly functional methods (like `exists`, `all`, `find` etc.) 
-- **TODO** (currying, lifting, traversing ...)
+
+### Currying
+
+If higher order functions are said to be bread & butter of functional programming then currying is ... well ... the spice of it. The concept is simple - it is transforming function taking multiple arguments into sequence of functions each taking single argument.
+
+Since PHP does not provide us with any means of currying, we implemented own callable wrapper `Lambda` capable of the task:
+
+```php
+$greeter = fn (string $greeting, string $name): string => "{$greeting} {$name}!";
+
+$helloGreeter = Lambda::of($greeter)("Hello");
+echo $helloGreeter("John"); // Hello John!
+echo $helloGreeter("Paul"); // Hello Paul!
+
+$holaGreeter = Lambda::of($greeter)("Hola");
+echo $holaGreeter("Diego"); // Hola Diego!
+```
+
+To be more developer friendly, it is possible to call functions either with multiple arguments or with single argument per call or even combine the both:
+
+```php
+$sumThree = Lambda::of(fn (int $x, int $y, int $z): int => $x + $y + $z);
+
+$sumThree(7)(42)(666);
+$sumThree(7)(42, 666);
+$sumThree(7, 42)(666);
+$sumThree(7, 42, 666);
+```
+
+All invocations will yield the same result.
+ 
+
+- **TODO** (lifting, traversing ...)
 
 ## Doctrine
 
