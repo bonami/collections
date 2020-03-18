@@ -11,6 +11,7 @@
     - [Type classes](#type-classes)
     - [Currying](#currying)
     - [Option](#option)
+    - [TrySafe](#trysafe)
 - [License](#features)
 - [Contributing](#features)
 
@@ -261,6 +262,89 @@ You can see that the second example using `Option` allows us to sequence computa
 We hope you have a grasp of it, even though example is rather artificial ;-)
 
 In case you are a functional programming zealot, you'd like to hear that `Option` is a lawful monad (thus functor & applicative).
+
+### TrySafe
+
+Make long story short: what `Option` is for possible missing (nullable) values, `TrySafe` is for possible exceptions.
+
+Throwing exceptions and catching them somewhere may seem as a good way how to handle error states throughout your code. Except that it is not...
+
+Consider following code - can you guess the outcome of calling possible implementation of `compute` method from signature?
+```php
+interface Div {
+    public function compute(int $a, int $b): float;
+}
+```
+Most of the time, the method will be well-behaved and will return `float` according to return type declaration. Until we pass `0` as second argument:
+
+```php
+class DivImplementation {
+    public function compute(int $a, int $b): float {
+        if ($b === 0) {
+            throw new RuntimeException("Can not divide by zero, bro");
+        }
+        return $a / $b;
+    }
+}
+```
+The problem is that `compute` is not defined for every possible combination of arguments (it is [partial function](https://en.wikipedia.org/wiki/Partial_function)) and the signature is kind of lying to us. We must look at the specific function implementation body to see if there is possibility for exception to be thrown. 
+
+We can do better with the little help of `TrySafe` class:
+
+```php
+use Bonami\Collection\TrySafe;
+
+interface Div {
+    public function compute(int $a, int $b): TrySafe;
+}
+
+class DivImplementation {
+    public function compute(int $a, int $b): TrySafe {
+        return $b === 0
+            ? TrySafe::failure(new RuntimeException("Can not divide by zero, bro"))
+            : TrySafe::success($a / $b);
+    }
+}
+
+$div = new DivImplementation();
+$outcome = $div->compute(10, 0);
+
+```
+
+Now we have the outcome of `compute` call safely wrapped in `TrySafe` instances and can do the further computations with it no matter if it is `Success` or `Failure`.
+ 
+You can use `TrySafe` to wrap unsafe (throwing) calls and chain the computations the same way as with `Option`:
+
+```php
+use Bonami\Collection\TrySafe;
+
+$getTheUltimateAnswerOrThrow = function(bool $shouldThrow): int {
+    if ($shouldThrow) {
+        throw new RuntimeException("There is no ultimate answer!");
+    }
+    return 42;
+};
+
+$makeTheAnswerBiggerOrThrow = function(int $answer): int {
+  if ($answer !== 42) {
+      throw new RuntimeException("Unlucky!");
+  }
+  return $answer + 624;
+};
+
+TrySafe::fromCallable(fn() => $getTheUltimateAnswerOrThrow(true))
+    ->flatMap(fn (int $answer) => TrySafe::fromCallable(fn() => $makeTheAnswerBiggerOrThrow($answer)))
+    ->fold (
+        function(Throwable $e): void { 
+            print $e->getMessage();
+        },
+        function(int $biggerAnswer): void { 
+            print "The ultimate answer is {$biggerAnswer}";
+        }
+    );
+```
+ 
+_Disclaimer:_ As you probably noticed, we reflect possible exception in return type now, but on the other side, we've lost the information that wrapped success value is `float`.  This applies also to `Option`, `ArrayList` etc. Unfortunately there is no silver bullet solution, until PHP have the generics implemented (but hey, have look at [phpstan generics templates](https://medium.com/@ondrejmirtes/generics-in-php-using-phpdocs-14e7301953)). 
 
 ## License
 
