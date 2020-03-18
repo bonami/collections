@@ -19,6 +19,10 @@ abstract class Option implements IHashable, IteratorAggregate {
 		return self::some($value);
 	}
 
+	final public static function fromNullable($value): Option {
+		return $value === null ? self::none() : self::some($value);
+	}
+
 	final public static function none(): Option {
 		return self::$none ?? self::$none = new class extends Option {
 

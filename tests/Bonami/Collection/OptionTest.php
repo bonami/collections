@@ -26,6 +26,11 @@ class OptionTest extends TestCase {
 		self::assertTrue($fromNotNull->isDefined());
 	}
 
+	public function testCreateFromNullable(): void {
+		self::assertTrue(Option::fromNullable("Look, I exist")->isDefined());
+		self::assertFalse(Option::fromNullable(null)->isDefined());
+	}
+
 	public function testLift(): void {
 
 		$none = Option::none();
