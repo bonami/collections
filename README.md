@@ -10,6 +10,7 @@
     - [Structures](#structures)
     - [Type classes](#type-classes)
     - [Currying](#currying)
+    - [Option](#option)
 - [License](#features)
 - [Contributing](#features)
 
@@ -161,6 +162,105 @@ $sumThree(7, 42, 666);
 ```
 
 All invocations will yield the same result.
+
+### Option
+
+> aka how to avoid billion dollar mistake by using `Option` (we are looking in your direction, `null`!)
+
+`Option` type encapsulates value, which may or may not exist. If you are not familiar with concept of `Option` (also called `Maybe` in some languages), think of `ArrayList` which is either empty or has single item inside.
+
+Value which exists is represented by instance of `Some` class, whereas missing one is `None`.
+
+```php
+use Bonami\Collection\Option;
+
+$somethingToEat = Option::some("ice cream");
+$nothingToSeeHere = Option::none();
+```
+
+The good thing is that we can operate on `Some` & `None` the same way: 
+
+```php 
+use Bonami\Collection\Option;
+
+$somethingToEat = Option::some("ice cream");
+$nothingToSeeHere = Option::none();
+
+$iLikeToEat = fn (string $food): string => "I like to eat tasty {$food}!"; 
+
+$somethingToEat->map($iLikeToEat); // Will map to string "I like to eat tasty ice cream!" wrapped in `Some` instance
+$nothingToSeeHere->map($iLikeToEat); // `None`, wont be mapped and will stay the same
+
+``` 
+ 
+We can use `Option` as better and more safe alternative to nullable values since handling of `null` may easily become cumbersome. Compare following code examples:
+
+```php
+function getUserEmailById(int $id): ?string {
+    $usersDb = [
+        1 => "john@foobar.baz",
+        2 => "paul@foobar.baz",
+    ];
+    return $usersDb[$id] ?? null;
+} 
+function getAgeByUserEmail(string $email): ?int {
+    $ageDb = [
+        "john@foobar.baz" => 66,
+        "diego@hola.esp" => 42,
+    ];
+    return $ageDb[$email] ?? null;
+}
+
+// The old good `null` way
+function printUserAgeById(int $id): void {
+    $email = getUserEmailById($id);
+    $age = null;
+    if ($email !== null) {
+        $age = getAgeByUserEmail($email);
+   
+    }
+    if ($age === null) {
+        print "Dont know age of user with id {$id}";
+    } else {
+        print "Age of user with id {$id} is {$age}";
+    }   
+     
+}
+
+```
+
+```php
+use Bonami\Collection\Option;
+
+function getUserEmailById(int $id): ?string {
+    $usersDb = [
+        1 => "john@foobar.baz",
+        2 => "paul@foobar.baz",
+    ];
+    return $usersDb[$id] ?? null;
+} 
+function getAgeByUserEmail(string $email): ?int {
+    $ageDb = [
+        "john@foobar.baz" => 66,
+        "diego@hola.esp" => 42,
+    ];
+    return $ageDb[$email] ?? null;
+}
+
+// The better way using `Option` 
+function printUserAgeById(int $id): void {
+    print Option::fromNullable(getUserEmailById($id))
+        ->flatMap(fn (string $email) => Option::fromNullable(getAgeByUserEmail($email)))
+        ->map(fn (int $age): string => "Age of user with id {$id} is {$age}")
+        ->getOrElse("Dont know age of user with id {$id}");
+
+}
+```
+
+You can see that the second example using `Option` allows us to sequence computations so that if any of intermediate steps yields `None`, the subsequent computations are simply ignored.
+We hope you have a grasp of it, even though example is rather artificial ;-)
+
+In case you are a functional programming zealot, you'd like to hear that `Option` is a lawful monad (thus functor & applicative).
 
 ## License
 
