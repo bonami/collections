@@ -118,7 +118,7 @@ $top10 = frequencyAnalysis($text)
 - `\Bonami\Collection\Map` - An immutable key-value structure. It can contain any kind of object as keys (with some limitation, see further info in docs).
 - `\Bonami\Collection\Mutable\Map` - Mutable variant of Map.
 - `\Bonami\Collection\LazyList` - Wrapper on any iterable structure. It leverages yield internally making it lazy. It can save memory significantly.
-- `\Bonami\Collection\Enum` - Not a collection, but has great synergy with rest of the library. Meant for defining closed enumerations. Provides interesting methods like getting complements list of values for given enum.  
+- [`\Bonami\Collection\Enum`](./docs/enum.md) - Not a collection, but has great synergy with rest of the library. Meant for defining closed enumerations. Provides interesting methods like getting complements list of values for given enum.  
 - `\Bonami\Collection\EnumList` - List of Enums, extending ArrayList
 - `\Bonami\Collection\Option` - Immutable structure for representing, that you maybe have value and maybe not. It provides safe (functional) approach to handle null pointer errors.
 - `\Bonami\Collection\TrySafe` - Immutable structure for representing,  that you have value or error generated upon the way. It provides safe (functional) approach to handle errors without side effects.
