@@ -3,7 +3,7 @@
 all: deps test
 
 deps:
-	docker run -it --rm -v ${PWD}:/app -w /app composer install --prefer-dist --verbose --no-interaction --optimize-autoloader --no-ansi
+	docker run -it --rm -v ${PWD}:/app -w /app composer update --prefer-dist --verbose --no-interaction --optimize-autoloader
 
 test:
 	docker run -it --rm -v ${PWD}:/app -w /app composer run-script test
