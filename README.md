@@ -334,7 +334,7 @@ $makeTheAnswerBiggerOrThrow = function(int $answer): int {
 
 TrySafe::fromCallable(fn() => $getTheUltimateAnswerOrThrow(true))
     ->flatMap(fn (int $answer) => TrySafe::fromCallable(fn() => $makeTheAnswerBiggerOrThrow($answer)))
-    ->fold (
+    ->resolve (
         function(Throwable $e): void { 
             print $e->getMessage();
         },

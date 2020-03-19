@@ -84,7 +84,7 @@ abstract class TrySafe implements IHashable, IteratorAggregate {
 				return Option::some($this->value);
 			}
 
-			public function fold(callable $handleFailure, callable $handleSuccess) {
+			public function resolve(callable $handleFailure, callable $handleSuccess) {
 				return $handleSuccess($this->value);
 			}
 
@@ -151,7 +151,7 @@ abstract class TrySafe implements IHashable, IteratorAggregate {
 				return Option::none();
 			}
 
-			public function fold(callable $handleFailure, callable $handleSuccess) {
+			public function resolve(callable $handleFailure, callable $handleSuccess) {
 				return $handleFailure($this->failure);
 			}
 
@@ -206,6 +206,6 @@ abstract class TrySafe implements IHashable, IteratorAggregate {
 
 	abstract public function toOption(): Option;
 
-	abstract public function fold(callable $handleFailure, callable $handleSuccess);
+	abstract public function resolve(callable $handleFailure, callable $handleSuccess);
 
 }

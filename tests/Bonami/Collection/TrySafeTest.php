@@ -111,25 +111,25 @@ class TrySafeTest extends TestCase {
 		self::assertFalse($this->createFailure()->toOption()->isDefined());
 	}
 
-	public function testFoldSuccess(): void {
+	public function testResolveSuccess(): void {
 		$handleSuccessSpy = $this->createInvokableSpy();
 		$handleFailureSpy = $this->createInvokableSpy();
 
 		TrySafe::success(666)
-			->fold($handleFailureSpy, $handleSuccessSpy);
+			->resolve($handleFailureSpy, $handleSuccessSpy);
 
 		self::assertCount(1, $handleSuccessSpy->getCalls());
 		self::assertCount(0, $handleFailureSpy->getCalls());
 		self::assertEquals([[666]], $handleSuccessSpy->getCalls());
 	}
 
-	public function testFoldFailure(): void {
+	public function testResolveFailure(): void {
 		$handleSuccessSpy = $this->createInvokableSpy();
 		$handleFailureSpy = $this->createInvokableSpy();
 
 		$exception = new Exception();
 		TrySafe::failure($exception)
-			->fold($handleFailureSpy, $handleSuccessSpy);
+			->resolve($handleFailureSpy, $handleSuccessSpy);
 
 		self::assertCount(0, $handleSuccessSpy->getCalls());
 		self::assertCount(1, $handleFailureSpy->getCalls());
