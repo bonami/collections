@@ -112,8 +112,8 @@ class TrySafeTest extends TestCase {
 	}
 
 	public function testResolveSuccess(): void {
-		$handleSuccessSpy = $this->createInvokableSpy();
-		$handleFailureSpy = $this->createInvokableSpy();
+		$handleSuccessSpy = createInvokableSpy();
+		$handleFailureSpy = createInvokableSpy();
 
 		TrySafe::success(666)
 			->resolve($handleFailureSpy, $handleSuccessSpy);
@@ -124,8 +124,8 @@ class TrySafeTest extends TestCase {
 	}
 
 	public function testResolveFailure(): void {
-		$handleSuccessSpy = $this->createInvokableSpy();
-		$handleFailureSpy = $this->createInvokableSpy();
+		$handleSuccessSpy = createInvokableSpy();
+		$handleFailureSpy = createInvokableSpy();
 
 		$exception = new Exception();
 		TrySafe::failure($exception)
@@ -136,17 +136,6 @@ class TrySafeTest extends TestCase {
 		self::assertSame([[$exception]], $handleFailureSpy->getCalls());
 	}
 
-	private function createInvokableSpy() {
-		return new class {
-			private $calls = [];
-			public function __invoke() {
-				$this->calls[] = func_get_args();
-			}
-			public function getCalls(): array {
-				return $this->calls;
-			}
-		};
-	}
 
 	public function testIterator(): void {
 		$val = "Hello world";
