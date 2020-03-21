@@ -601,6 +601,11 @@ parameters:
 			path: src/Bonami/Collection/Option.php
 
 		-
+			message: "#^Method class@anonymous/src/Bonami/Collection/Option\\.php\\:27\\:\\:resolve\\(\\) has no return typehint specified\\.$#"
+			count: 1
+			path: src/Bonami/Collection/Option.php
+
+		-
 			message: "#^Method Bonami\\\\Collection\\\\Option\\:\\:some\\(\\) has parameter \\$value with no typehint specified\\.$#"
 			count: 1
 			path: src/Bonami/Collection/Option.php
@@ -611,77 +616,82 @@ parameters:
 			path: src/Bonami/Collection/Option.php
 
 		-
-			message: "#^Property class@anonymous/src/Bonami/Collection/Option\\.php\\:82\\:\\:\\$value has no typehint specified\\.$#"
+			message: "#^Property class@anonymous/src/Bonami/Collection/Option\\.php\\:86\\:\\:\\$value has no typehint specified\\.$#"
 			count: 1
 			path: src/Bonami/Collection/Option.php
 
 		-
-			message: "#^Method class@anonymous/src/Bonami/Collection/Option\\.php\\:82\\:\\:__construct\\(\\) has parameter \\$value with no typehint specified\\.$#"
+			message: "#^Method class@anonymous/src/Bonami/Collection/Option\\.php\\:86\\:\\:__construct\\(\\) has parameter \\$value with no typehint specified\\.$#"
 			count: 1
 			path: src/Bonami/Collection/Option.php
 
 		-
-			message: "#^Method class@anonymous/src/Bonami/Collection/Option\\.php\\:82\\:\\:ap\\(\\) has parameter \\$option with no value type specified in iterable type Bonami\\\\Collection\\\\Option\\.$#"
+			message: "#^Method class@anonymous/src/Bonami/Collection/Option\\.php\\:86\\:\\:ap\\(\\) has parameter \\$option with no value type specified in iterable type Bonami\\\\Collection\\\\Option\\.$#"
 			count: 1
 			path: src/Bonami/Collection/Option.php
 
 		-
-			message: "#^Method class@anonymous/src/Bonami/Collection/Option\\.php\\:82\\:\\:ap\\(\\) return type has no value type specified in iterable type Bonami\\\\Collection\\\\Option\\.$#"
+			message: "#^Method class@anonymous/src/Bonami/Collection/Option\\.php\\:86\\:\\:ap\\(\\) return type has no value type specified in iterable type Bonami\\\\Collection\\\\Option\\.$#"
 			count: 1
 			path: src/Bonami/Collection/Option.php
 
 		-
-			message: "#^Method class@anonymous/src/Bonami/Collection/Option\\.php\\:82\\:\\:map\\(\\) return type has no value type specified in iterable type Bonami\\\\Collection\\\\Option\\.$#"
+			message: "#^Method class@anonymous/src/Bonami/Collection/Option\\.php\\:86\\:\\:map\\(\\) return type has no value type specified in iterable type Bonami\\\\Collection\\\\Option\\.$#"
 			count: 1
 			path: src/Bonami/Collection/Option.php
 
 		-
-			message: "#^Method class@anonymous/src/Bonami/Collection/Option\\.php\\:82\\:\\:flatMap\\(\\) return type has no value type specified in iterable type Bonami\\\\Collection\\\\Option\\.$#"
+			message: "#^Method class@anonymous/src/Bonami/Collection/Option\\.php\\:86\\:\\:flatMap\\(\\) return type has no value type specified in iterable type Bonami\\\\Collection\\\\Option\\.$#"
 			count: 1
 			path: src/Bonami/Collection/Option.php
 
 		-
-			message: "#^Method class@anonymous/src/Bonami/Collection/Option\\.php\\:82\\:\\:filter\\(\\) return type has no value type specified in iterable type Bonami\\\\Collection\\\\Option\\.$#"
+			message: "#^Method class@anonymous/src/Bonami/Collection/Option\\.php\\:86\\:\\:filter\\(\\) return type has no value type specified in iterable type Bonami\\\\Collection\\\\Option\\.$#"
 			count: 1
 			path: src/Bonami/Collection/Option.php
 
 		-
-			message: "#^Method class@anonymous/src/Bonami/Collection/Option\\.php\\:82\\:\\:getUnsafe\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method class@anonymous/src/Bonami/Collection/Option\\.php\\:86\\:\\:getUnsafe\\(\\) has no return typehint specified\\.$#"
 			count: 1
 			path: src/Bonami/Collection/Option.php
 
 		-
-			message: "#^Method class@anonymous/src/Bonami/Collection/Option\\.php\\:82\\:\\:getOrElse\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method class@anonymous/src/Bonami/Collection/Option\\.php\\:86\\:\\:getOrElse\\(\\) has no return typehint specified\\.$#"
 			count: 1
 			path: src/Bonami/Collection/Option.php
 
 		-
-			message: "#^Method class@anonymous/src/Bonami/Collection/Option\\.php\\:82\\:\\:getOrElse\\(\\) has parameter \\$else with no typehint specified\\.$#"
+			message: "#^Method class@anonymous/src/Bonami/Collection/Option\\.php\\:86\\:\\:getOrElse\\(\\) has parameter \\$else with no typehint specified\\.$#"
 			count: 1
 			path: src/Bonami/Collection/Option.php
 
 		-
-			message: "#^Method class@anonymous/src/Bonami/Collection/Option\\.php\\:82\\:\\:toTrySafe\\(\\) return type has no value type specified in iterable type Bonami\\\\Collection\\\\TrySafe\\.$#"
+			message: "#^Method class@anonymous/src/Bonami/Collection/Option\\.php\\:86\\:\\:toTrySafe\\(\\) return type has no value type specified in iterable type Bonami\\\\Collection\\\\TrySafe\\.$#"
 			count: 1
 			path: src/Bonami/Collection/Option.php
 
 		-
-			message: "#^Method class@anonymous/src/Bonami/Collection/Option\\.php\\:82\\:\\:hashCode\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method class@anonymous/src/Bonami/Collection/Option\\.php\\:86\\:\\:hashCode\\(\\) has no return typehint specified\\.$#"
 			count: 1
 			path: src/Bonami/Collection/Option.php
 
 		-
-			message: "#^Method class@anonymous/src/Bonami/Collection/Option\\.php\\:82\\:\\:getIterator\\(\\) return type has no value type specified in iterable type Traversable\\<mixed, mixed\\>\\.$#"
+			message: "#^Method class@anonymous/src/Bonami/Collection/Option\\.php\\:86\\:\\:getIterator\\(\\) return type has no value type specified in iterable type Traversable\\<mixed, mixed\\>\\.$#"
 			count: 1
 			path: src/Bonami/Collection/Option.php
 
 		-
-			message: "#^Method class@anonymous/src/Bonami/Collection/Option\\.php\\:82\\:\\:orElse\\(\\) has parameter \\$else with no value type specified in iterable type Bonami\\\\Collection\\\\Option\\.$#"
+			message: "#^Method class@anonymous/src/Bonami/Collection/Option\\.php\\:86\\:\\:orElse\\(\\) has parameter \\$else with no value type specified in iterable type Bonami\\\\Collection\\\\Option\\.$#"
 			count: 1
 			path: src/Bonami/Collection/Option.php
 
 		-
-			message: "#^Method class@anonymous/src/Bonami/Collection/Option\\.php\\:82\\:\\:orElse\\(\\) return type has no value type specified in iterable type Bonami\\\\Collection\\\\Option\\.$#"
+			message: "#^Method class@anonymous/src/Bonami/Collection/Option\\.php\\:86\\:\\:orElse\\(\\) return type has no value type specified in iterable type Bonami\\\\Collection\\\\Option\\.$#"
+			count: 1
+			path: src/Bonami/Collection/Option.php
+
+		-
+			message: "#^Method class@anonymous/src/Bonami/Collection/Option\\.php\\:86\\:\\:resolve\\(\\) has no return typehint specified\\.$#"
 			count: 1
 			path: src/Bonami/Collection/Option.php
 
@@ -747,6 +757,11 @@ parameters:
 
 		-
 			message: "#^Method Bonami\\\\Collection\\\\Option\\:\\:orElse\\(\\) return type has no value type specified in iterable type Bonami\\\\Collection\\\\Option\\.$#"
+			count: 1
+			path: src/Bonami/Collection/Option.php
+
+		-
+			message: "#^Method Bonami\\\\Collection\\\\Option\\:\\:resolve\\(\\) has no return typehint specified\\.$#"
 			count: 1
 			path: src/Bonami/Collection/Option.php
 
@@ -851,7 +866,7 @@ parameters:
 			path: src/Bonami/Collection/TrySafe.php
 
 		-
-			message: "#^Method class@anonymous/src/Bonami/Collection/TrySafe\\.php\\:29\\:\\:fold\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method class@anonymous/src/Bonami/Collection/TrySafe\\.php\\:29\\:\\:resolve\\(\\) has no return typehint specified\\.$#"
 			count: 1
 			path: src/Bonami/Collection/TrySafe.php
 
@@ -916,7 +931,7 @@ parameters:
 			path: src/Bonami/Collection/TrySafe.php
 
 		-
-			message: "#^Method class@anonymous/src/Bonami/Collection/TrySafe\\.php\\:105\\:\\:fold\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method class@anonymous/src/Bonami/Collection/TrySafe\\.php\\:105\\:\\:resolve\\(\\) has no return typehint specified\\.$#"
 			count: 1
 			path: src/Bonami/Collection/TrySafe.php
 
@@ -991,7 +1006,7 @@ parameters:
 			path: src/Bonami/Collection/TrySafe.php
 
 		-
-			message: "#^Method Bonami\\\\Collection\\\\TrySafe\\:\\:fold\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method Bonami\\\\Collection\\\\TrySafe\\:\\:resolve\\(\\) has no return typehint specified\\.$#"
 			count: 1
 			path: src/Bonami/Collection/TrySafe.php
 
@@ -1401,26 +1416,6 @@ parameters:
 			path: tests/Bonami/Collection/OptionTest.php
 
 		-
-			message: "#^Method Bonami\\\\Collection\\\\TrySafeTest\\:\\:createInvokableSpy\\(\\) has no return typehint specified\\.$#"
-			count: 1
-			path: tests/Bonami/Collection/TrySafeTest.php
-
-		-
-			message: "#^Property class@anonymous/tests/Bonami/Collection/TrySafeTest\\.php\\:141\\:\\:\\$calls has no typehint specified\\.$#"
-			count: 1
-			path: tests/Bonami/Collection/TrySafeTest.php
-
-		-
-			message: "#^Method class@anonymous/tests/Bonami/Collection/TrySafeTest\\.php\\:141\\:\\:__invoke\\(\\) has no return typehint specified\\.$#"
-			count: 1
-			path: tests/Bonami/Collection/TrySafeTest.php
-
-		-
-			message: "#^Method class@anonymous/tests/Bonami/Collection/TrySafeTest\\.php\\:141\\:\\:getCalls\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: tests/Bonami/Collection/TrySafeTest.php
-
-		-
 			message: "#^Method Bonami\\\\Collection\\\\TrySafeTest\\:\\:equals\\(\\) has parameter \\$a with no typehint specified\\.$#"
 			count: 1
 			path: tests/Bonami/Collection/TrySafeTest.php
@@ -1436,7 +1431,7 @@ parameters:
 			path: tests/Bonami/Collection/TrySafeTest.php
 
 		-
-			message: "#^Method class@anonymous/tests/Bonami/Collection/TrySafeTest\\.php\\:246\\:\\:hashCode\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method class@anonymous/tests/Bonami/Collection/TrySafeTest\\.php\\:234\\:\\:hashCode\\(\\) has no return typehint specified\\.$#"
 			count: 1
 			path: tests/Bonami/Collection/TrySafeTest.php
 
@@ -1512,6 +1507,26 @@ parameters:
 
 		-
 			message: "#^Function Bonami\\\\Collection\\\\testApplicativeComposition\\(\\) has parameter \\$applicativeG with no typehint specified\\.$#"
+			count: 1
+			path: tests/Bonami/Collection/helpers.php
+
+		-
+			message: "#^Function Bonami\\\\Collection\\\\createInvokableSpy\\(\\) has no return typehint specified\\.$#"
+			count: 1
+			path: tests/Bonami/Collection/helpers.php
+
+		-
+			message: "#^Property class@anonymous/tests/Bonami/Collection/helpers\\.php\\:75\\:\\:\\$calls has no typehint specified\\.$#"
+			count: 1
+			path: tests/Bonami/Collection/helpers.php
+
+		-
+			message: "#^Method class@anonymous/tests/Bonami/Collection/helpers\\.php\\:75\\:\\:__invoke\\(\\) has no return typehint specified\\.$#"
+			count: 1
+			path: tests/Bonami/Collection/helpers.php
+
+		-
+			message: "#^Method class@anonymous/tests/Bonami/Collection/helpers\\.php\\:75\\:\\:getCalls\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: tests/Bonami/Collection/helpers.php
 
