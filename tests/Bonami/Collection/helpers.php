@@ -70,3 +70,15 @@ function testApplicativeComposition(callable $assertEquals, callable $pure, $app
 		$applicativeF->ap($applicativeG->ap($applicative))
 	);
 }
+
+function createInvokableSpy() {
+	return new class {
+		private $calls = [];
+		public function __invoke() {
+			$this->calls[] = func_get_args();
+		}
+		public function getCalls(): array {
+			return $this->calls;
+		}
+	};
+}

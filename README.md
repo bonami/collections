@@ -10,6 +10,8 @@
     - [Structures](#structures)
     - [Type classes](#type-classes)
     - [Currying](#currying)
+    - [Option](#option)
+    - [TrySafe](#trysafe)
 - [License](#features)
 - [Contributing](#features)
 
@@ -161,6 +163,188 @@ $sumThree(7, 42, 666);
 ```
 
 All invocations will yield the same result.
+
+### Option
+
+> aka how to avoid billion dollar mistake by using `Option` (we are looking in your direction, `null`!)
+
+`Option` type encapsulates value, which may or may not exist. If you are not familiar with concept of `Option` (also called `Maybe` in some languages), think of `ArrayList` which is either empty or has single item inside.
+
+Value which exists is represented by instance of `Some` class, whereas missing one is `None`.
+
+```php
+use Bonami\Collection\Option;
+
+$somethingToEat = Option::some("ice cream");
+$nothingToSeeHere = Option::none();
+```
+
+The good thing is that we can operate on `Some` & `None` the same way: 
+
+```php 
+use Bonami\Collection\Option;
+
+$somethingToEat = Option::some("ice cream");
+$nothingToSeeHere = Option::none();
+
+$iLikeToEat = fn (string $food): string => "I like to eat tasty {$food}!"; 
+
+$somethingToEat->map($iLikeToEat); // Will map to string "I like to eat tasty ice cream!" wrapped in `Some` instance
+$nothingToSeeHere->map($iLikeToEat); // `None`, wont be mapped and will stay the same
+
+``` 
+ 
+We can use `Option` as better and more safe alternative to nullable values since handling of `null` may easily become cumbersome. Compare following code examples:
+
+```php
+function getUserEmailById(int $id): ?string {
+    $usersDb = [
+        1 => "john@foobar.baz",
+        2 => "paul@foobar.baz",
+    ];
+    return $usersDb[$id] ?? null;
+} 
+function getAgeByUserEmail(string $email): ?int {
+    $ageDb = [
+        "john@foobar.baz" => 66,
+        "diego@hola.esp" => 42,
+    ];
+    return $ageDb[$email] ?? null;
+}
+
+// The old good `null` way
+function printUserAgeById(int $id): void {
+    $email = getUserEmailById($id);
+    $age = null;
+    if ($email !== null) {
+        $age = getAgeByUserEmail($email);
+   
+    }
+    if ($age === null) {
+        print "Dont know age of user with id {$id}";
+    } else {
+        print "Age of user with id {$id} is {$age}";
+    }   
+     
+}
+
+```
+
+```php
+use Bonami\Collection\Option;
+
+function getUserEmailById(int $id): ?string {
+    $usersDb = [
+        1 => "john@foobar.baz",
+        2 => "paul@foobar.baz",
+    ];
+    return $usersDb[$id] ?? null;
+} 
+function getAgeByUserEmail(string $email): ?int {
+    $ageDb = [
+        "john@foobar.baz" => 66,
+        "diego@hola.esp" => 42,
+    ];
+    return $ageDb[$email] ?? null;
+}
+
+// The better way using `Option` 
+function printUserAgeById(int $id): void {
+    print Option::fromNullable(getUserEmailById($id))
+        ->flatMap(fn (string $email) => Option::fromNullable(getAgeByUserEmail($email)))
+        ->map(fn (int $age): string => "Age of user with id {$id} is {$age}")
+        ->getOrElse("Dont know age of user with id {$id}");
+
+}
+```
+
+You can see that the second example using `Option` allows us to sequence computations so that if any of intermediate steps yields `None`, the subsequent computations are simply ignored.
+We hope you have a grasp of it, even though example is rather artificial ;-)
+
+In case you are a functional programming zealot, you'd like to hear that `Option` is a lawful monad (thus functor & applicative).
+
+### TrySafe
+
+Make long story short: what `Option` is for possible missing (nullable) values, `TrySafe` is for possible exceptions.
+
+Throwing exceptions and catching them somewhere may seem as a good way how to handle error states throughout your code. Except that it is not...
+
+Consider following code - can you guess the outcome of calling possible implementation of `compute` method from signature?
+```php
+interface Div {
+    public function compute(int $a, int $b): float;
+}
+```
+Most of the time, the method will be well-behaved and will return `float` according to return type declaration. Until we pass `0` as second argument:
+
+```php
+class DivImplementation {
+    public function compute(int $a, int $b): float {
+        if ($b === 0) {
+            throw new RuntimeException("Can not divide by zero, bro");
+        }
+        return $a / $b;
+    }
+}
+```
+The problem is that `compute` is not defined for every possible combination of arguments (it is [partial function](https://en.wikipedia.org/wiki/Partial_function)) and the signature is kind of lying to us. We must look at the specific function implementation body to see if there is possibility for exception to be thrown. 
+
+We can do better with the little help of `TrySafe` class:
+
+```php
+use Bonami\Collection\TrySafe;
+
+interface Div {
+    public function compute(int $a, int $b): TrySafe;
+}
+
+class DivImplementation {
+    public function compute(int $a, int $b): TrySafe {
+        return $b === 0
+            ? TrySafe::failure(new RuntimeException("Can not divide by zero, bro"))
+            : TrySafe::success($a / $b);
+    }
+}
+
+$div = new DivImplementation();
+$outcome = $div->compute(10, 0);
+
+```
+
+Now we have the outcome of `compute` call safely wrapped in `TrySafe` instances and can do the further computations with it no matter if it is `Success` or `Failure`.
+ 
+You can use `TrySafe` to wrap unsafe (throwing) calls and chain the computations the same way as with `Option`:
+
+```php
+use Bonami\Collection\TrySafe;
+
+$getTheUltimateAnswerOrThrow = function(bool $shouldThrow): int {
+    if ($shouldThrow) {
+        throw new RuntimeException("There is no ultimate answer!");
+    }
+    return 42;
+};
+
+$makeTheAnswerBiggerOrThrow = function(int $answer): int {
+  if ($answer !== 42) {
+      throw new RuntimeException("Unlucky!");
+  }
+  return $answer + 624;
+};
+
+TrySafe::fromCallable(fn() => $getTheUltimateAnswerOrThrow(true))
+    ->flatMap(fn (int $answer) => TrySafe::fromCallable(fn() => $makeTheAnswerBiggerOrThrow($answer)))
+    ->resolve (
+        function(Throwable $e): void { 
+            print $e->getMessage();
+        },
+        function(int $biggerAnswer): void { 
+            print "The ultimate answer is {$biggerAnswer}";
+        }
+    );
+```
+ 
+_Disclaimer:_ As you probably noticed, we reflect possible exception in return type now, but on the other side, we've lost the information that wrapped success value is `float`.  This applies also to `Option`, `ArrayList` etc. Unfortunately there is no silver bullet solution, until PHP have the generics implemented (but hey, have look at [phpstan generics templates](https://medium.com/@ondrejmirtes/generics-in-php-using-phpdocs-14e7301953)). 
 
 ## License
 

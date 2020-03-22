@@ -131,11 +131,6 @@ parameters:
 			path: src/Bonami/Collection/ArrayList.php
 
 		-
-			message: "#^Method Bonami\\\\Collection\\\\ArrayList\\:\\:union\\(\\) should return static\\(Bonami\\\\Collection\\\\ArrayList\\) but returns Bonami\\\\Collection\\\\ArrayList\\.$#"
-			count: 1
-			path: src/Bonami/Collection/ArrayList.php
-
-		-
 			message: "#^Method Bonami\\\\Collection\\\\ArrayList\\:\\:filter\\(\\) return type has no value type specified in iterable type static\\(Bonami\\\\Collection\\\\ArrayList\\)\\.$#"
 			count: 1
 			path: src/Bonami/Collection/ArrayList.php
@@ -271,6 +266,231 @@ parameters:
 			path: src/Bonami/Collection/ArrayList.php
 
 		-
+			message: "#^Method Bonami\\\\Collection\\\\LazyList\\:\\:traverse\\(\\) has parameter \\$iterable with no value type specified in iterable type iterable\\.$#"
+			count: 1
+			path: src/Bonami/Collection/LazyList.php
+
+		-
+			message: "#^Method Bonami\\\\Collection\\\\LazyList\\:\\:traverse\\(\\) return type has no value type specified in iterable type Bonami\\\\Collection\\\\LazyList\\.$#"
+			count: 1
+			path: src/Bonami/Collection/LazyList.php
+
+		-
+			message: "#^Class Bonami\\\\Collection\\\\LazyList implements generic interface IteratorAggregate but does not specify its types\\: TKey, TValue$#"
+			count: 1
+			path: src/Bonami/Collection/LazyList.php
+
+		-
+			message: "#^Property Bonami\\\\Collection\\\\LazyList\\:\\:\\$items type has no value type specified in iterable type iterable\\.$#"
+			count: 1
+			path: src/Bonami/Collection/LazyList.php
+
+		-
+			message: "#^Method Bonami\\\\Collection\\\\LazyList\\:\\:__construct\\(\\) has parameter \\$iterable with no value type specified in iterable type iterable\\.$#"
+			count: 1
+			path: src/Bonami/Collection/LazyList.php
+
+		-
+			message: "#^Method Bonami\\\\Collection\\\\LazyList\\:\\:range\\(\\) return type has no value type specified in iterable type Bonami\\\\Collection\\\\LazyList\\.$#"
+			count: 1
+			path: src/Bonami/Collection/LazyList.php
+
+		-
+			message: "#^Unsafe usage of new static\\(\\)\\.$#"
+			count: 9
+			path: src/Bonami/Collection/LazyList.php
+
+		-
+			message: "#^Method Bonami\\\\Collection\\\\LazyList\\:\\:fill\\(\\) has parameter \\$item with no typehint specified\\.$#"
+			count: 1
+			path: src/Bonami/Collection/LazyList.php
+
+		-
+			message: "#^Method Bonami\\\\Collection\\\\LazyList\\:\\:fill\\(\\) return type has no value type specified in iterable type Bonami\\\\Collection\\\\LazyList\\.$#"
+			count: 1
+			path: src/Bonami/Collection/LazyList.php
+
+		-
+			message: "#^Method Bonami\\\\Collection\\\\LazyList\\:\\:fromEmpty\\(\\) return type has no value type specified in iterable type Bonami\\\\Collection\\\\LazyList\\.$#"
+			count: 1
+			path: src/Bonami/Collection/LazyList.php
+
+		-
+			message: "#^Method Bonami\\\\Collection\\\\LazyList\\:\\:fromArray\\(\\) return type has no value type specified in iterable type Bonami\\\\Collection\\\\LazyList\\.$#"
+			count: 1
+			path: src/Bonami/Collection/LazyList.php
+
+		-
+			message: "#^Method Bonami\\\\Collection\\\\LazyList\\:\\:fromTraversable\\(\\) has parameter \\$items with no value type specified in iterable type Traversable\\.$#"
+			count: 1
+			path: src/Bonami/Collection/LazyList.php
+
+		-
+			message: "#^Method Bonami\\\\Collection\\\\LazyList\\:\\:fromTraversable\\(\\) return type has no value type specified in iterable type Bonami\\\\Collection\\\\LazyList\\.$#"
+			count: 1
+			path: src/Bonami/Collection/LazyList.php
+
+		-
+			message: "#^Method Bonami\\\\Collection\\\\LazyList\\:\\:fromIterable\\(\\) has parameter \\$iterable with no value type specified in iterable type iterable\\.$#"
+			count: 1
+			path: src/Bonami/Collection/LazyList.php
+
+		-
+			message: "#^Method Bonami\\\\Collection\\\\LazyList\\:\\:fromIterable\\(\\) return type has no value type specified in iterable type Bonami\\\\Collection\\\\LazyList\\.$#"
+			count: 1
+			path: src/Bonami/Collection/LazyList.php
+
+		-
+			message: "#^Method Bonami\\\\Collection\\\\LazyList\\:\\:of\\(\\) has parameter \\$items with no typehint specified\\.$#"
+			count: 1
+			path: src/Bonami/Collection/LazyList.php
+
+		-
+			message: "#^Method Bonami\\\\Collection\\\\LazyList\\:\\:of\\(\\) return type has no value type specified in iterable type Bonami\\\\Collection\\\\LazyList\\.$#"
+			count: 1
+			path: src/Bonami/Collection/LazyList.php
+
+		-
+			message: "#^Method Bonami\\\\Collection\\\\LazyList\\:\\:map\\(\\) has no return typehint specified\\.$#"
+			count: 1
+			path: src/Bonami/Collection/LazyList.php
+
+		-
+			message: "#^Method Bonami\\\\Collection\\\\LazyList\\:\\:ap\\(\\) has parameter \\$lazyList with no value type specified in iterable type Bonami\\\\Collection\\\\LazyList\\.$#"
+			count: 1
+			path: src/Bonami/Collection/LazyList.php
+
+		-
+			message: "#^Method Bonami\\\\Collection\\\\LazyList\\:\\:ap\\(\\) return type has no value type specified in iterable type Bonami\\\\Collection\\\\LazyList\\.$#"
+			count: 1
+			path: src/Bonami/Collection/LazyList.php
+
+		-
+			message: "#^Method Bonami\\\\Collection\\\\LazyList\\:\\:flatMap\\(\\) return type has no value type specified in iterable type Bonami\\\\Collection\\\\LazyList\\.$#"
+			count: 1
+			path: src/Bonami/Collection/LazyList.php
+
+		-
+			message: "#^Method Bonami\\\\Collection\\\\LazyList\\:\\:flatten\\(\\) return type has no value type specified in iterable type Bonami\\\\Collection\\\\LazyList\\.$#"
+			count: 1
+			path: src/Bonami/Collection/LazyList.php
+
+		-
+			message: "#^Method Bonami\\\\Collection\\\\LazyList\\:\\:reduce\\(\\) has no return typehint specified\\.$#"
+			count: 1
+			path: src/Bonami/Collection/LazyList.php
+
+		-
+			message: "#^Method Bonami\\\\Collection\\\\LazyList\\:\\:reduce\\(\\) has parameter \\$initialReduction with no typehint specified\\.$#"
+			count: 1
+			path: src/Bonami/Collection/LazyList.php
+
+		-
+			message: "#^Method Bonami\\\\Collection\\\\LazyList\\:\\:scan\\(\\) return type has no value type specified in iterable type Bonami\\\\Collection\\\\LazyList\\.$#"
+			count: 1
+			path: src/Bonami/Collection/LazyList.php
+
+		-
+			message: "#^Method Bonami\\\\Collection\\\\LazyList\\:\\:takeWhile\\(\\) has no return typehint specified\\.$#"
+			count: 1
+			path: src/Bonami/Collection/LazyList.php
+
+		-
+			message: "#^Method Bonami\\\\Collection\\\\LazyList\\:\\:take\\(\\) has no return typehint specified\\.$#"
+			count: 1
+			path: src/Bonami/Collection/LazyList.php
+
+		-
+			message: "#^Method Bonami\\\\Collection\\\\LazyList\\:\\:chunk\\(\\) return type has no value type specified in iterable type Bonami\\\\Collection\\\\LazyList\\.$#"
+			count: 1
+			path: src/Bonami/Collection/LazyList.php
+
+		-
+			message: "#^Method Bonami\\\\Collection\\\\LazyList\\:\\:head\\(\\) return type has no value type specified in iterable type Bonami\\\\Collection\\\\Option\\.$#"
+			count: 1
+			path: src/Bonami/Collection/LazyList.php
+
+		-
+			message: "#^Method Bonami\\\\Collection\\\\LazyList\\:\\:last\\(\\) return type has no value type specified in iterable type Bonami\\\\Collection\\\\Option\\.$#"
+			count: 1
+			path: src/Bonami/Collection/LazyList.php
+
+		-
+			message: "#^Method Bonami\\\\Collection\\\\LazyList\\:\\:filter\\(\\) has no return typehint specified\\.$#"
+			count: 1
+			path: src/Bonami/Collection/LazyList.php
+
+		-
+			message: "#^Method Bonami\\\\Collection\\\\LazyList\\:\\:find\\(\\) return type has no value type specified in iterable type Bonami\\\\Collection\\\\Option\\.$#"
+			count: 1
+			path: src/Bonami/Collection/LazyList.php
+
+		-
+			message: "#^Method Bonami\\\\Collection\\\\LazyList\\:\\:dropWhile\\(\\) has no return typehint specified\\.$#"
+			count: 1
+			path: src/Bonami/Collection/LazyList.php
+
+		-
+			message: "#^Method Bonami\\\\Collection\\\\LazyList\\:\\:drop\\(\\) has no return typehint specified\\.$#"
+			count: 1
+			path: src/Bonami/Collection/LazyList.php
+
+		-
+			message: "#^Method Bonami\\\\Collection\\\\LazyList\\:\\:zip\\(\\) return type has no value type specified in iterable type Bonami\\\\Collection\\\\LazyList\\.$#"
+			count: 1
+			path: src/Bonami/Collection/LazyList.php
+
+		-
+			message: "#^Method Bonami\\\\Collection\\\\LazyList\\:\\:concat\\(\\) has no return typehint specified\\.$#"
+			count: 1
+			path: src/Bonami/Collection/LazyList.php
+
+		-
+			message: "#^Method Bonami\\\\Collection\\\\LazyList\\:\\:add\\(\\) has no return typehint specified\\.$#"
+			count: 1
+			path: src/Bonami/Collection/LazyList.php
+
+		-
+			message: "#^Method Bonami\\\\Collection\\\\LazyList\\:\\:add\\(\\) has parameter \\$items with no typehint specified\\.$#"
+			count: 1
+			path: src/Bonami/Collection/LazyList.php
+
+		-
+			message: "#^Method Bonami\\\\Collection\\\\LazyList\\:\\:insertOnPosition\\(\\) has no return typehint specified\\.$#"
+			count: 1
+			path: src/Bonami/Collection/LazyList.php
+
+		-
+			message: "#^Method Bonami\\\\Collection\\\\LazyList\\:\\:insertOnPosition\\(\\) has parameter \\$iterable with no value type specified in iterable type iterable\\.$#"
+			count: 1
+			path: src/Bonami/Collection/LazyList.php
+
+		-
+			message: "#^Method Bonami\\\\Collection\\\\LazyList\\:\\:toArray\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Bonami/Collection/LazyList.php
+
+		-
+			message: "#^Method Bonami\\\\Collection\\\\LazyList\\:\\:getIterator\\(\\) return type has no value type specified in iterable type Traversable\\<mixed, mixed\\>\\.$#"
+			count: 1
+			path: src/Bonami/Collection/LazyList.php
+
+		-
+			message: "#^Method Bonami\\\\Collection\\\\LazyList\\:\\:toList\\(\\) return type has no value type specified in iterable type Bonami\\\\Collection\\\\ArrayList\\.$#"
+			count: 1
+			path: src/Bonami/Collection/LazyList.php
+
+		-
+			message: "#^Method Bonami\\\\Collection\\\\LazyList\\:\\:createTraversable\\(\\) has parameter \\$iterable with no value type specified in iterable type iterable\\.$#"
+			count: 1
+			path: src/Bonami/Collection/LazyList.php
+
+		-
+			message: "#^Method Bonami\\\\Collection\\\\LazyList\\:\\:createTraversable\\(\\) return type has no value type specified in iterable type Traversable\\.$#"
+			count: 1
+			path: src/Bonami/Collection/LazyList.php
+
+		-
 			message: "#^Method Bonami\\\\Collection\\\\Option\\:\\:traverse\\(\\) has parameter \\$iterable with no value type specified in iterable type iterable\\.$#"
 			count: 1
 			path: src/Bonami/Collection/Option.php
@@ -301,72 +521,87 @@ parameters:
 			path: src/Bonami/Collection/Option.php
 
 		-
+			message: "#^Method Bonami\\\\Collection\\\\Option\\:\\:fromNullable\\(\\) has parameter \\$value with no typehint specified\\.$#"
+			count: 1
+			path: src/Bonami/Collection/Option.php
+
+		-
+			message: "#^Method Bonami\\\\Collection\\\\Option\\:\\:fromNullable\\(\\) return type has no value type specified in iterable type Bonami\\\\Collection\\\\Option\\.$#"
+			count: 1
+			path: src/Bonami/Collection/Option.php
+
+		-
 			message: "#^Method Bonami\\\\Collection\\\\Option\\:\\:none\\(\\) return type has no value type specified in iterable type Bonami\\\\Collection\\\\Option\\.$#"
 			count: 1
 			path: src/Bonami/Collection/Option.php
 
 		-
-			message: "#^Method class@anonymous/src/Bonami/Collection/Option\\.php\\:23\\:\\:map\\(\\) return type has no value type specified in iterable type Bonami\\\\Collection\\\\Option\\.$#"
+			message: "#^Method class@anonymous/src/Bonami/Collection/Option\\.php\\:27\\:\\:map\\(\\) return type has no value type specified in iterable type Bonami\\\\Collection\\\\Option\\.$#"
 			count: 1
 			path: src/Bonami/Collection/Option.php
 
 		-
-			message: "#^Method class@anonymous/src/Bonami/Collection/Option\\.php\\:23\\:\\:ap\\(\\) has parameter \\$option with no value type specified in iterable type Bonami\\\\Collection\\\\Option\\.$#"
+			message: "#^Method class@anonymous/src/Bonami/Collection/Option\\.php\\:27\\:\\:ap\\(\\) has parameter \\$option with no value type specified in iterable type Bonami\\\\Collection\\\\Option\\.$#"
 			count: 1
 			path: src/Bonami/Collection/Option.php
 
 		-
-			message: "#^Method class@anonymous/src/Bonami/Collection/Option\\.php\\:23\\:\\:ap\\(\\) return type has no value type specified in iterable type Bonami\\\\Collection\\\\Option\\.$#"
+			message: "#^Method class@anonymous/src/Bonami/Collection/Option\\.php\\:27\\:\\:ap\\(\\) return type has no value type specified in iterable type Bonami\\\\Collection\\\\Option\\.$#"
 			count: 1
 			path: src/Bonami/Collection/Option.php
 
 		-
-			message: "#^Method class@anonymous/src/Bonami/Collection/Option\\.php\\:23\\:\\:flatMap\\(\\) return type has no value type specified in iterable type Bonami\\\\Collection\\\\Option\\.$#"
+			message: "#^Method class@anonymous/src/Bonami/Collection/Option\\.php\\:27\\:\\:flatMap\\(\\) return type has no value type specified in iterable type Bonami\\\\Collection\\\\Option\\.$#"
 			count: 1
 			path: src/Bonami/Collection/Option.php
 
 		-
-			message: "#^Method class@anonymous/src/Bonami/Collection/Option\\.php\\:23\\:\\:filter\\(\\) return type has no value type specified in iterable type Bonami\\\\Collection\\\\Option\\.$#"
+			message: "#^Method class@anonymous/src/Bonami/Collection/Option\\.php\\:27\\:\\:filter\\(\\) return type has no value type specified in iterable type Bonami\\\\Collection\\\\Option\\.$#"
 			count: 1
 			path: src/Bonami/Collection/Option.php
 
 		-
-			message: "#^Method class@anonymous/src/Bonami/Collection/Option\\.php\\:23\\:\\:getUnsafe\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method class@anonymous/src/Bonami/Collection/Option\\.php\\:27\\:\\:getUnsafe\\(\\) has no return typehint specified\\.$#"
 			count: 1
 			path: src/Bonami/Collection/Option.php
 
 		-
-			message: "#^Method class@anonymous/src/Bonami/Collection/Option\\.php\\:23\\:\\:getOrElse\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method class@anonymous/src/Bonami/Collection/Option\\.php\\:27\\:\\:getOrElse\\(\\) has no return typehint specified\\.$#"
 			count: 1
 			path: src/Bonami/Collection/Option.php
 
 		-
-			message: "#^Method class@anonymous/src/Bonami/Collection/Option\\.php\\:23\\:\\:getOrElse\\(\\) has parameter \\$else with no typehint specified\\.$#"
+			message: "#^Method class@anonymous/src/Bonami/Collection/Option\\.php\\:27\\:\\:getOrElse\\(\\) has parameter \\$else with no typehint specified\\.$#"
 			count: 1
 			path: src/Bonami/Collection/Option.php
 
 		-
-			message: "#^Method class@anonymous/src/Bonami/Collection/Option\\.php\\:23\\:\\:toTrySafe\\(\\) return type has no value type specified in iterable type Bonami\\\\Collection\\\\TrySafe\\.$#"
+			message: "#^Method class@anonymous/src/Bonami/Collection/Option\\.php\\:27\\:\\:toTrySafe\\(\\) return type has no value type specified in iterable type Bonami\\\\Collection\\\\TrySafe\\.$#"
 			count: 1
 			path: src/Bonami/Collection/Option.php
 
 		-
-			message: "#^Method class@anonymous/src/Bonami/Collection/Option\\.php\\:23\\:\\:hashCode\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method class@anonymous/src/Bonami/Collection/Option\\.php\\:27\\:\\:hashCode\\(\\) has no return typehint specified\\.$#"
 			count: 1
 			path: src/Bonami/Collection/Option.php
 
 		-
-			message: "#^Method class@anonymous/src/Bonami/Collection/Option\\.php\\:23\\:\\:getIterator\\(\\) return type has no value type specified in iterable type Traversable\\<mixed, mixed\\>\\.$#"
+			message: "#^Method class@anonymous/src/Bonami/Collection/Option\\.php\\:27\\:\\:getIterator\\(\\) return type has no value type specified in iterable type Traversable\\<mixed, mixed\\>\\.$#"
 			count: 1
 			path: src/Bonami/Collection/Option.php
 
 		-
-			message: "#^Method class@anonymous/src/Bonami/Collection/Option\\.php\\:23\\:\\:orElse\\(\\) has parameter \\$else with no value type specified in iterable type Bonami\\\\Collection\\\\Option\\.$#"
+			message: "#^Method class@anonymous/src/Bonami/Collection/Option\\.php\\:27\\:\\:orElse\\(\\) has parameter \\$else with no value type specified in iterable type Bonami\\\\Collection\\\\Option\\.$#"
 			count: 1
 			path: src/Bonami/Collection/Option.php
 
 		-
-			message: "#^Method class@anonymous/src/Bonami/Collection/Option\\.php\\:23\\:\\:orElse\\(\\) return type has no value type specified in iterable type Bonami\\\\Collection\\\\Option\\.$#"
+			message: "#^Method class@anonymous/src/Bonami/Collection/Option\\.php\\:27\\:\\:orElse\\(\\) return type has no value type specified in iterable type Bonami\\\\Collection\\\\Option\\.$#"
+			count: 1
+			path: src/Bonami/Collection/Option.php
+
+		-
+			message: "#^Method class@anonymous/src/Bonami/Collection/Option\\.php\\:27\\:\\:resolve\\(\\) has no return typehint specified\\.$#"
 			count: 1
 			path: src/Bonami/Collection/Option.php
 
@@ -381,77 +616,82 @@ parameters:
 			path: src/Bonami/Collection/Option.php
 
 		-
-			message: "#^Property class@anonymous/src/Bonami/Collection/Option\\.php\\:78\\:\\:\\$value has no typehint specified\\.$#"
+			message: "#^Property class@anonymous/src/Bonami/Collection/Option\\.php\\:86\\:\\:\\$value has no typehint specified\\.$#"
 			count: 1
 			path: src/Bonami/Collection/Option.php
 
 		-
-			message: "#^Method class@anonymous/src/Bonami/Collection/Option\\.php\\:78\\:\\:__construct\\(\\) has parameter \\$value with no typehint specified\\.$#"
+			message: "#^Method class@anonymous/src/Bonami/Collection/Option\\.php\\:86\\:\\:__construct\\(\\) has parameter \\$value with no typehint specified\\.$#"
 			count: 1
 			path: src/Bonami/Collection/Option.php
 
 		-
-			message: "#^Method class@anonymous/src/Bonami/Collection/Option\\.php\\:78\\:\\:ap\\(\\) has parameter \\$option with no value type specified in iterable type Bonami\\\\Collection\\\\Option\\.$#"
+			message: "#^Method class@anonymous/src/Bonami/Collection/Option\\.php\\:86\\:\\:ap\\(\\) has parameter \\$option with no value type specified in iterable type Bonami\\\\Collection\\\\Option\\.$#"
 			count: 1
 			path: src/Bonami/Collection/Option.php
 
 		-
-			message: "#^Method class@anonymous/src/Bonami/Collection/Option\\.php\\:78\\:\\:ap\\(\\) return type has no value type specified in iterable type Bonami\\\\Collection\\\\Option\\.$#"
+			message: "#^Method class@anonymous/src/Bonami/Collection/Option\\.php\\:86\\:\\:ap\\(\\) return type has no value type specified in iterable type Bonami\\\\Collection\\\\Option\\.$#"
 			count: 1
 			path: src/Bonami/Collection/Option.php
 
 		-
-			message: "#^Method class@anonymous/src/Bonami/Collection/Option\\.php\\:78\\:\\:map\\(\\) return type has no value type specified in iterable type Bonami\\\\Collection\\\\Option\\.$#"
+			message: "#^Method class@anonymous/src/Bonami/Collection/Option\\.php\\:86\\:\\:map\\(\\) return type has no value type specified in iterable type Bonami\\\\Collection\\\\Option\\.$#"
 			count: 1
 			path: src/Bonami/Collection/Option.php
 
 		-
-			message: "#^Method class@anonymous/src/Bonami/Collection/Option\\.php\\:78\\:\\:flatMap\\(\\) return type has no value type specified in iterable type Bonami\\\\Collection\\\\Option\\.$#"
+			message: "#^Method class@anonymous/src/Bonami/Collection/Option\\.php\\:86\\:\\:flatMap\\(\\) return type has no value type specified in iterable type Bonami\\\\Collection\\\\Option\\.$#"
 			count: 1
 			path: src/Bonami/Collection/Option.php
 
 		-
-			message: "#^Method class@anonymous/src/Bonami/Collection/Option\\.php\\:78\\:\\:filter\\(\\) return type has no value type specified in iterable type Bonami\\\\Collection\\\\Option\\.$#"
+			message: "#^Method class@anonymous/src/Bonami/Collection/Option\\.php\\:86\\:\\:filter\\(\\) return type has no value type specified in iterable type Bonami\\\\Collection\\\\Option\\.$#"
 			count: 1
 			path: src/Bonami/Collection/Option.php
 
 		-
-			message: "#^Method class@anonymous/src/Bonami/Collection/Option\\.php\\:78\\:\\:getUnsafe\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method class@anonymous/src/Bonami/Collection/Option\\.php\\:86\\:\\:getUnsafe\\(\\) has no return typehint specified\\.$#"
 			count: 1
 			path: src/Bonami/Collection/Option.php
 
 		-
-			message: "#^Method class@anonymous/src/Bonami/Collection/Option\\.php\\:78\\:\\:getOrElse\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method class@anonymous/src/Bonami/Collection/Option\\.php\\:86\\:\\:getOrElse\\(\\) has no return typehint specified\\.$#"
 			count: 1
 			path: src/Bonami/Collection/Option.php
 
 		-
-			message: "#^Method class@anonymous/src/Bonami/Collection/Option\\.php\\:78\\:\\:getOrElse\\(\\) has parameter \\$else with no typehint specified\\.$#"
+			message: "#^Method class@anonymous/src/Bonami/Collection/Option\\.php\\:86\\:\\:getOrElse\\(\\) has parameter \\$else with no typehint specified\\.$#"
 			count: 1
 			path: src/Bonami/Collection/Option.php
 
 		-
-			message: "#^Method class@anonymous/src/Bonami/Collection/Option\\.php\\:78\\:\\:toTrySafe\\(\\) return type has no value type specified in iterable type Bonami\\\\Collection\\\\TrySafe\\.$#"
+			message: "#^Method class@anonymous/src/Bonami/Collection/Option\\.php\\:86\\:\\:toTrySafe\\(\\) return type has no value type specified in iterable type Bonami\\\\Collection\\\\TrySafe\\.$#"
 			count: 1
 			path: src/Bonami/Collection/Option.php
 
 		-
-			message: "#^Method class@anonymous/src/Bonami/Collection/Option\\.php\\:78\\:\\:hashCode\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method class@anonymous/src/Bonami/Collection/Option\\.php\\:86\\:\\:hashCode\\(\\) has no return typehint specified\\.$#"
 			count: 1
 			path: src/Bonami/Collection/Option.php
 
 		-
-			message: "#^Method class@anonymous/src/Bonami/Collection/Option\\.php\\:78\\:\\:getIterator\\(\\) return type has no value type specified in iterable type Traversable\\<mixed, mixed\\>\\.$#"
+			message: "#^Method class@anonymous/src/Bonami/Collection/Option\\.php\\:86\\:\\:getIterator\\(\\) return type has no value type specified in iterable type Traversable\\<mixed, mixed\\>\\.$#"
 			count: 1
 			path: src/Bonami/Collection/Option.php
 
 		-
-			message: "#^Method class@anonymous/src/Bonami/Collection/Option\\.php\\:78\\:\\:orElse\\(\\) has parameter \\$else with no value type specified in iterable type Bonami\\\\Collection\\\\Option\\.$#"
+			message: "#^Method class@anonymous/src/Bonami/Collection/Option\\.php\\:86\\:\\:orElse\\(\\) has parameter \\$else with no value type specified in iterable type Bonami\\\\Collection\\\\Option\\.$#"
 			count: 1
 			path: src/Bonami/Collection/Option.php
 
 		-
-			message: "#^Method class@anonymous/src/Bonami/Collection/Option\\.php\\:78\\:\\:orElse\\(\\) return type has no value type specified in iterable type Bonami\\\\Collection\\\\Option\\.$#"
+			message: "#^Method class@anonymous/src/Bonami/Collection/Option\\.php\\:86\\:\\:orElse\\(\\) return type has no value type specified in iterable type Bonami\\\\Collection\\\\Option\\.$#"
+			count: 1
+			path: src/Bonami/Collection/Option.php
+
+		-
+			message: "#^Method class@anonymous/src/Bonami/Collection/Option\\.php\\:86\\:\\:resolve\\(\\) has no return typehint specified\\.$#"
 			count: 1
 			path: src/Bonami/Collection/Option.php
 
@@ -521,279 +761,14 @@ parameters:
 			path: src/Bonami/Collection/Option.php
 
 		-
-			message: "#^Method Bonami\\\\Collection\\\\Option\\:\\:equals\\(\\) has parameter \\$value with no typehint specified\\.$#"
+			message: "#^Method Bonami\\\\Collection\\\\Option\\:\\:resolve\\(\\) has no return typehint specified\\.$#"
 			count: 1
 			path: src/Bonami/Collection/Option.php
 
 		-
-			message: "#^Method Bonami\\\\Collection\\\\LazyList\\:\\:traverse\\(\\) has parameter \\$iterable with no value type specified in iterable type iterable\\.$#"
+			message: "#^Method Bonami\\\\Collection\\\\Option\\:\\:equals\\(\\) has parameter \\$value with no typehint specified\\.$#"
 			count: 1
-			path: src/Bonami/Collection/LazyList.php
-
-		-
-			message: "#^Method Bonami\\\\Collection\\\\LazyList\\:\\:traverse\\(\\) return type has no value type specified in iterable type Bonami\\\\Collection\\\\LazyList\\.$#"
-			count: 1
-			path: src/Bonami/Collection/LazyList.php
-
-		-
-			message: "#^Class Bonami\\\\Collection\\\\LazyList implements generic interface IteratorAggregate but does not specify its types\\: TKey, TValue$#"
-			count: 1
-			path: src/Bonami/Collection/LazyList.php
-
-		-
-			message: "#^Property Bonami\\\\Collection\\\\LazyList\\:\\:\\$items type has no value type specified in iterable type iterable\\.$#"
-			count: 1
-			path: src/Bonami/Collection/LazyList.php
-
-		-
-			message: "#^Method Bonami\\\\Collection\\\\LazyList\\:\\:__construct\\(\\) has parameter \\$iterable with no value type specified in iterable type iterable\\.$#"
-			count: 1
-			path: src/Bonami/Collection/LazyList.php
-
-		-
-			message: "#^Method Bonami\\\\Collection\\\\LazyList\\:\\:range\\(\\) return type has no value type specified in iterable type Bonami\\\\Collection\\\\LazyList\\.$#"
-			count: 1
-			path: src/Bonami/Collection/LazyList.php
-
-		-
-			message: "#^Unsafe usage of new static\\(\\)\\.$#"
-			count: 11
-			path: src/Bonami/Collection/LazyList.php
-
-		-
-			message: "#^Method Bonami\\\\Collection\\\\LazyList\\:\\:fill\\(\\) has parameter \\$item with no typehint specified\\.$#"
-			count: 1
-			path: src/Bonami/Collection/LazyList.php
-
-		-
-			message: "#^Method Bonami\\\\Collection\\\\LazyList\\:\\:fill\\(\\) return type has no value type specified in iterable type Bonami\\\\Collection\\\\LazyList\\.$#"
-			count: 1
-			path: src/Bonami/Collection/LazyList.php
-
-		-
-			message: "#^Method Bonami\\\\Collection\\\\LazyList\\:\\:fromEmpty\\(\\) return type has no value type specified in iterable type Bonami\\\\Collection\\\\LazyList\\.$#"
-			count: 1
-			path: src/Bonami/Collection/LazyList.php
-
-		-
-			message: "#^Method Bonami\\\\Collection\\\\LazyList\\:\\:fromArray\\(\\) return type has no value type specified in iterable type Bonami\\\\Collection\\\\LazyList\\.$#"
-			count: 1
-			path: src/Bonami/Collection/LazyList.php
-
-		-
-			message: "#^Method Bonami\\\\Collection\\\\LazyList\\:\\:fromTraversable\\(\\) has parameter \\$items with no value type specified in iterable type Traversable\\.$#"
-			count: 1
-			path: src/Bonami/Collection/LazyList.php
-
-		-
-			message: "#^Method Bonami\\\\Collection\\\\LazyList\\:\\:fromTraversable\\(\\) return type has no value type specified in iterable type Bonami\\\\Collection\\\\LazyList\\.$#"
-			count: 1
-			path: src/Bonami/Collection/LazyList.php
-
-		-
-			message: "#^Method Bonami\\\\Collection\\\\LazyList\\:\\:fromIterable\\(\\) has parameter \\$iterable with no value type specified in iterable type iterable\\.$#"
-			count: 1
-			path: src/Bonami/Collection/LazyList.php
-
-		-
-			message: "#^Method Bonami\\\\Collection\\\\LazyList\\:\\:fromIterable\\(\\) return type has no value type specified in iterable type Bonami\\\\Collection\\\\LazyList\\.$#"
-			count: 1
-			path: src/Bonami/Collection/LazyList.php
-
-		-
-			message: "#^Method Bonami\\\\Collection\\\\LazyList\\:\\:of\\(\\) has parameter \\$items with no typehint specified\\.$#"
-			count: 1
-			path: src/Bonami/Collection/LazyList.php
-
-		-
-			message: "#^Method Bonami\\\\Collection\\\\LazyList\\:\\:of\\(\\) return type has no value type specified in iterable type Bonami\\\\Collection\\\\LazyList\\.$#"
-			count: 1
-			path: src/Bonami/Collection/LazyList.php
-
-		-
-			message: "#^Method Bonami\\\\Collection\\\\LazyList\\:\\:map\\(\\) return type has no value type specified in iterable type Bonami\\\\Collection\\\\LazyList\\.$#"
-			count: 1
-			path: src/Bonami/Collection/LazyList.php
-
-		-
-			message: "#^Method Bonami\\\\Collection\\\\LazyList\\:\\:ap\\(\\) has parameter \\$lazyList with no value type specified in iterable type Bonami\\\\Collection\\\\LazyList\\.$#"
-			count: 1
-			path: src/Bonami/Collection/LazyList.php
-
-		-
-			message: "#^Method Bonami\\\\Collection\\\\LazyList\\:\\:ap\\(\\) return type has no value type specified in iterable type Bonami\\\\Collection\\\\LazyList\\.$#"
-			count: 1
-			path: src/Bonami/Collection/LazyList.php
-
-		-
-			message: "#^Method Bonami\\\\Collection\\\\LazyList\\:\\:flatMap\\(\\) return type has no value type specified in iterable type Bonami\\\\Collection\\\\LazyList\\.$#"
-			count: 1
-			path: src/Bonami/Collection/LazyList.php
-
-		-
-			message: "#^Method Bonami\\\\Collection\\\\LazyList\\:\\:flatten\\(\\) return type has no value type specified in iterable type Bonami\\\\Collection\\\\LazyList\\.$#"
-			count: 1
-			path: src/Bonami/Collection/LazyList.php
-
-		-
-			message: "#^Method Bonami\\\\Collection\\\\LazyList\\:\\:reduce\\(\\) has no return typehint specified\\.$#"
-			count: 1
-			path: src/Bonami/Collection/LazyList.php
-
-		-
-			message: "#^Method Bonami\\\\Collection\\\\LazyList\\:\\:reduce\\(\\) has parameter \\$initialReduction with no typehint specified\\.$#"
-			count: 1
-			path: src/Bonami/Collection/LazyList.php
-
-		-
-			message: "#^Method Bonami\\\\Collection\\\\LazyList\\:\\:scan\\(\\) return type has no value type specified in iterable type Bonami\\\\Collection\\\\LazyList\\.$#"
-			count: 1
-			path: src/Bonami/Collection/LazyList.php
-
-		-
-			message: "#^Method Bonami\\\\Collection\\\\LazyList\\:\\:takeWhile\\(\\) return type has no value type specified in iterable type Bonami\\\\Collection\\\\LazyList\\.$#"
-			count: 1
-			path: src/Bonami/Collection/LazyList.php
-
-		-
-			message: "#^Method Bonami\\\\Collection\\\\LazyList\\:\\:take\\(\\) return type has no value type specified in iterable type Bonami\\\\Collection\\\\LazyList\\.$#"
-			count: 1
-			path: src/Bonami/Collection/LazyList.php
-
-		-
-			message: "#^Method Bonami\\\\Collection\\\\LazyList\\:\\:chunk\\(\\) return type has no value type specified in iterable type Bonami\\\\Collection\\\\LazyList\\.$#"
-			count: 1
-			path: src/Bonami/Collection/LazyList.php
-
-		-
-			message: "#^Method Bonami\\\\Collection\\\\LazyList\\:\\:head\\(\\) return type has no value type specified in iterable type Bonami\\\\Collection\\\\Option\\.$#"
-			count: 1
-			path: src/Bonami/Collection/LazyList.php
-
-		-
-			message: "#^Method Bonami\\\\Collection\\\\LazyList\\:\\:last\\(\\) return type has no value type specified in iterable type Bonami\\\\Collection\\\\Option\\.$#"
-			count: 1
-			path: src/Bonami/Collection/LazyList.php
-
-		-
-			message: "#^Method Bonami\\\\Collection\\\\LazyList\\:\\:filter\\(\\) return type has no value type specified in iterable type Bonami\\\\Collection\\\\LazyList\\.$#"
-			count: 1
-			path: src/Bonami/Collection/LazyList.php
-
-		-
-			message: "#^Method Bonami\\\\Collection\\\\LazyList\\:\\:find\\(\\) return type has no value type specified in iterable type Bonami\\\\Collection\\\\Option\\.$#"
-			count: 1
-			path: src/Bonami/Collection/LazyList.php
-
-		-
-			message: "#^Method Bonami\\\\Collection\\\\LazyList\\:\\:dropWhile\\(\\) return type has no value type specified in iterable type Bonami\\\\Collection\\\\LazyList\\.$#"
-			count: 1
-			path: src/Bonami/Collection/LazyList.php
-
-		-
-			message: "#^Method Bonami\\\\Collection\\\\LazyList\\:\\:drop\\(\\) return type has no value type specified in iterable type Bonami\\\\Collection\\\\LazyList\\.$#"
-			count: 1
-			path: src/Bonami/Collection/LazyList.php
-
-		-
-			message: "#^Method Bonami\\\\Collection\\\\LazyList\\:\\:zip\\(\\) return type has no value type specified in iterable type Bonami\\\\Collection\\\\LazyList\\.$#"
-			count: 1
-			path: src/Bonami/Collection/LazyList.php
-
-		-
-			message: "#^Method Bonami\\\\Collection\\\\LazyList\\:\\:concat\\(\\) return type has no value type specified in iterable type Bonami\\\\Collection\\\\LazyList\\.$#"
-			count: 1
-			path: src/Bonami/Collection/LazyList.php
-
-		-
-			message: "#^Method Bonami\\\\Collection\\\\LazyList\\:\\:add\\(\\) has parameter \\$items with no typehint specified\\.$#"
-			count: 1
-			path: src/Bonami/Collection/LazyList.php
-
-		-
-			message: "#^Method Bonami\\\\Collection\\\\LazyList\\:\\:add\\(\\) return type has no value type specified in iterable type Bonami\\\\Collection\\\\LazyList\\.$#"
-			count: 1
-			path: src/Bonami/Collection/LazyList.php
-
-		-
-			message: "#^Method Bonami\\\\Collection\\\\LazyList\\:\\:insertOnPosition\\(\\) has parameter \\$iterable with no value type specified in iterable type iterable\\.$#"
-			count: 1
-			path: src/Bonami/Collection/LazyList.php
-
-		-
-			message: "#^Method Bonami\\\\Collection\\\\LazyList\\:\\:insertOnPosition\\(\\) return type has no value type specified in iterable type Bonami\\\\Collection\\\\LazyList\\.$#"
-			count: 1
-			path: src/Bonami/Collection/LazyList.php
-
-		-
-			message: "#^Method Bonami\\\\Collection\\\\LazyList\\:\\:toArray\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Bonami/Collection/LazyList.php
-
-		-
-			message: "#^Method Bonami\\\\Collection\\\\LazyList\\:\\:getIterator\\(\\) return type has no value type specified in iterable type Traversable\\<mixed, mixed\\>\\.$#"
-			count: 1
-			path: src/Bonami/Collection/LazyList.php
-
-		-
-			message: "#^Method Bonami\\\\Collection\\\\LazyList\\:\\:toList\\(\\) return type has no value type specified in iterable type Bonami\\\\Collection\\\\ArrayList\\.$#"
-			count: 1
-			path: src/Bonami/Collection/LazyList.php
-
-		-
-			message: "#^Method Bonami\\\\Collection\\\\LazyList\\:\\:createTraversable\\(\\) has parameter \\$iterable with no value type specified in iterable type iterable\\.$#"
-			count: 1
-			path: src/Bonami/Collection/LazyList.php
-
-		-
-			message: "#^Method Bonami\\\\Collection\\\\LazyList\\:\\:createTraversable\\(\\) return type has no value type specified in iterable type Traversable\\.$#"
-			count: 1
-			path: src/Bonami/Collection/LazyList.php
-
-		-
-			message: "#^Method Bonami\\\\Collection\\\\LazyList\\:\\:map\\(\\) has no return typehint specified\\.$#"
-			count: 1
-			path: src/Bonami/Collection/LazyList.php
-
-		-
-			message: "#^Method Bonami\\\\Collection\\\\LazyList\\:\\:takeWhile\\(\\) has no return typehint specified\\.$#"
-			count: 1
-			path: src/Bonami/Collection/LazyList.php
-
-		-
-			message: "#^Method Bonami\\\\Collection\\\\LazyList\\:\\:take\\(\\) has no return typehint specified\\.$#"
-			count: 1
-			path: src/Bonami/Collection/LazyList.php
-
-		-
-			message: "#^Method Bonami\\\\Collection\\\\LazyList\\:\\:filter\\(\\) has no return typehint specified\\.$#"
-			count: 1
-			path: src/Bonami/Collection/LazyList.php
-
-		-
-			message: "#^Method Bonami\\\\Collection\\\\LazyList\\:\\:dropWhile\\(\\) has no return typehint specified\\.$#"
-			count: 1
-			path: src/Bonami/Collection/LazyList.php
-
-		-
-			message: "#^Method Bonami\\\\Collection\\\\LazyList\\:\\:drop\\(\\) has no return typehint specified\\.$#"
-			count: 1
-			path: src/Bonami/Collection/LazyList.php
-
-		-
-			message: "#^Method Bonami\\\\Collection\\\\LazyList\\:\\:concat\\(\\) has no return typehint specified\\.$#"
-			count: 1
-			path: src/Bonami/Collection/LazyList.php
-
-		-
-			message: "#^Method Bonami\\\\Collection\\\\LazyList\\:\\:add\\(\\) has no return typehint specified\\.$#"
-			count: 1
-			path: src/Bonami/Collection/LazyList.php
-
-		-
-			message: "#^Method Bonami\\\\Collection\\\\LazyList\\:\\:insertOnPosition\\(\\) has no return typehint specified\\.$#"
-			count: 1
-			path: src/Bonami/Collection/LazyList.php
+			path: src/Bonami/Collection/Option.php
 
 		-
 			message: "#^Method Bonami\\\\Collection\\\\TrySafe\\:\\:traverse\\(\\) has parameter \\$iterable with no value type specified in iterable type iterable\\.$#"
@@ -891,6 +866,11 @@ parameters:
 			path: src/Bonami/Collection/TrySafe.php
 
 		-
+			message: "#^Method class@anonymous/src/Bonami/Collection/TrySafe\\.php\\:29\\:\\:resolve\\(\\) has no return typehint specified\\.$#"
+			count: 1
+			path: src/Bonami/Collection/TrySafe.php
+
+		-
 			message: "#^Method class@anonymous/src/Bonami/Collection/TrySafe\\.php\\:29\\:\\:getIterator\\(\\) return type has no value type specified in iterable type Traversable\\<mixed, mixed\\>\\.$#"
 			count: 1
 			path: src/Bonami/Collection/TrySafe.php
@@ -906,57 +886,62 @@ parameters:
 			path: src/Bonami/Collection/TrySafe.php
 
 		-
-			message: "#^Method class@anonymous/src/Bonami/Collection/TrySafe\\.php\\:101\\:\\:map\\(\\) return type has no value type specified in iterable type Bonami\\\\Collection\\\\TrySafe\\.$#"
+			message: "#^Method class@anonymous/src/Bonami/Collection/TrySafe\\.php\\:105\\:\\:map\\(\\) return type has no value type specified in iterable type Bonami\\\\Collection\\\\TrySafe\\.$#"
 			count: 1
 			path: src/Bonami/Collection/TrySafe.php
 
 		-
-			message: "#^Method class@anonymous/src/Bonami/Collection/TrySafe\\.php\\:101\\:\\:ap\\(\\) has parameter \\$trySafe with no value type specified in iterable type Bonami\\\\Collection\\\\TrySafe\\.$#"
+			message: "#^Method class@anonymous/src/Bonami/Collection/TrySafe\\.php\\:105\\:\\:ap\\(\\) has parameter \\$trySafe with no value type specified in iterable type Bonami\\\\Collection\\\\TrySafe\\.$#"
 			count: 1
 			path: src/Bonami/Collection/TrySafe.php
 
 		-
-			message: "#^Method class@anonymous/src/Bonami/Collection/TrySafe\\.php\\:101\\:\\:ap\\(\\) return type has no value type specified in iterable type Bonami\\\\Collection\\\\TrySafe\\.$#"
+			message: "#^Method class@anonymous/src/Bonami/Collection/TrySafe\\.php\\:105\\:\\:ap\\(\\) return type has no value type specified in iterable type Bonami\\\\Collection\\\\TrySafe\\.$#"
 			count: 1
 			path: src/Bonami/Collection/TrySafe.php
 
 		-
-			message: "#^Method class@anonymous/src/Bonami/Collection/TrySafe\\.php\\:101\\:\\:flatMap\\(\\) return type has no value type specified in iterable type Bonami\\\\Collection\\\\TrySafe\\.$#"
+			message: "#^Method class@anonymous/src/Bonami/Collection/TrySafe\\.php\\:105\\:\\:flatMap\\(\\) return type has no value type specified in iterable type Bonami\\\\Collection\\\\TrySafe\\.$#"
 			count: 1
 			path: src/Bonami/Collection/TrySafe.php
 
 		-
-			message: "#^Method class@anonymous/src/Bonami/Collection/TrySafe\\.php\\:101\\:\\:recover\\(\\) return type has no value type specified in iterable type Bonami\\\\Collection\\\\TrySafe\\.$#"
+			message: "#^Method class@anonymous/src/Bonami/Collection/TrySafe\\.php\\:105\\:\\:recover\\(\\) return type has no value type specified in iterable type Bonami\\\\Collection\\\\TrySafe\\.$#"
 			count: 1
 			path: src/Bonami/Collection/TrySafe.php
 
 		-
-			message: "#^Method class@anonymous/src/Bonami/Collection/TrySafe\\.php\\:101\\:\\:getUnsafe\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method class@anonymous/src/Bonami/Collection/TrySafe\\.php\\:105\\:\\:getUnsafe\\(\\) has no return typehint specified\\.$#"
 			count: 1
 			path: src/Bonami/Collection/TrySafe.php
 
 		-
-			message: "#^Method class@anonymous/src/Bonami/Collection/TrySafe\\.php\\:101\\:\\:getOrElse\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method class@anonymous/src/Bonami/Collection/TrySafe\\.php\\:105\\:\\:getOrElse\\(\\) has no return typehint specified\\.$#"
 			count: 1
 			path: src/Bonami/Collection/TrySafe.php
 
 		-
-			message: "#^Method class@anonymous/src/Bonami/Collection/TrySafe\\.php\\:101\\:\\:getOrElse\\(\\) has parameter \\$else with no typehint specified\\.$#"
+			message: "#^Method class@anonymous/src/Bonami/Collection/TrySafe\\.php\\:105\\:\\:getOrElse\\(\\) has parameter \\$else with no typehint specified\\.$#"
 			count: 1
 			path: src/Bonami/Collection/TrySafe.php
 
 		-
-			message: "#^Method class@anonymous/src/Bonami/Collection/TrySafe\\.php\\:101\\:\\:toOption\\(\\) return type has no value type specified in iterable type Bonami\\\\Collection\\\\Option\\.$#"
+			message: "#^Method class@anonymous/src/Bonami/Collection/TrySafe\\.php\\:105\\:\\:toOption\\(\\) return type has no value type specified in iterable type Bonami\\\\Collection\\\\Option\\.$#"
 			count: 1
 			path: src/Bonami/Collection/TrySafe.php
 
 		-
-			message: "#^Method class@anonymous/src/Bonami/Collection/TrySafe\\.php\\:101\\:\\:getIterator\\(\\) return type has no value type specified in iterable type Traversable\\<mixed, mixed\\>\\.$#"
+			message: "#^Method class@anonymous/src/Bonami/Collection/TrySafe\\.php\\:105\\:\\:resolve\\(\\) has no return typehint specified\\.$#"
 			count: 1
 			path: src/Bonami/Collection/TrySafe.php
 
 		-
-			message: "#^Method class@anonymous/src/Bonami/Collection/TrySafe\\.php\\:101\\:\\:hashCode\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method class@anonymous/src/Bonami/Collection/TrySafe\\.php\\:105\\:\\:getIterator\\(\\) return type has no value type specified in iterable type Traversable\\<mixed, mixed\\>\\.$#"
+			count: 1
+			path: src/Bonami/Collection/TrySafe.php
+
+		-
+			message: "#^Method class@anonymous/src/Bonami/Collection/TrySafe\\.php\\:105\\:\\:hashCode\\(\\) has no return typehint specified\\.$#"
 			count: 1
 			path: src/Bonami/Collection/TrySafe.php
 
@@ -1017,6 +1002,11 @@ parameters:
 
 		-
 			message: "#^Method Bonami\\\\Collection\\\\TrySafe\\:\\:toOption\\(\\) return type has no value type specified in iterable type Bonami\\\\Collection\\\\Option\\.$#"
+			count: 1
+			path: src/Bonami/Collection/TrySafe.php
+
+		-
+			message: "#^Method Bonami\\\\Collection\\\\TrySafe\\:\\:resolve\\(\\) has no return typehint specified\\.$#"
 			count: 1
 			path: src/Bonami/Collection/TrySafe.php
 
@@ -1441,7 +1431,7 @@ parameters:
 			path: tests/Bonami/Collection/TrySafeTest.php
 
 		-
-			message: "#^Method class@anonymous/tests/Bonami/Collection/TrySafeTest\\.php\\:208\\:\\:hashCode\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method class@anonymous/tests/Bonami/Collection/TrySafeTest\\.php\\:234\\:\\:hashCode\\(\\) has no return typehint specified\\.$#"
 			count: 1
 			path: tests/Bonami/Collection/TrySafeTest.php
 
@@ -1519,3 +1509,24 @@ parameters:
 			message: "#^Function Bonami\\\\Collection\\\\testApplicativeComposition\\(\\) has parameter \\$applicativeG with no typehint specified\\.$#"
 			count: 1
 			path: tests/Bonami/Collection/helpers.php
+
+		-
+			message: "#^Function Bonami\\\\Collection\\\\createInvokableSpy\\(\\) has no return typehint specified\\.$#"
+			count: 1
+			path: tests/Bonami/Collection/helpers.php
+
+		-
+			message: "#^Property class@anonymous/tests/Bonami/Collection/helpers\\.php\\:75\\:\\:\\$calls has no typehint specified\\.$#"
+			count: 1
+			path: tests/Bonami/Collection/helpers.php
+
+		-
+			message: "#^Method class@anonymous/tests/Bonami/Collection/helpers\\.php\\:75\\:\\:__invoke\\(\\) has no return typehint specified\\.$#"
+			count: 1
+			path: tests/Bonami/Collection/helpers.php
+
+		-
+			message: "#^Method class@anonymous/tests/Bonami/Collection/helpers\\.php\\:75\\:\\:getCalls\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: tests/Bonami/Collection/helpers.php
+

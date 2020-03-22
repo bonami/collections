@@ -26,6 +26,11 @@ class OptionTest extends TestCase {
 		self::assertTrue($fromNotNull->isDefined());
 	}
 
+	public function testCreateFromNullable(): void {
+		self::assertTrue(Option::fromNullable("Look, I exist")->isDefined());
+		self::assertFalse(Option::fromNullable(null)->isDefined());
+	}
+
 	public function testLift(): void {
 
 		$none = Option::none();
@@ -231,6 +236,30 @@ class OptionTest extends TestCase {
 
 		$this->equals($some42, $some42->orElse($some666));
 		$this->equals($some666, $none->orElse($some666));
+	}
+
+	public function testResolveSome(): void {
+		$handleSomeSpy = createInvokableSpy();
+		$handleNoneSpy = createInvokableSpy();
+
+		Option::some(666)
+			->resolve($handleNoneSpy, $handleSomeSpy);
+
+		self::assertCount(1, $handleSomeSpy->getCalls());
+		self::assertCount(0, $handleNoneSpy->getCalls());
+		self::assertEquals([[666]], $handleSomeSpy->getCalls());
+	}
+
+	public function testResolveNone(): void {
+		$handleSomeSpy = createInvokableSpy();
+		$handleNoneSpy = createInvokableSpy();
+
+		Option::none()
+			->resolve($handleNoneSpy, $handleSomeSpy);
+
+		self::assertCount(0, $handleSomeSpy->getCalls());
+		self::assertCount(1, $handleNoneSpy->getCalls());
+		self::assertSame([[]], $handleNoneSpy->getCalls());
 	}
 
 	public function testLaws(): void {

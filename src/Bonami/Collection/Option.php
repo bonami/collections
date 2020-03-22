@@ -19,6 +19,10 @@ abstract class Option implements IHashable, IteratorAggregate {
 		return self::some($value);
 	}
 
+	final public static function fromNullable($value): Option {
+		return $value === null ? self::none() : self::some($value);
+	}
+
 	final public static function none(): Option {
 		return self::$none ?? self::$none = new class extends Option {
 
@@ -65,6 +69,10 @@ abstract class Option implements IHashable, IteratorAggregate {
 
 			public function orElse(Option $else): Option {
 				return $else;
+			}
+
+			public function resolve(callable $handleNone, callable $handleSome) {
+				return $handleNone();
 			}
 
 			public function __toString(): string {
@@ -135,6 +143,10 @@ abstract class Option implements IHashable, IteratorAggregate {
 				return $this;
 			}
 
+			public function resolve(callable $handleNone, callable $handleSome) {
+				return $handleSome($this->value);
+			}
+
 			public function __toString(): string {
 				return 'Some(' . $this->value . ')';
 			}
@@ -167,6 +179,8 @@ abstract class Option implements IHashable, IteratorAggregate {
 	abstract public function toTrySafe(): TrySafe;
 
 	abstract public function orElse(self $else): self;
+
+	abstract public function resolve(callable $handleNone, callable $handleSome);
 
 	final public function equals($value): bool {
 		return $value instanceof Option
