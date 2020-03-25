@@ -341,6 +341,9 @@ class LazyList implements IteratorAggregate {
 			return new ArrayIterator($iterable);
 		}
 
-		throw new InvalidArgumentException('Argument has to be iterable');
+		// Fallback to generator, be aware, that it is not rewindable!
+		return (function(iterable $iterable): Generator {
+			yield from $iterable;
+		})($iterable);
 	}
 }
