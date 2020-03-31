@@ -404,6 +404,29 @@ class Map implements Countable, IteratorAggregate {
 	}
 
 	/**
+	 * Converts map into associative array. It works well if keys are scalar values.
+	 *
+	 * Please note, that when applied on object keys, conversion to string is done. This should work well
+	 * when object implements __toString method.
+	 *
+	 * Please note, that when converted object keys into strings causes duplicate keys in resulting array,
+	 * then last value is used.
+	 *
+	 * Complexity: o(n)
+	 *
+	 * @return array
+	 */
+	public function toAssociativeArray(): array {
+		$assoc = array_combine(
+			array_map(function ($key) { return (string) $key; }, $this->keys),
+			$this->values
+		);
+		assert(is_array($assoc));
+
+		return $assoc;
+	}
+
+	/**
 	 * Adds all values from $mergeMap where keys are not defined yet
 	 * and replaces values from $mergeMap where keys are already defined
 	 *
