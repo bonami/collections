@@ -253,6 +253,40 @@ class MapTest extends TestCase {
 		$this->assertEquals($array, $m->getItems());
 	}
 
+	public function testAssociativeArrayScalars(): void {
+		$bools = [true => 't', false => 'f'];
+		$this->assertEquals($bools, Map::fromAssociativeArray($bools)->toAssociativeArray());
+
+		$ints = [1 => 'a', 2 => 'b'];
+		$this->assertEquals($ints, Map::fromAssociativeArray($ints)->toAssociativeArray());
+
+		$floats = [1.1 => 'a', 2.1 => 'b'];
+		$this->assertEquals($floats, Map::fromAssociativeArray($floats)->toAssociativeArray());
+
+		$strings = ['A' => 'a', 'B' => 'b'];
+		$this->assertEquals($strings, Map::fromAssociativeArray($strings)->toAssociativeArray());
+	}
+
+	public function testAssociativeArrayObjectKeys(): void {
+		$a = new class {
+			public function __toString() {
+				return 'a';
+			}
+		};
+		$b = new class {
+			public function __toString() {
+				return 'b';
+			}
+		};
+		$map = new Map([
+			[$a, 1],
+			[$b, 2],
+			[$a, 3],
+		]);
+		$this->assertEquals(['b' => 2, 'a' => 3], $map->toAssociativeArray());
+
+	}
+
 	public function testFlattenValues(): void {
 		$m = Map::fromIterable([
 			[1, ['a', 'b']],
