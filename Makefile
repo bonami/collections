@@ -8,8 +8,8 @@ deps:
 test:
 	docker run -it --rm -v ${PWD}:/app -w /app composer run-script test
 
-coding-standards:
+fmt-check:
 	docker run -it --rm -v ${PWD}:/app -w /app composer run-script phpcs
 
-coding-standards-fix:
+fmt:
 	docker run -it --rm -v ${PWD}:/app -w /app composer run-script phpcbf

@@ -18,9 +18,9 @@ You can run specific `make` or `composer` targets to help your development proce
 Initially you need to have Docker installed on your system. Afterwards run `make deps` in order to download dependencies.
 
 - `make deps` - downloads dependencies
-- `make tests` - run tests and static-analysis
-- `make coding-standards` - check code style
-- `make coding-standards-fix` - automatically fix your code style
+- `make test` - run tests and static-analysis
+- `make fmt-check` - check code style
+- `make fmt` - automatically fix your code style
 
 ### Without Docker
 
