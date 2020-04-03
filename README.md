@@ -75,7 +75,7 @@ $coloredObjects = ArrayList::fromIterable($colors)
 // $coloredObjects = ArrayList::of('red car', 'red pencil', 'green car', 'green pencil', 'blue car', 'blue pencil')
 ```
 
-### Generating combinations with lift
+### Generating combinations with [lift](#lift-operator)
 
 ```php
 use Bonami\Collection\ArrayList;
@@ -123,8 +123,8 @@ $top10 = frequencyAnalysis($text)
 - `\Bonami\Collection\LazyList` - Wrapper on any iterable structure. It leverages yield internally making it lazy. It can save memory significantly.
 - [`\Bonami\Collection\Enum`](./docs/enum.md) - Not a collection, but has great synergy with rest of the library. Meant for defining closed enumerations. Provides interesting methods like getting complements list of values for given enum.  
 - `\Bonami\Collection\EnumList` - List of Enums, extending ArrayList
-- `\Bonami\Collection\Option` - Immutable structure for representing, that you maybe have value and maybe not. It provides safe (functional) approach to handle null pointer errors.
-- `\Bonami\Collection\TrySafe` - Immutable structure for representing,  that you have value or error generated upon the way. It provides safe (functional) approach to handle errors without side effects.
+- [`\Bonami\Collection\Option`](#option) - Immutable structure for representing, that you maybe have value and maybe not. It provides safe (functional) approach to handle null pointer errors.
+- [`\Bonami\Collection\TrySafe`](#trysafe) - Immutable structure for representing,  that you have value or error generated upon the way. It provides safe (functional) approach to handle errors without side effects.
 - `\Bonami\Collection\Lambda` - Wrapper around callable providing currying. Currying is very useful for some functional patterns
 
 ### Type classes
