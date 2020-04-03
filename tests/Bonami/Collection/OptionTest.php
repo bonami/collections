@@ -229,6 +229,24 @@ class OptionTest extends TestCase {
 		);
 	}
 
+	public function testSequence(): void {
+		$iterable = [
+			Option::some(42),
+			Option::some(666),
+		];
+
+		$iterableWithNone = [
+			Option::some(42),
+			Option::none(),
+		];
+
+		$emptyIterable = [];
+
+		self::assertEquals([42, 666], Option::sequence($iterable)->getUnsafe()->toArray());
+		self::assertEquals([], Option::sequence($emptyIterable)->getUnsafe()->toArray());
+		self::assertSame(Option::none(), Option::sequence($iterableWithNone));
+	}
+
 	public function testOrElse(): void {
 		$some42 = Option::some(5);
 		$some666 = Option::some(666);
@@ -263,7 +281,7 @@ class OptionTest extends TestCase {
 	}
 
 	public function testLaws(): void {
-		$assertEquals = function ($a, $b) { $this->equals($a, $b); };
+		$assertEquals = function ($a, $b): void { $this->equals($a, $b); };
 		$optionEquals = function (Option $a, Option $b): bool { return $a->equals($b); };
 		$pure = function ($value): Option { return Option::of($value); };
 
@@ -312,6 +330,14 @@ class OptionTest extends TestCase {
 		testApplicativeInterchange($assertEquals, $pure, 666, $none);
 	}
 
+	/**
+	 * @template A
+	 * @template B
+	 * @param A $a
+	 * @param B $b
+	 *
+	 * @return void
+	 */
 	private function equals($a, $b): void {
 		if ($a instanceof Option && $b instanceof Option) {
 			self::assertTrue($a->equals($b));

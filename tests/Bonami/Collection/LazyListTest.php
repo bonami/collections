@@ -17,7 +17,7 @@ class LazyListTest extends TestCase {
 
 	public function testInfinityRange(): void {
 		$range = LazyList::range(1)
-			->filter(function(int $number) { return $number % 3 === 0; })
+			->filter(function(int $number): bool { return $number % 3 === 0; })
 			->take(10)
 			->toArray();
 		$this->assertEquals(range(3, 30, 3), $range);
@@ -172,7 +172,7 @@ class LazyListTest extends TestCase {
 		$lazyList = new LazyList(new ArrayIterator(range(1, 10)));
 
 		$accumulator = 0;
-		$lazyList->each(function (int $item) use (&$accumulator) {
+		$lazyList->each(function (int $item) use (&$accumulator): void {
 			$accumulator += $item;
 		});
 
@@ -376,12 +376,14 @@ class LazyListTest extends TestCase {
 	}
 
 	public function testInsertOnPosition(): void {
+		/** @var LazyList<int|string> $lazyList1 */
 		$lazyList1 = new LazyList([1, 2, 3]);
 		$lazyList2 = new LazyList(['a', 'b']);
 		$this->assertEquals([1, 'a', 'b', 2, 3], $lazyList1->insertOnPosition(1, $lazyList2)->toArray());
 	}
 
 	public function testInsertOnInvalidPosition(): void {
+		/** @var LazyList<int|string> $lazyList1 */
 		$lazyList1 = new LazyList([1, 2, 3]);
 		$lazyList2 = new LazyList(['a', 'b']);
 		try {

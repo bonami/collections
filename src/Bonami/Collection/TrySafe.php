@@ -8,16 +8,29 @@ use Bonami\Collection\Hash\IHashable;
 use EmptyIterator;
 use IteratorAggregate;
 use Throwable;
+use Traversable;
 
+/**
+ * @template T
+ * @implements IteratorAggregate<int, T>
+ */
 abstract class TrySafe implements IHashable, IteratorAggregate {
 
 	use ApplicativeHelpers;
 
-	final public static function of($value): TrySafe {
+	/**
+	 * @param T $value
+	 * @return self<T>
+	 */
+	final public static function of($value): self {
 		return self::success($value);
 	}
 
-	final public static function fromCallable(callable $callable): TrySafe {
+	/**
+	 * @param callable(): T $callable
+	 * @return self<T>
+	 */
+	final public static function fromCallable(callable $callable): self {
 		try {
 			return self::success($callable());
 		} catch (Throwable $failure) {
@@ -25,11 +38,20 @@ abstract class TrySafe implements IHashable, IteratorAggregate {
 		}
 	}
 
-	final public static function success($value): TrySafe {
+	/**
+	 * @param T $value
+	 * @return self<T>
+	 */
+	final public static function success($value): self {
+		/**
+		 * @extends TrySafe<T>
+		 */
 		return new class($value) extends TrySafe {
 
+			/** @var T */
 			private $value;
 
+			/** @param T $value */
 			protected function __construct($value) {
 				$this->value = $value;
 			}
@@ -38,12 +60,18 @@ abstract class TrySafe implements IHashable, IteratorAggregate {
 				return true;
 			}
 
+			/**
+			 * @inheritDoc
+			 */
 			public function map(callable $mapper): TrySafe {
 				return self::fromCallable(function () use ($mapper) {
 					return $mapper($this->value);
 				});
 			}
 
+			/**
+			 * @inheritDoc
+			 */
 			public function ap(TrySafe $trySafe): TrySafe {
 				assert(is_callable($this->value));
 				return $trySafe->map(function ($value) {
@@ -51,6 +79,9 @@ abstract class TrySafe implements IHashable, IteratorAggregate {
 				});
 			}
 
+			/**
+			 * @inheritDoc
+			 */
 			public function flatMap(callable $mapper): TrySafe {
 				try {
 					$trySafe = $mapper($this->value);
@@ -62,15 +93,27 @@ abstract class TrySafe implements IHashable, IteratorAggregate {
 				return $trySafe;
 			}
 
+			/**
+			 * @inheritDoc
+			 */
 			public function recover(callable $callable): TrySafe {
 				return $this;
 			}
 
-			/** @inheritDoc */
+			/**
+			 * Consider calling getOrElse instead
+			 *
+			 * @return T
+			 */
 			public function getUnsafe() {
 				return $this->value;
 			}
 
+			/**
+			 * @template E
+			 * @param E $else
+			 * @return T
+			 */
 			public function getOrElse($else) {
 				return $this->value;
 			}
@@ -88,10 +131,16 @@ abstract class TrySafe implements IHashable, IteratorAggregate {
 				return $handleSuccess($this->value);
 			}
 
-			public function getIterator() {
+			/**
+			 * @return Traversable<int, T>
+			 */
+			public function getIterator(): Traversable {
 				return new ArrayIterator([$this->value]);
 			}
 
+			/**
+			 * @return int|string
+			 */
 			public function hashCode() {
 				$valueHash = $this->value instanceof IHashable
 					? $this->value->hashCode()
@@ -101,7 +150,14 @@ abstract class TrySafe implements IHashable, IteratorAggregate {
 		};
 	}
 
+	/**
+	 * @param Throwable $failure
+	 * @return self<T>
+	 */
 	final public static function failure(Throwable $failure): TrySafe {
+		/**
+		 * @extends TrySafe<T>
+		 */
 		return new class($failure) extends TrySafe {
 
 			/** @var Throwable */
@@ -133,16 +189,25 @@ abstract class TrySafe implements IHashable, IteratorAggregate {
 				});
 			}
 
-			/** @inheritDoc */
+			/**
+			 * Consider calling getOrElse instead
+			 * @throws ValueIsNotPresentException
+			 *
+			 * @return T
+			 */
 			public function getUnsafe() {
 				throw new ValueIsNotPresentException("Can not get value for Failure");
 			}
 
+			/**
+			 * @template E
+			 * @param E $else
+			 * @return E
+			 */
 			public function getOrElse($else) {
 				return $else;
 			}
 
-			/** @inheritDoc */
 			public function getFailureUnsafe(): Throwable {
 				return $this->failure;
 			}
@@ -155,10 +220,14 @@ abstract class TrySafe implements IHashable, IteratorAggregate {
 				return $handleFailure($this->failure);
 			}
 
-			public function getIterator() {
+			/**
+			 * @return Traversable<int, T>
+			 */
+			public function getIterator(): Traversable {
 				return new EmptyIterator();
 			}
 
+			/** @return int|string */
 			public function hashCode() {
 				$failureHash = $this->failure instanceof IHashable
 					? $this->failure->hashCode()
@@ -168,22 +237,53 @@ abstract class TrySafe implements IHashable, IteratorAggregate {
 		};
 	}
 
-	abstract public function ap(TrySafe $trySafe): TrySafe;
+	/**
+	 * @param self<mixed> $trySafe
+	 *
+	 * @return self<mixed>
+	 */
+	abstract public function ap(self $trySafe): self;
 
-	abstract public function map(callable $mapper): TrySafe;
+	/**
+	 * @param callable(T): mixed $mapper
+	 *
+	 * @return self<mixed>
+	 */
+	abstract public function map(callable $mapper): self;
 
-	abstract public function flatMap(callable $mapper): TrySafe;
+	/**
+	 * @param callable(T): self<mixed> $mapper
+	 *
+	 * @return self<mixed>
+	 */
+	abstract public function flatMap(callable $mapper): self;
 
+	/**
+	 * @template R
+	 * @param callable(R, T): R $reducer
+	 * @param R $initialReduction
+	 *
+	 * @return R
+	 */
 	final public function reduce(callable $reducer, $initialReduction) {
 		return LazyList::fromIterable($this)->reduce($reducer, $initialReduction);
 	}
 
+	/**
+	 * @param self<T> $value
+	 * @return bool
+	 */
 	final public function equals($value): bool {
-		return $value instanceof TrySafe
+		return $value instanceof self
 			&& $value->hashCode() === $this->hashCode();
 	}
 
-	abstract public function recover(callable $callable): TrySafe;
+	/**
+	 * @param callable(Throwable): T $callable
+	 *
+	 * @return self<T>
+	 */
+	abstract public function recover(callable $callable): self;
 
 	abstract public function isSuccess(): bool;
 
@@ -194,9 +294,16 @@ abstract class TrySafe implements IHashable, IteratorAggregate {
 	/**
 	 * Consider calling getOrElse instead
 	 * @throws ValueIsNotPresentException
+	 *
+	 * @return T
 	 */
 	abstract public function getUnsafe();
 
+	/**
+	 * @template E
+	 * @param E $else
+	 * @return T|E
+	 */
 	abstract public function getOrElse($else);
 
 	/**
@@ -204,8 +311,19 @@ abstract class TrySafe implements IHashable, IteratorAggregate {
 	 */
 	abstract public function getFailureUnsafe(): Throwable;
 
+	/**
+	 * @return Option<T>
+	 */
 	abstract public function toOption(): Option;
 
+	/**
+	 * @template F
+	 * @template S
+	 * @param callable(Throwable): F $handleFailure
+	 * @param callable(T): S $handleSuccess
+	 *
+	 * @return F|S
+	 */
 	abstract public function resolve(callable $handleFailure, callable $handleSuccess);
 
 }

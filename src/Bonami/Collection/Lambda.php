@@ -4,18 +4,24 @@ namespace Bonami\Collection;
 
 use Bonami\Collection\Exception\InvalidStateException;
 use Closure;
+use ReflectionException;
 use ReflectionFunction;
 
 final class Lambda {
 
 	/** @var callable  */
 	protected $callable;
-	/** @var array */
+	/** @var array<mixed> */
 	protected $applied;
 	/** @var int|null */
 	protected $numberOfArgs;
 
-	protected function __construct(callable $callable, $numberOfArgs = null, array $applied = []) {
+	/**
+	 * @param callable $callable
+	 * @param int|null $numberOfArgs
+	 * @param array<mixed> $applied
+	 */
+	protected function __construct(callable $callable, int $numberOfArgs = null, array $applied = []) {
 		$this->callable = $callable;
 		$this->numberOfArgs = $numberOfArgs;
 		$this->applied = $applied;
@@ -48,6 +54,12 @@ final class Lambda {
 		return new static(compose($callable, $this->callable));
 	}
 
+	/**
+	 * @param mixed... $args
+	 *
+	 * @return mixed
+	 * @throws ReflectionException
+	 */
 	public function __invoke(...$args) {
 		if ($this->numberOfArgs === null) {
 			$this->numberOfArgs = (new ReflectionFunction(Closure::fromCallable($this->callable)))->getNumberOfParameters();

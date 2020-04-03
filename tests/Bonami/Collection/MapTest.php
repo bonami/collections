@@ -137,7 +137,7 @@ class MapTest extends TestCase {
 		$this->assertSame(0, $m->getUnsafe(true));
 	}
 
-	public function testKeys() {
+	public function testKeys(): void {
 		$map = new Map([
 			[(object)[1985, 1, 29], "Isabel Lucas"],
 			[(object)[1984, 7, 11], "Rachael Taylor"],
@@ -150,7 +150,7 @@ class MapTest extends TestCase {
 		);
 	}
 
-	public function testValues() {
+	public function testValues(): void {
 		$map = new Map([
 			[1, "Isabel Lucas"],
 			[2, "Rachael Taylor"],
@@ -350,11 +350,21 @@ class MapTest extends TestCase {
 		);
 	}
 
-	/** @dataProvider providerChunks */
+	/**
+	 * @dataProvider providerChunks
+	 *
+	 * @param Map<int, array<string>> $sourceMap
+	 * @param array<Map<int, array<string>>> $expectList
+	 *
+	 * @return void
+	 */
 	public function testChunk(Map $sourceMap, array $expectList): void {
 		$this->assertEquals(ArrayList::fromIterable($expectList), $sourceMap->chunk(2));
 	}
 
+	/**
+	 * @return array<string, array<string, mixed>>
+	 */
 	public function providerChunks(): array {
 		$object12 = $this->createObject(12);
 		$object18 = $this->createObject(18);
@@ -548,7 +558,13 @@ class MapTest extends TestCase {
 		$this->assertEquals('{a: 1, b: 2}', (string) $m);
 	}
 
-	private function createRecursiveArray($deepness, $identification): array {
+	/**
+	 * @param int $deepness
+	 * @param int $identification
+	 *
+	 * @return array<string, mixed>
+	 */
+	private function createRecursiveArray(int $deepness, int $identification): array {
 		$array = [
 			'someKey' => 'someValue',
 			'identification' => $identification,
@@ -560,7 +576,7 @@ class MapTest extends TestCase {
 		return $array;
 	}
 
-	private function createObject($val) {
+	private function createObject(int $val): stdClass {
 		$o = new stdClass();
 		$o->prop = $val;
 

@@ -11,17 +11,31 @@ use RuntimeException;
 use SplFixedArray;
 use Traversable;
 
+/**
+ * @template T
+ * @implements IteratorAggregate<int, T>
+ */
 class LazyList implements IteratorAggregate {
 
 	use ApplicativeHelpers;
 
-	/** @var iterable */
+	/** @var iterable<T> */
 	private $items;
 
+	/**
+	 * @param iterable<T> $iterable
+	 */
 	public function __construct(iterable $iterable) {
 		$this->items = $iterable;
 	}
 
+	/**
+	 * @param int $low
+	 * @param int $high
+	 * @param int $step
+	 *
+	 * @return static<int>
+	 */
 	public static function range(int $low, int $high = PHP_INT_MAX, int $step = 1): self {
 		$range = static function(int $low, int $high, int $step = 1): Generator {
 			while ($low <= $high) {
@@ -33,6 +47,12 @@ class LazyList implements IteratorAggregate {
 		return new static($range($low, $high, $step));
 	}
 
+	/**
+	 * @param T $item
+	 * @param int|null $size
+	 *
+	 * @return self<T>
+	 */
 	public static function fill($item, ?int $size = null): self {
 		$fill = static function($item, ?int $size = null): Generator {
 			$generated = 0;
@@ -47,26 +67,57 @@ class LazyList implements IteratorAggregate {
 		return new static($fill($item, $size));
 	}
 
+	/**
+	 * @return self<mixed>
+	 */
 	public static function fromEmpty(): self {
-		return new self([]);
+		/** @var array<mixed> $empty */
+		$empty = [];
+
+		return new self($empty);
 	}
 
+	/**
+	 * @param array<T> ...$items
+	 *
+	 * @return self<T>
+	 */
 	public static function fromArray(array ...$items): self {
 		return self::fromEmpty()->concat(...$items);
 	}
 
+	/**
+	 * @param Traversable<int, T> $items
+	 *
+	 * @return self<T>
+	 */
 	public static function fromTraversable(Traversable $items): self {
 		return new self($items);
 	}
 
+	/**
+	 * @param iterable<T> $iterable
+	 *
+	 * @return self<T>
+	 */
 	public static function fromIterable(iterable $iterable): self {
 		return new self($iterable);
 	}
 
+	/**
+	 * @param T ...$items
+	 *
+	 * @return self<T>
+	 */
 	public static function of(...$items): self {
 		return new self($items);
 	}
 
+	/**
+	 * @param callable(mixed, int): mixed $mapper
+	 *
+	 * @return self<mixed>
+	 */
 	public function map(callable $mapper) {
 		$map = function(callable $callback): Generator {
 			foreach ($this->items as $key => $item) {
@@ -76,6 +127,11 @@ class LazyList implements IteratorAggregate {
 		return new static($map($mapper));
 	}
 
+	/**
+	 * @param self<mixed> $lazyList
+	 *
+	 * @return self<mixed>
+	 */
 	public function ap(self $lazyList): self {
 		$mappers = $this->map(function (callable $mapper) { return Lambda::of($mapper); })->toList();
 
@@ -86,10 +142,18 @@ class LazyList implements IteratorAggregate {
 		});
 	}
 
+	/**
+	 * @param callable(mixed, int): iterable<mixed> $mapper
+	 *
+	 * @return self<mixed>
+	 */
 	public function flatMap(callable $mapper): self {
 		return $this->map($mapper)->flatten();
 	}
 
+	/**
+	 * @return self<mixed>
+	 */
 	public function flatten(): self {
 		$flatten = function (): Generator {
 			foreach ($this->items as $item) {
@@ -103,12 +167,24 @@ class LazyList implements IteratorAggregate {
 		return new self($flatten());
 	}
 
+	/**
+	 * @param callable(mixed, int): void $sideEffect
+	 */
 	public function each(callable $sideEffect): void {
-		foreach ($this->items as $item) {
-			$sideEffect($item);
+		foreach ($this->items as $key => $item) {
+			$sideEffect($item, $key);
 		}
 	}
 
+	/**
+	 * Computes reduction of the elements of the collection.
+	 *
+	 * @template R
+	 * @param callable(R, mixed): R $reducer a binary operation for reduction
+	 * @param R $initialReduction
+	 *
+	 * @return R
+	 */
 	public function reduce(callable $reducer, $initialReduction) {
 		$reduction = $initialReduction;
 		foreach ($this->items as $item) {
@@ -120,10 +196,11 @@ class LazyList implements IteratorAggregate {
 	/**
 	 * Computes a prefix scan (reduction) of the elements of the collection.
 	 *
-	 * @param callable $scanner a binary operation for scan (reduction)
-	 * @param mixed $initialReduction
+	 * @template R
+	 * @param callable(R, mixed): R $scanner a binary operation for scan (reduction)
+	 * @param R $initialReduction
 	 *
-	 * @return self collection with intermediate scan (reduction) results
+	 * @return self<R> collection with intermediate scan (reduction) results
 	 */
 	public function scan(callable $scanner, $initialReduction): self {
 		$scan = function (callable $scanner, $initialReduction): Generator {
@@ -137,6 +214,11 @@ class LazyList implements IteratorAggregate {
 		return new self($scan($scanner, $initialReduction));
 	}
 
+	/**
+	 * @param callable(mixed): bool $predicate
+	 *
+	 * @return static<T>
+	 */
 	public function takeWhile(callable $predicate) {
 		$takeWhile = function(callable $whileCallback): Generator {
 			foreach ($this->items as $item) {
@@ -149,6 +231,11 @@ class LazyList implements IteratorAggregate {
 		return new static($takeWhile($predicate));
 	}
 
+	/**
+	 * @param int $size
+	 *
+	 * @return static<T>
+	 */
 	public function take(int $size) {
 		$take = function(int $size): Generator {
 			$taken = 1;
@@ -163,6 +250,9 @@ class LazyList implements IteratorAggregate {
 		return new static($take($size));
 	}
 
+	/**
+	 * @return self<static<T>>
+	 */
 	public function chunk(int $size): self {
 		assert($size > 0, 'Size must be positive');
 		$chunk = function (int $size): Generator {
@@ -183,10 +273,16 @@ class LazyList implements IteratorAggregate {
 		return new self($chunk($size));
 	}
 
+	/**
+	 * @return Option<T>
+	 */
 	public function head(): Option {
 		return $this->find(tautology());
 	}
 
+	/**
+	 * @return Option<T>
+	 */
 	public function last(): Option {
 		// No first item implies there is also no last item, thus we have to return none
 		return $this->head()->isDefined()
@@ -194,10 +290,15 @@ class LazyList implements IteratorAggregate {
 			: Option::none();
 	}
 
+	/**
+	 * @param callable(mixed, int): bool $predicate
+	 *
+	 * @return static<T>
+	 */
 	public function filter(callable $predicate) {
 		$filter = function (callable $filterCallback): Generator {
-			foreach ($this->items as $item) {
-				if ($filterCallback($item)) {
+			foreach ($this->items as $key => $item) {
+				if ($filterCallback($item, $key)) {
 					yield $item;
 				}
 			}
@@ -205,6 +306,11 @@ class LazyList implements IteratorAggregate {
 		return new static($filter($predicate));
 	}
 
+	/**
+	 * @param callable(mixed): bool $predicate
+	 *
+	 * @return Option<T>
+	 */
 	public function find(callable $predicate): Option {
 		foreach ($this->items as $item) {
 			if ($predicate($item)) {
@@ -215,6 +321,11 @@ class LazyList implements IteratorAggregate {
 		return Option::none();
 	}
 
+	/**
+	 * @param callable(mixed): bool $predicate
+	 *
+	 * @return static<T>
+	 */
 	public function dropWhile(callable $predicate) {
 		$drop = function (callable $dropCallback): Generator {
 			$dropping = true;
@@ -232,6 +343,11 @@ class LazyList implements IteratorAggregate {
 		return new static($drop($predicate));
 	}
 
+	/**
+	 * @param int $count
+	 *
+	 * @return static<T>
+	 */
 	public function drop(int $count) {
 		$i = 0;
 		return $this->dropWhile(static function () use ($count, &$i) {
@@ -239,6 +355,11 @@ class LazyList implements IteratorAggregate {
 		});
 	}
 
+	/**
+	 * @param callable(mixed): bool $predicate
+	 *
+	 * @return bool
+	 */
 	public function exists(callable $predicate): bool {
 		foreach ($this->items as $item) {
 			if ($predicate($item)) {
@@ -249,6 +370,11 @@ class LazyList implements IteratorAggregate {
 		return false;
 	}
 
+	/**
+	 * @param callable(mixed): bool $predicate
+	 *
+	 * @return bool
+	 */
 	public function all(callable $predicate): bool {
 		foreach ($this->items as $item) {
 			if (!$predicate($item)) {
@@ -259,6 +385,11 @@ class LazyList implements IteratorAggregate {
 		return true;
 	}
 
+	/**
+	 * @param iterable<mixed> ...$iterables
+	 *
+	 * @return self<array<int, mixed>>
+	 */
 	public function zip(iterable ...$iterables): self {
 		$zip = function (array $iterables): Generator {
 			$traversables = new self(
@@ -281,6 +412,11 @@ class LazyList implements IteratorAggregate {
 		return new self($zip($iterables));
 	}
 
+	/**
+	 * @param iterable<T> ...$iterables
+	 *
+	 * @return static<T>
+	 */
 	public function concat(iterable ...$iterables) {
 		$append = function (iterable ...$iterables): Generator {
 			yield from $this;
@@ -291,10 +427,20 @@ class LazyList implements IteratorAggregate {
 		return new static($append($iterables));
 	}
 
+	/**
+	 * @param T ...$items
+	 * @return static<T>
+	 */
 	public function add(...$items) {
 		return $this->concat(new self($items));
 	}
 
+	/**
+	 * @param int $position
+	 * @param iterable<T> $iterable
+	 *
+	 * @return static<T>
+	 */
 	public function insertOnPosition(int $position, iterable $iterable) {
 		$insertOnPosition = function (int $position, iterable $iterable): Generator {
 			$index = 0;
@@ -312,6 +458,9 @@ class LazyList implements IteratorAggregate {
 		return new static($insertOnPosition($position, $iterable));
 	}
 
+	/**
+	 * @return array<T>
+	 */
 	public function toArray(): array {
 		return iterator_to_array($this->getIterator(), false);
 	}
@@ -320,14 +469,24 @@ class LazyList implements IteratorAggregate {
 		return implode($glue, $this->toArray());
 	}
 
+	/**
+	 * @return Traversable<T>
+	 */
 	public function getIterator(): Traversable {
 		return $this->createTraversable($this->items);
 	}
 
+	/**
+	 * @return ArrayList<T>
+	 */
 	public function toList(): ArrayList {
 		return ArrayList::fromIterable($this);
 	}
 
+	/**
+	 * @param iterable<T> $iterable
+	 * @return Traversable<T>
+	 */
 	private function createTraversable(iterable $iterable): Traversable {
 		if ($iterable instanceof Iterator) {
 			return $iterable;

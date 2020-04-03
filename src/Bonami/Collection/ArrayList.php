@@ -30,13 +30,18 @@ use function spl_object_hash;
 use function sprintf;
 use function usort;
 
+/**
+ * @template T
+ * @implements IteratorAggregate<int, T>
+ */
 class ArrayList implements Countable, IteratorAggregate, JsonSerializable {
 
 	use ApplicativeHelpers;
 
-	/** @var array */
+	/** @var array<int, T> */
 	protected $items;
 
+	/** @param array<int, T> $items */
 	public function __construct(array $items) {
 		$this->items = $items;
 	}
@@ -46,7 +51,7 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable {
 	 *
 	 * Complexity: o(1)
 	 *
-	 * @return static
+	 * @return static<T>
 	 */
 	public static function fromEmpty() {
 		return new static([]);
@@ -57,9 +62,9 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable {
 	 *
 	 * Complexity: o(n) - where n is number of passed items
 	 *
-	 * @param mixed ...$item - with any number of occurences
+	 * @param T ...$item - with any number of occurences
 	 *
-	 * @return static
+	 * @return static<T>
 	 */
 	public static function of(...$item) {
 		return new static($item);
@@ -70,10 +75,10 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable {
 	 *
 	 * Complexity: o(n)
 	 *
-	 * @param mixed $item - an item to be filled
+	 * @param T $item - an item to be filled
 	 * @param int $size - size of desired ArrayList with filled $item as each element
 	 *
-	 * @return static
+	 * @return static<T>
 	 */
 	public static function fill($item, int $size) {
 		return new static(array_fill(0, $size, $item));
@@ -84,14 +89,14 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable {
 	 *
 	 * Complexity: o(n) - where n is size of resulting List
 	 *
+	 * @see LazyList::range() - for initializing range lazily
+	 *
 	 * @param int $min - a minimal (starting) value of range
 	 * @param int $max - a maximum value of range - it may or maybe not be included as last element if the step does not step
 	 *                 over it.
 	 * @param int $step - a size of step between each item of range
 	 *
-	 * @return self
-	 *@see LazyList::range() - for initializing range lazily
-	 *
+	 * @return self<int>
 	 */
 	public static function range(int $min, int $max, int $step = 1): self {
 		return LazyList::range($min, $max, $step)->toList();
@@ -108,7 +113,7 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable {
 	 * @param string $delimiter - a delimiter to be used for spliting
 	 * @param string $string - a string to be exploded
 	 *
-	 * @return self
+	 * @return self<string>
 	 */
 	public static function explode(string $delimiter, string $string): self {
 		return $delimiter === ''
@@ -126,9 +131,9 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable {
 	 *
 	 * Complexity: o(n) or o(1) - depending on type of iterable collection passed.
 	 *
-	 * @param iterable $iterable
+	 * @param iterable<int, T> $iterable
 	 *
-	 * @return static
+	 * @return static<T>
 	 */
 	public static function fromIterable(iterable $iterable) {
 		return new static(static::convertIterableToArray($iterable));
@@ -143,9 +148,9 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable {
 	 * @see fromIterable
 	 * @internal
 	 *
-	 * @param iterable $iterable
+	 * @param iterable<int, T> $iterable
 	 *
-	 * @return array
+	 * @return array<T>
 	 */
 	private static function convertIterableToArray(iterable $iterable): array {
 		switch (true) {
@@ -163,7 +168,7 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable {
 	 *
 	 * Complexity: o(1) - Retriving the iterator itself is constant. Iterating over it is of course o(n)
 	 *
-	 * @return Traversable
+	 * @return Traversable<int, T>
 	 */
 	public function getIterator(): Traversable {
 		return new ArrayIterator($this->items);
@@ -214,7 +219,7 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable {
 	 *
 	 * @param callable $mapper - ($value: mixed, $index: int) => mixed
 	 *
-	 * @return self
+	 * @return self<mixed>
 	 */
 	public function map(callable $mapper): self {
 		return new self(array_map($mapper, $this->items, array_keys($this->items)));
@@ -233,12 +238,12 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable {
 	 *
 	 * Complexity: o(n)
 	 *
-	 * @param self $values
+	 * @param self<mixed> $values
 	 *
-	 * @return self
+	 * @return self<mixed>
 	 */
 	public function ap(self $values): self {
-		$mappers = $this->map(function (callable $mapper) { return Lambda::of($mapper); });
+		$mappers = $this->map(function (callable $mapper): Lambda { return Lambda::of($mapper); });
 
 		return $values->flatMap(function ($value) use ($mappers) {
 			return $mappers->map(function (Lambda $mapper) use ($value) {
@@ -256,13 +261,12 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable {
 	 * This means it depends on size of original List and
 	 * on size of iterables returned from mapCallback
 	 *
-	 * @param callable $mapper      - ($value: mixed, $index: int) => iterable - it will fail if
-	 *                              map callback does not return iterable
-	 *
 	 * @see map
 	 * @see flatten
 	 *
-	 * @return self
+	 * @param callable(mixed, int): self<mixed> $mapper      - ($value: mixed, $index: int) => iterable - it will fail if
+	 *                              map callback does not return iterable
+	 * @return self<mixed>
 	 */
 	public function flatMap(callable $mapper): self {
 		return self::fromIterable(LazyList::fromIterable($this->items)->flatMap($mapper));
@@ -279,7 +283,7 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable {
 	 *
 	 * @see flatMap
 	 *
-	 * @return self
+	 * @return self<mixed>
 	 */
 	public function flatten(): self {
 		return self::fromIterable(LazyList::fromIterable($this->items)->flatten());
@@ -306,9 +310,9 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable {
 	 * @see uniqueBy
 	 * @see IHashable::hashCode
 	 *
-	 * @param callable $mapper - ($value: mixed, $index: int) => mixed
+	 * @param callable(mixed, int): mixed $mapper - ($value: mixed, $index: int) => mixed
 	 *
-	 * @return self
+	 * @return self<mixed>
 	 */
 	public function uniqueMap(callable $mapper): self {
 		return $this
@@ -339,7 +343,7 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable {
 	 *
 	 * @param callable $discriminator - ($value: mixed, $index: int) => mixed
 	 *
-	 * @return static
+	 * @return static<T>
 	 */
 	public function uniqueBy(callable $discriminator) {
 		return static::fromIterable($this
@@ -368,7 +372,7 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable {
 	 * @see uniqueMap
 	 * @see IHashable::hashCode
 	 *
-	 * @return static
+	 * @return static<T>
 	 */
 	public function unique() {
 		return static::fromIterable($this->uniqueMap(identity()));
@@ -383,10 +387,12 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable {
 	 *
 	 * Complexity: o(n + m) - where n is size of original List and m is a size of merged list.
 	 *
-	 * @return static
-	 *@see concat - to append items from iterable without deduplicating
-	 *
+	 * @see concat - to append items from iterable without deduplicating
 	 * @see unique - for more info about how deduplication work
+	 *
+	 * @param iterable<T> $list
+	 *
+	 * @return static<T>
 	 */
 	public function union(iterable $list) {
 		return $this->concat($list)->unique();
@@ -397,9 +403,9 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable {
 	 *
 	 * Complexity: o(n)
 	 *
-	 * @param callable $predicate - ($item: mixed, $index: int) => bool
+	 * @param callable(mixed, int): bool $predicate - ($item: mixed, $index: int) => bool
 	 *
-	 * @return static
+	 * @return static<T>
 	 */
 	public function filter(callable $predicate) {
 		return new static(array_values(array_filter($this->items, $predicate, ARRAY_FILTER_USE_BOTH)));
@@ -413,9 +419,9 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable {
 	 * @see exists - if you just need to check if something matches by predicate
 	 * @see findKey - if you need to get key by predicate
 	 *
-	 * @param callable $predicate - ($item: mixed, $index: int) => bool
+	 * @param callable(mixed, int): bool $predicate - ($item: mixed, $index: int) => bool
 	 *
-	 * @return Option
+	 * @return Option<T>
 	 */
 	public function find(callable $predicate): Option {
 		foreach ($this->items as $key => $item) {
@@ -434,9 +440,9 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable {
 	 * @see exists - if you just need to check if something matches by predicate
 	 * @see find - if you need to get item by predicate
 	 *
-	 * @param callable $predicate - ($item: mixed, $index: int) => bool
+	 * @param callable(mixed, int): bool $predicate - ($item: mixed, $index: int) => bool
 	 *
-	 * @return Option
+	 * @return Option<T>
 	 */
 	public function findKey(callable $predicate): Option {
 		foreach ($this->items as $key => $item) {
@@ -456,7 +462,7 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable {
 	 * @see contains - if you need to check item existence directly without predicate
 	 * @see all - if you need to check if ALL items in List satisfy predicate
 	 *
-	 * @param callable $predicate - ($item: mixed, $index: int) => bool
+	 * @param callable(mixed, int): bool $predicate - ($item: mixed, $index: int) => bool
 	 *
 	 * @return bool
 	 */
@@ -477,7 +483,7 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable {
 	 * @see exists - if you need to check if something exists by predicate
 	 * @see find - if you need to get item by predicate
 	 *
-	 * @param mixed $item            - item for lookup
+	 * @param T $item            - item for lookup
 	 * @param bool|null $strictComparison - if true, identity (===) comparison is used, equality otherwise (==)
 	 *
 	 * @return bool
@@ -494,7 +500,7 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable {
 	 * @see exists - if you need to check if AT LEAST ONE item in List satisfy predicate
 	 * @see find - if you need to get item by predicate
 	 *
-	 * @param callable $predicate - ($item: mixed, $index: int) => bool
+	 * @param callable(mixed, int): bool $predicate - ($item: mixed, $index: int) => bool
 	 *
 	 * @return bool
 	 */
@@ -518,11 +524,11 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable {
 	 *
 	 * @see comparator() - a default value for $comparator when ommited
 	 *
-	 * @param callable|null $comparator - ($first: mixed, $second: mixed) => int
+	 * @param callable(mixed, mixed): int|null $comparator - ($first: mixed, $second: mixed) => int
 	 *                                    classic comparator returning 1, 0 or -1
 	 *                                  - if no comparator is passed, $first <=> $second is used
 	 *
-	 * @return static
+	 * @return static<T>
 	 */
 	public function sort(?callable $comparator = null) {
 		$copied = $this->items;
@@ -535,9 +541,10 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable {
 	 *
 	 * Complexity: o(n)
 	 *
-	 * @param callable $indexCallback - ($item: mixed, $index: int) => mixed
+	 * @template M
+	 * @param callable(mixed, int): M $indexCallback - ($item: mixed, $index: int) => mixed
 	 *
-	 * @return Map
+	 * @return Map<M, T>
 	 */
 	public function index(callable $indexCallback): Map {
 		return Map::fromIterable($this->map(static function ($item, $key) use ($indexCallback) {
@@ -550,7 +557,7 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable {
 	 *
 	 * Complexity: o(1)
 	 *
-	 * @return array
+	 * @return array<T>
 	 */
 	public function toArray(): array {
 		return $this->items;
@@ -561,9 +568,10 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable {
 	 *
 	 * Complexity: o(n)
 	 *
-	 * @param callable $reducer - ($carry: mixed, $item: mixed, $key: int) => mixed
-	 * @param mixed $initialReduction - initial value used as seed for $carry
-	 * @return mixed - reduced values. If the list is empty, $initialReduction is directly returned
+	 * @template R
+	 * @param callable(R, mixed, int): R $reducer - ($carry: mixed, $item: mixed, $key: int) => mixed
+	 * @param R $initialReduction - initial value used as seed for $carry
+	 * @return R - reduced values. If the list is empty, $initialReduction is directly returned
 	 */
 	public function reduce(callable $reducer, $initialReduction) {
 		return array_reduce(array_keys($this->items), function ($carry, $key) use ($reducer) {
@@ -576,11 +584,11 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable {
 	 *
 	 * Complexity: o(n)
 	 *
-	 * @param callable|null $comparator - ($first: mixed, $second: mixed) => int
+	 * @param callable(mixed, mixed): int|null $comparator - ($first: mixed, $second: mixed) => int
 	 *                                    classic comparator returning 1, 0 or -1
 	 *                                  - if no comparator is passed, $first <=> $second is used
 	 *
-	 * @return Option minimal value wrapped in Option::some or Option::none when list is empty
+	 * @return Option<T> minimal value wrapped in Option::some or Option::none when list is empty
 	 */
 	public function min(?callable $comparator = null): Option {
 		if ($this->isEmpty()) {
@@ -604,11 +612,11 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable {
 	 *
 	 * Complexity: o(n)
 	 *
-	 * @param callable|null $comparator - ($first: mixed, $second: mixed) => int
+	 * @param callable(mixed, mixed): int|null $comparator - ($first: mixed, $second: mixed) => int
 	 *                                    classic comparator returning 1, 0 or -1
 	 *                                  - if no comparator is passed, $second <=> $first is used
 	 *
-	 * @return Option minimal value wrapped in Option::some or Option::none when list is empty
+	 * @return Option<T> minimal value wrapped in Option::some or Option::none when list is empty
 	 */
 	public function max(?callable $comparator = null): Option {
 		if ($this->isEmpty()) {
@@ -632,7 +640,7 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable {
 	 *
 	 * Complexity: o(n)
 	 *
-	 * @param callable $sideEffect - ($item: mixed, $index: int) => void
+	 * @param callable(mixed, mixed): void $sideEffect - ($item: mixed, $index: int) => void
 	 *
 	 * @return void
 	 */
@@ -647,7 +655,7 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable {
 	 *
 	 * Complexity: o(1)
 	 *
-	 * @return Option item wrapped with Option::some or Option::none if list is empty
+	 * @return Option<T> item wrapped with Option::some or Option::none if list is empty
 	 */
 	public function head(): Option {
 		return array_key_exists(0, $this->items) ? Option::some($this->items[0]) : Option::none();
@@ -658,7 +666,7 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable {
 	 *
 	 * Complexity: o(n) - where n is `$size`
 	 *
-	 * @return static
+	 * @return static<T>
 	 */
 	public function take(int $size) {
 		return new static(array_slice($this->items, 0, $size, true));
@@ -673,7 +681,7 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable {
 	 * @param int|null $limit how much items should be taken from offset.
 	 *                        when nothing is specified, the items are taken until end of List
 	 *
-	 * @return static
+	 * @return static<T>
 	 */
 	public function slice(int $offset, ?int $limit = null) {
 		return new static(array_slice($this->items, $offset, $limit));
@@ -684,7 +692,7 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable {
 	 *
 	 * Complexity: o(1)
 	 *
-	 * @return Option item wrapped with Option::some or Option::none if list is empty
+	 * @return Option<T> item wrapped with Option::some or Option::none if list is empty
 	 */
 	public function last(): Option {
 		$count = $this->count();
@@ -700,7 +708,7 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable {
 	 *
 	 * Complexity: o(n)
 	 *
-	 * @return static
+	 * @return static<T>
 	 */
 	public function withoutNulls() {
 		return $this->filter(static function ($item): bool { return $item !== null; });
@@ -718,10 +726,10 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable {
 	 * n = number of items in this list
 	 * m = number of items to remove.
 	 *
-	 * @param iterable $itemsToRemove
+	 * @param iterable<T> $itemsToRemove
 	 * @param bool|null $strictComparison
 	 *
-	 * @return static
+	 * @return static<T>
 	 */
 	public function minus(iterable $itemsToRemove, ?bool $strictComparison = true) {
 		if ($itemsToRemove instanceof self) {
@@ -750,10 +758,10 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable {
 	 *
 	 * Complexity: o(n) - strict comparison is slightly faster (with same complexity, but less hidden cost)
 	 *
-	 * @param mixed $itemToRemove
+	 * @param T $itemToRemove
 	 * @param bool|null $strictComparison
 	 *
-	 * @return static
+	 * @return static<T>
 	 */
 	public function minusOne($itemToRemove, ?bool $strictComparison = true) {
 		return $strictComparison
@@ -770,9 +778,9 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable {
 	 *
 	 * Complexity: o(n)
 	 *
-	 * @param iterable $itemsToAdd
+	 * @param iterable<T> $itemsToAdd
 	 *
-	 * @return static
+	 * @return static<T>
 	 */
 	public function concat(iterable $itemsToAdd) {
 		return new static(array_merge($this->items, self::convertIterableToArray($itemsToAdd)));
@@ -783,9 +791,9 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable {
 	 *
 	 * Complexity: o(n)
 	 *
-	 * @param iterable $items
+	 * @param iterable<T> $items
 	 *
-	 * @return static
+	 * @return static<T>
 	 */
 	public function intersect(iterable $items) {
 		return static::fromIterable($this->index(identity())->getByKeys($items)->keys());
@@ -796,9 +804,10 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable {
 	 *
 	 * Complexity: o(n)
 	 *
-	 * @param callable $groupBy - ($item: mixed, $index: int) => mixed
+	 * @template G
+	 * @param callable(mixed, mixed): G $groupBy - ($item: mixed, $index: int) => mixed
 	 *
-	 * @return Map
+	 * @return Map<G, static<T>>
 	 */
 	public function groupBy(callable $groupBy): Map {
 		$grouped = new \Bonami\Collection\Mutable\Map([]);
@@ -817,7 +826,7 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable {
 	 *
 	 * @param int $size - size of resulting nested List
 	 *
-	 * @return self
+	 * @return self<static<T>>
 	 */
 	public function chunk(int $size): self {
 		return new ArrayList(
@@ -837,9 +846,10 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable {
 	 *
 	 * Complexity: o(n)
 	 *
-	 * @param iterable $values
+	 * @template V
+	 * @param iterable<V> $values
 	 *
-	 * @return Map
+	 * @return Map<T, V>
 	 */
 	public function combine(iterable $values): Map {
 		return Map::fromIterable($this->zip($values));
@@ -857,9 +867,9 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable {
 	 *
 	 * Complexity: o(n*m) where m is number of passed iterables and n is size of shortest collection
 	 *
-	 * @param iterable ...$iterables
+	 * @param iterable<mixed> ...$iterables
 	 *
-	 * @return self
+	 * @return self<array<int, mixed>>
 	 */
 	public function zip(iterable ...$iterables): self {
 		return self::fromIterable(LazyList::fromIterable($this->items)->zip(...$iterables));
@@ -884,7 +894,7 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable {
 	 *
 	 * Complexity: o(n)
 	 *
-	 * @return array
+	 * @return array<T>
 	 */
 	public function jsonSerialize(): array {
 		return $this->toArray();
@@ -895,7 +905,7 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable {
 	 *
 	 * Complexity: o(n)
 	 *
-	 * @return static
+	 * @return static<T>
 	 */
 	public function reverse() {
 		return new static(array_reverse($this->items));
@@ -906,7 +916,7 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable {
 	 *
 	 * @internal
 	 *
-	 * @param mixed $item
+	 * @param T $item
 	 *
 	 * @return string
 	 */

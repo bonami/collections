@@ -8,6 +8,10 @@ use function gettype;
 
 class InvalidEnumValueException extends InvalidArgumentException {
 
+	/**
+	 * @param mixed $value
+	 * @param string $enumClass
+	 */
 	public function __construct($value, string $enumClass) {
 		$valueType = gettype($value);
 		$expectedValues = $enumClass::instanceList()->join(', ');
