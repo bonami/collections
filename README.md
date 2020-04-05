@@ -130,7 +130,7 @@ $top10 = frequencyAnalysis($text)
 ### Type classes
 
 - `\Bonami\Collection\ArrayList`, `\Bonami\Collection\LazyList`, `\Bonami\Collection\Option`, `\Bonami\Collection\TrySafe` are Monads, which means that they support
-    - `->map` with functorial laws
+    - `->map` with functor laws
     - `::of` (pure) and `->ap` (apply) with applicative laws
     - `->flatMap` (bind) with monadic laws
     - on top of that they support many friendly functional methods (like `exists`, `all`, `find` etc.) 
