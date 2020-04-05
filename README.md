@@ -13,6 +13,7 @@
     - [Option](#option)
     - [TrySafe](#trysafe)
     - [Lift operator](#lift-operator)
+    - [Traverse](#traverse)
 - [License](#features)
 - [Contributing](#features)
 
@@ -416,6 +417,72 @@ print $createUriLifted($hosts, $ports); // []
 ```
 This is not coincidence - `Option::none()`, `ArrayList::fromEmpty()`, `LazyList::fromEmpty()`, `TrySafe::failure($ex)` they all create an instance expressing nonexistence of value and are analogous to zero in context of multiplication (empty set in cartesian product for these type classes actually).
 
+### Traverse
+ 
+You may find yourself in situation, where you map list using mapper function which returns values wrapped in `Option` but you'd rather have values unwrapped. And that is when `traverse` method comes handy:
+
+```php
+use Bonami\Collection\ArrayList;
+use Bonami\Collection\Option;
+
+$getUserNameById = function(int $id): Option {
+	$userNamesById = [
+		1 => "John",
+		2 => "Paul",
+		3 => "George",
+		4 => "Ringo",
+	];
+	return Option::fromNullable($userNamesById[$id] ?? null);
+};
+
+print Option::traverse(ArrayList::fromIterable([1, 3, 4]), $getUserNameById); 
+// Some([John, Paul, Ringo])
+``` 
+
+Compare the result with usage of our old buddy `ArrayList::map`: 
+
+```php
+use Bonami\Collection\ArrayList;
+use Bonami\Collection\Option;
+
+$getUserNameById = function(int $id): Option {
+	$userNamesById = [
+		1 => "John",
+		2 => "Paul",
+		3 => "George",
+		4 => "Ringo",
+	];
+	return Option::fromNullable($userNamesById[$id] ?? null);
+};
+
+print ArrayList::fromIterable([1, 3, 4])
+    ->map($getUserNameById);
+// [Some(John), Some(George), Some(Ringo)]
+``` 
+
+Did you spot the difference? We have list of options with strings inside here whereas we have option of list with strings inside in the first code example.
+
+So `traverse` allows us to convert list of `Options` to `Option` of list with unwrapped values. And guess what - as usual, `None` will ruin everything:   
+
+```php
+use Bonami\Collection\ArrayList;
+use Bonami\Collection\Option;
+
+$getUserNameById = function(int $id): Option {
+	$userNamesById = [
+		1 => "John",
+		2 => "Paul",
+		3 => "George",
+		4 => "Ringo",
+	];
+	return Option::fromNullable($userNamesById[$id] ?? null);
+};
+
+print Option::traverse(ArrayList::fromIterable([1, 3, 666]), $getUserNameById); 
+// None
+``` 
+
+Usage of `traverse` method is not limited to `Option` class. It will work with any applicative, so it is available for `TrySafe`, `ArrayList` & `LazyList` (`Failure` & empty list instances behave the same way as `None`).
 
 ## License
 
