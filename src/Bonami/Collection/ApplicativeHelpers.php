@@ -53,4 +53,7 @@ trait ApplicativeHelpers {
 			);
 	}
 
+	final public static function sequence(iterable $iterable): self {
+		self::traverse($iterable, identity());
+	}
 }
