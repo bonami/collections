@@ -1529,4 +1529,22 @@ parameters:
 			message: "#^Method class@anonymous/tests/Bonami/Collection/helpers\\.php\\:75\\:\\:getCalls\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: tests/Bonami/Collection/helpers.php
+		-
+			message: "#^Method Bonami\\\\Collection\\\\ArrayList\\:\\:sequence\\(\\) should return Bonami\\\\Collection\\\\ArrayList but return statement is missing\\.$#"
+			count: 1
+			path: src/Bonami/Collection/ArrayList.php
 
+		-
+			message: "#^Method Bonami\\\\Collection\\\\LazyList\\:\\:sequence\\(\\) should return Bonami\\\\Collection\\\\LazyList but return statement is missing\\.$#"
+			count: 1
+			path: src/Bonami/Collection/LazyList.php
+
+		-
+			message: "#^Method Bonami\\\\Collection\\\\Option\\:\\:sequence\\(\\) should return Bonami\\\\Collection\\\\Option but return statement is missing\\.$#"
+			count: 1
+			path: src/Bonami/Collection/Option.php
+
+		-
+			message: "#^Method Bonami\\\\Collection\\\\TrySafe\\:\\:sequence\\(\\) should return Bonami\\\\Collection\\\\TrySafe but return statement is missing\\.$#"
+			count: 1
+			path: src/Bonami/Collection/TrySafe.php
