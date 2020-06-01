@@ -3,6 +3,7 @@
 namespace Bonami\Collection;
 
 use ArrayIterator;
+use Bonami\Collection\Exception\OutOfBoundsException;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use stdClass;
@@ -58,6 +59,26 @@ class ArrayListTest extends TestCase {
 	public function testIsNotEmpty(): void {
 		$this->assertFalse(ArrayList::fromEmpty()->isNotEmpty());
 		$this->assertTrue(ArrayList::of(1, 2)->isNotEmpty());
+	}
+
+	public function testGet(): void {
+		$a = ArrayList::of(666);
+		$this->assertTrue($a->get(0)->equals(Option::some(666)));
+		$this->assertTrue($a->get(1)->equals(Option::none()));
+	}
+
+	public function testGetOrElse(): void {
+		$a = ArrayList::of(666);
+		$this->assertSame(666, $a->getOrElse(0, 42));
+		$this->assertSame(42, $a->getOrElse(1, 42));
+	}
+
+	public function testGetUnsafe(): void {
+		$a = ArrayList::of(666);
+		$this->assertSame(666, $a->getUnsafe(0));
+
+		$this->expectException(OutOfBoundsException::class);
+		$a->getUnsafe(1);
 	}
 
 	public function testMap(): void {
