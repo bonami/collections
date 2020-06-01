@@ -4,6 +4,7 @@ namespace Bonami\Collection;
 
 use ArrayIterator;
 use Bonami\Collection\Exception\NotImplementedException;
+use Bonami\Collection\Exception\OutOfBoundsException;
 use Countable;
 use IteratorAggregate;
 use JsonSerializable;
@@ -209,6 +210,63 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable {
 	 */
 	public function isNotEmpty(): bool {
 		return $this->count() !== 0;
+	}
+
+	/**
+	 * Safely gets item in list by key wrapped in Option.
+	 *
+	 * Complexity: o(1)
+	 *
+	 * @see getUnsafe - when you are 100 % sure, that key is set
+	 * @see getOrElse - for unboxing value directly with alternative value when value is not set
+	 *
+	 * @param int $key
+	 *
+	 * @return Option<T>
+	 */
+	public function get(int $key): Option {
+		return array_key_exists($key, $this->items)
+			? Option::some($this->items[$key])
+			: Option::none();
+	}
+
+	/**
+	 * Safely gets unwrapped item or alternative, when key is not defined
+	 *
+	 * Complexity: o(1)
+	 *
+	 * @see get - for getting Option instead of unboxing it directly
+	 * @see getUnsafe - when you are 100 % sure, that key is set
+	 *
+	 * @param int $key
+	 * @param T $else
+	 *
+	 * @return T
+	 */
+	public function getOrElse(int $key, $else) {
+		return array_key_exists($key, $this->items)
+			? $this->items[$key]
+			: $else;
+	}
+
+	/**
+	 * Gets unwrapped item or fail with exception, when key is not defined
+	 *
+	 * @see get - for getting Option instead of unboxing it directly
+	 * @see getOrElse - for unboxing value directly with alternative value when value is not set
+	 *
+	 * @param int $key
+	 *
+	 * @throws OutOfBoundsException
+	 *
+	 * @return T
+	 */
+	public function getUnsafe(int $key) {
+		if (array_key_exists($key, $this->items)) {
+			return $this->items[$key];
+		}
+
+		throw new OutOfBoundsException("Key [$key] does not exist");
 	}
 
 	/**
