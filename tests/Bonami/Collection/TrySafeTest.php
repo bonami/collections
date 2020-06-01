@@ -161,7 +161,7 @@ class TrySafeTest extends TestCase {
 	}
 
 	public function testLaws(): void {
-		$assertEquals = function ($a, $b) { $this->equals($a, $b); };
+		$assertEquals = function ($a, $b): void { $this->equals($a, $b); };
 		$tryEquals = function (TrySafe $a, TrySafe $b): bool { return $a->equals($b); };
 		$pure = function ($value): TrySafe { return TrySafe::of($value); };
 
@@ -218,6 +218,13 @@ class TrySafeTest extends TestCase {
 		testApplicativeInterchange($assertEquals, $pure, 666, $failure);
 	}
 
+	/**
+	 * @template T
+	 * @param T $a
+	 * @param T $b
+	 *
+	 * @return void
+	 */
 	private function equals($a, $b): void {
 		if ($a instanceof TrySafe && $b instanceof TrySafe) {
 			self::assertTrue($a->equals($b));
@@ -226,6 +233,9 @@ class TrySafeTest extends TestCase {
 		}
 	}
 
+	/**
+	 * @return TrySafe<mixed>
+	 */
 	private function createFailure(): TrySafe {
 		return TrySafe::failure($this->createHashableException());
 	}

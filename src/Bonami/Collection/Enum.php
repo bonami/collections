@@ -10,15 +10,18 @@ use function is_object;
 
 abstract class Enum implements IHashable {
 
-	/** @var array */
-	private static $instances;
-	/** @var array */
+	/** @var array<string, Map<int|string, static>> */
+	private static $instances = [];
+	/** @var array<string, array<int|string, static>> */
 	private static $instanceIndex;
-	/** @var array */
+	/** @var array<string, array<int|string, string>> */
 	private static $constNameIndex;
-	/** @var mixed */
+	/** @var int|string */
 	private $value;
 
+	/**
+	 * @param int|string $value
+	 */
 	protected function __construct($value) {
 		$this->value = $value;
 	}
@@ -35,7 +38,9 @@ abstract class Enum implements IHashable {
 		}
 		if (!isset(self::$instanceIndex[$class])) {
 			$instances = self::instanceList();
-			self::$instanceIndex[$class] = array_combine($instances->getValues(), $instances->toArray());
+			$combined = array_combine($instances->getValues(), $instances->toArray());
+			assert(is_array($combined));
+			self::$instanceIndex[$class] = $combined;
 		}
 		if (!isset(self::$instanceIndex[$class][$value])) {
 			throw new InvalidEnumValueException($value, static::class);
@@ -44,45 +49,61 @@ abstract class Enum implements IHashable {
 		return self::$instanceIndex[$class][$value];
 	}
 
-	public static function instanceList() {
+	/**
+	 * @return EnumList<static>
+	 */
+	public static function instanceList(): EnumList {
 		return EnumList::fromIterable(self::instanceMap()->values());
 	}
 
+	/**
+	 * @param static ...$enums
+	 *
+	 * @return EnumList<static>
+	 */
 	public static function getListComplement(self ...$enums) {
 		return self::instanceList()->minus($enums);
 	}
 
+	/**
+	 * @return Map<int|string, static>
+	 */
 	public static function instanceMap(): Map {
 		$class = static::class;
 
-		if (!isset(self::$instances)) {
-			self::$instances = [];
+		if (isset(self::$instances[$class])) {
+			return self::$instances[$class];
 		}
 
-		if (!isset(self::$instances[$class])) {
-			$items = [];
-			foreach (self::getClassConstants($class) as $value) {
-				$items[] = [$value, new static($value)];
-			}
-			self::$instances[$class] = new Map($items);
-		}
+		/** @var iterable<int, array<int, static>> $pairs */
+		$pairs = array_map(
+			function ($value) { return [$value, new static($value)]; },
+			self::getClassConstants()
+		);
 
-		return self::$instances[$class];
+		return self::$instances[$class] = Map::fromIterable($pairs);
 	}
 
+	/**
+	 * @param int|string $value
+	 *
+	 * @return bool
+	 */
 	public static function exists($value): bool {
 		return static::instanceMap()->has($value);
 	}
 
+	/**
+	 * @return int|string
+	 */
 	public function getValue() {
 		return $this->value;
 	}
 
 	public function getConstName(): string {
-		$class = static::class;
-		self::lazyInitConstNameIndex($class);
+		self::lazyInitConstNameIndex();
 
-		return self::$constNameIndex[$class][$this->value];
+		return self::$constNameIndex[static::class][$this->value];
 	}
 
 	public function __toString() {
@@ -93,20 +114,22 @@ abstract class Enum implements IHashable {
 		return $this->getValue();
 	}
 
-	private static function getClassConstants($class): array {
-		$reflectionClass = new ReflectionClass($class);
-
-		return $reflectionClass->getConstants();
+	/**
+	 * @return array<string>
+	 */
+	private static function getClassConstants(): array {
+		return (new ReflectionClass(static::class))->getConstants();
 	}
 
-	private static function lazyInitConstNameIndex($class): void {
+	private static function lazyInitConstNameIndex(): void {
+		$class = static::class;
 		if (!isset(self::$constNameIndex)) {
 			self::$constNameIndex = [];
 		}
 
 		if (!isset(self::$constNameIndex[$class])) {
 			$constNameIndex = [];
-			foreach (self::getClassConstants($class) as $constName => $value) {
+			foreach (self::getClassConstants() as $constName => $value) {
 				$constNameIndex[$value] = $constName;
 			}
 			self::$constNameIndex[$class] = $constNameIndex;

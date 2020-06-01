@@ -349,10 +349,10 @@ class ArrayListTest extends TestCase {
 
 	public function testEach(): void {
 		$a = ArrayList::of(1, 2);
-		$b = [];
+		$acc = 0;
 
-		$a->each(function ($i) use (&$b) { $b[] = $i; });
-		$this->assertEquals([1, 2], $b);
+		$a->each(function (int $i) use (&$acc): void { $acc += $i; });
+		$this->assertEquals(3, $acc);
 	}
 
 	public function testMaxWithNoCallback(): void {

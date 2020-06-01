@@ -23,16 +23,18 @@ trait ApplicativeHelpers {
 	}
 
 	/**
-	 * Takes any `iterable[A]`, for each item `A` transforms to applicative with $mapperToApplicative
-	 * `A -> self[B]` and cumulates it in `self[ArrayList[B]]`.
+	 * Takes any `iterable<A>`, for each item `A` transforms to applicative with $mapperToApplicative
+	 * `A => self<B>` and cumulates it in `self<ArrayList<B>>`.
 	 *
-	 * @param iterable $iterable             - iterable[A]
-	 * @param callable $mapperToApplicative  - A -> self[B]
+	 * @param iterable<mixed> $iterable             - iterable<A>
+	 * @param callable(mixed): self<mixed> $mapperToApplicative  - A => self<B>
 	 *
 	 *                                         When omitted, identity is used. That is useful when
 	 *                                         iterable already contains self instances
 	 *
-	 * @return self
+	 * @see sequence - behaves same as traverse, execept it is called with identity
+	 *
+	 * @return self<ArrayList<mixed>>
 	 */
 	final public static function traverse(iterable $iterable, callable $mapperToApplicative = null): self {
 		$mapperToApplicative = $mapperToApplicative ?? identity();
@@ -53,7 +55,18 @@ trait ApplicativeHelpers {
 			);
 	}
 
+	/**
+	 * Takes any `iterable<self<A>>` and sequence it into `self<ArrayList<A>>`. If any `self` is "empty", the result is
+	 * "short circuited".
+	 *
+	 * E. g. when called upon Option, when any instance is a None, then result is None. If all instances are Some, the result
+	 * is Some<ArrayList<A>>
+	 *
+	 * @param iterable<mixed> $iterable             - iterable<self<A>>
+	 *
+	 * @return self<ArrayList<mixed>>
+	 */
 	final public static function sequence(iterable $iterable): self {
-		self::traverse($iterable, identity());
+		return self::traverse($iterable, identity());
 	}
 }

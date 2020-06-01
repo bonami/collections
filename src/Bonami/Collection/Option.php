@@ -7,22 +7,38 @@ use Bonami\Collection\Exception\ValueIsNotPresentException;
 use Bonami\Collection\Hash\IHashable;
 use EmptyIterator;
 use IteratorAggregate;
+use Traversable;
 
+/**
+ * @template T
+ * @implements IteratorAggregate<int, T>
+ */
 abstract class Option implements IHashable, IteratorAggregate {
 
 	use ApplicativeHelpers;
 
-	/** @var Option|null */
+	/** @var self<T>|null */
 	private static $none;
 
-	final public static function of($value): Option {
+	/**
+	 * @param T $value
+	 * @return self<T>
+	 */
+	final public static function of($value): self {
 		return self::some($value);
 	}
 
-	final public static function fromNullable($value): Option {
+	/**
+	 * @param ?T $value
+	 * @return self<T>
+	 */
+	final public static function fromNullable($value): self {
 		return $value === null ? self::none() : self::some($value);
 	}
 
+	/**
+	 * @return self<T>
+	 */
 	final public static function none(): Option {
 		return self::$none ?? self::$none = new class extends Option {
 
@@ -46,11 +62,21 @@ abstract class Option implements IHashable, IteratorAggregate {
 				return $this;
 			}
 
-			/** @inheritDoc */
+			/**
+			 * Consider calling getOrElse instead
+			 * @throws ValueIsNotPresentException
+			 *
+			 * @return T
+			 */
 			public function getUnsafe() {
 				throw new ValueIsNotPresentException("Can not get value for None");
 			}
 
+			/**
+			 * @template E
+			 * @param E $else
+			 * @return E
+			 */
 			public function getOrElse($else) {
 				return $else;
 			}
@@ -59,11 +85,17 @@ abstract class Option implements IHashable, IteratorAggregate {
 				return TrySafe::failure(new ValueIsNotPresentException());
 			}
 
+			/**
+			 * @return int|string
+			 */
 			public function hashCode() {
 				return spl_object_hash($this); // There should be only one instance of none
 			}
 
-			public function getIterator() {
+			/**
+			 * @return Traversable<int, T>
+			 */
+			public function getIterator(): Traversable {
 				return new EmptyIterator();
 			}
 
@@ -82,10 +114,17 @@ abstract class Option implements IHashable, IteratorAggregate {
 		};
 	}
 
-	final public static function some($value): Option {
+	/**
+	 * @param T $value
+	 * @return self<T>
+	 */
+	final public static function some($value): self {
 		return new class($value) extends Option {
+
+			/** @var T */
 			private $value;
 
+			/** @param T $value */
 			protected function __construct($value) {
 				$this->value = $value;
 			}
@@ -115,11 +154,21 @@ abstract class Option implements IHashable, IteratorAggregate {
 				return $predicate($this->value) ? $this : self::none();
 			}
 
-			/** @inheritDoc */
+			/**
+			 * Consider calling getOrElse instead
+			 * @throws ValueIsNotPresentException
+			 *
+			 * @return T
+			 */
 			public function getUnsafe() {
 				return $this->value;
 			}
 
+			/**
+			 * @template E
+			 * @param E $else
+			 * @return T
+			 */
 			public function getOrElse($else) {
 				return $this->value;
 			}
@@ -128,6 +177,9 @@ abstract class Option implements IHashable, IteratorAggregate {
 				return TrySafe::success($this->value);
 			}
 
+			/**
+			 * @return int|string
+			 */
 			public function hashCode() {
 				$valueHash = $this->value instanceof IHashable
 					? $this->value->hashCode()
@@ -135,6 +187,9 @@ abstract class Option implements IHashable, IteratorAggregate {
 				return __CLASS__ . "::some({$valueHash})";
 			}
 
+			/**
+			 * @return Traversable<int, T>
+			 */
 			public function getIterator() {
 				return new ArrayIterator([$this->value]);
 			}
@@ -156,14 +211,40 @@ abstract class Option implements IHashable, IteratorAggregate {
 
 	abstract public function isDefined(): bool;
 
-	abstract public function filter(callable $predicate): Option;
+	/**
+	 * @param callable(T): bool $predicate
+	 * @return self<T>
+	 */
+	abstract public function filter(callable $predicate): self;
 
-	abstract public function ap(Option $option): Option;
+	/**
+	 * @param self<mixed> $option
+	 *
+	 * @return self<mixed>
+	 */
+	abstract public function ap(self $option): self;
 
-	abstract public function map(callable $mapper): Option;
+	/**
+	 * @param callable(mixed): mixed $mapper
+	 *
+	 * @return self<mixed>
+	 */
+	abstract public function map(callable $mapper): self;
 
-	abstract public function flatMap(callable $mapper): Option;
+	/**
+	 * @param callable(mixed): self<mixed> $mapper
+	 *
+	 * @return self<mixed>
+	 */
+	abstract public function flatMap(callable $mapper): self;
 
+	/**
+	 * @template R
+	 * @param callable(R, T): R $reducer
+	 * @param R $initialReduction
+	 *
+	 * @return R
+	 */
 	final public function reduce(callable $reducer, $initialReduction) {
 		return LazyList::fromIterable($this)->reduce($reducer, $initialReduction);
 	}
@@ -171,17 +252,44 @@ abstract class Option implements IHashable, IteratorAggregate {
 	/**
 	 * Consider calling getOrElse instead
 	 * @throws ValueIsNotPresentException
+	 *
+	 * @return T
 	 */
 	abstract public function getUnsafe();
 
+	/**
+	 * @template E
+	 * @param E $else
+	 * @return T|E
+	 */
 	abstract public function getOrElse($else);
 
+	/**
+	 * @return TrySafe<T>
+	 */
 	abstract public function toTrySafe(): TrySafe;
 
+	/**
+	 * @param self<T> $else
+	 *
+	 * @return self<T>
+	 */
 	abstract public function orElse(self $else): self;
 
+	/**
+	 * @template F
+	 * @template S
+	 * @param callable(): F $handleNone
+	 * @param callable(T): S $handleSome
+	 *
+	 * @return F|S
+	 */
 	abstract public function resolve(callable $handleNone, callable $handleSome);
 
+	/**
+	 * @param self<T> $value
+	 * @return bool
+	 */
 	final public function equals($value): bool {
 		return $value instanceof Option
 			&& $value->hashCode() === $this->hashCode();

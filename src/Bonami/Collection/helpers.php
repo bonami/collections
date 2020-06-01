@@ -22,6 +22,10 @@ function tautology(): callable {
 
 /**
  * Returns function that supplies $args as an arguments to passed function
+ *
+ * @param mixed... $args
+ *
+ * @return callable
  */
 function applicator(...$args): callable {
 	return function (callable $callable) use ($args) {
@@ -35,6 +39,11 @@ function compose(callable $f, callable $g): callable {
 	};
 }
 
+/**
+ * @param mixed $key
+ *
+ * @return int|string
+ */
 function hashKey($key) {
 	if ($key === (object)$key) {
 		if ($key instanceof IHashable) {

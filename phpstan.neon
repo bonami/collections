@@ -3,7 +3,6 @@ includes:
 parameters:
 	ignoreErrors:
 	autoload_directories:
-	checkMissingIterableValueType: false
 	universalObjectCratesClasses:
 		- stdClass
 		- DOMElement

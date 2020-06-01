@@ -17,8 +17,8 @@ class EnumListTest extends TestCase {
 
 }
 
-/* @codingStandardsIgnoreStart */
+// @codingStandardsIgnoreStart
 class DummyEnum extends Enum {
 	public const HI = 'hi';
 }
-/* @codingStandardsIgnoreEnd */
+// @codingStandardsIgnoreEnd
