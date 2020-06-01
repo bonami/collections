@@ -934,6 +934,19 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable {
 	}
 
 	/**
+	 * Maps with $mapper and zips with original values to keep track of which original value was mapped with $mapper
+	 *
+	 * Complexity: o(n)
+	 *
+	 * @param callable $mapper - ($value: mixed, $index: int) => mixed
+	 *
+	 * @return Map<T, mixed>
+	 */
+	public function zipMap(callable $mapper): Map {
+		return $this->zip($this->map($mapper))->toMap();
+	}
+
+	/**
 	 * Creates string by imploding all items with glue. This works great when items are scalars
 	 * or has __toString method implemented.
 	 *
@@ -967,6 +980,20 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable {
 	 */
 	public function reverse() {
 		return new static(array_reverse($this->items));
+	}
+
+	/**
+	 * Creates a map from List of pairs.
+	 *
+	 * When called, you have to be sure, that list contains two element arrays, otherwise it will fails in runtime
+	 * with exception.
+	 *
+	 * Complexity: o(n)
+	 *
+	 * @return Map<mixed, mixed>
+	 */
+	public function toMap(): Map {
+		return Map::fromIterable($this->items);
 	}
 
 	/**

@@ -413,6 +413,23 @@ class LazyList implements IteratorAggregate {
 	}
 
 	/**
+	 * Maps with $mapper and zips with original values to keep track of which original value was mapped with $mapper
+	 *
+	 * This operation immediately materializes LazyList
+	 *
+	 * Complexity: o(n)
+	 *
+	 * @param callable $mapper - ($value: mixed, $index: int) => mixed
+	 *
+	 * @return Map<T, mixed>
+	 */
+	public function zipMap(callable $mapper): Map {
+		return $this
+			->map(function ($value, $key) use ($mapper): array { return [$value, $mapper($value, $key)]; })
+			->toMap();
+	}
+
+	/**
 	 * @param iterable<T> ...$iterables
 	 *
 	 * @return static<T>
@@ -459,7 +476,7 @@ class LazyList implements IteratorAggregate {
 	}
 
 	/**
-	 * @return array<T>
+	 * @return array<int, T>
 	 */
 	public function toArray(): array {
 		return iterator_to_array($this->getIterator(), false);
@@ -481,6 +498,20 @@ class LazyList implements IteratorAggregate {
 	 */
 	public function toList(): ArrayList {
 		return ArrayList::fromIterable($this);
+	}
+
+	/**
+	 * Creates a map from List of pairs.
+	 *
+	 * When called, you have to be sure, that list contains two element arrays, otherwise it will fails in runtime
+	 * with exception.
+	 *
+	 * Complexity: o(n)
+	 *
+	 * @return Map<mixed, mixed>
+	 */
+	public function toMap(): Map {
+		return Map::fromIterable($this->toArray());
 	}
 
 	/**

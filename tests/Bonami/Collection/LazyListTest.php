@@ -361,6 +361,12 @@ class LazyListTest extends TestCase {
 		], $lazyList1->zip($lazyList2, $lazyList3)->toArray());
 	}
 
+	public function testZipMap(): void {
+		$ints = LazyList::range(0, 2);
+		$map = $ints->zipMap(function (int $i): string { return chr(ord('a') + $i); });
+		$this->assertEquals(Map::fromIterable([[0, 'a'], [1, 'b'], [2, 'c']]), $map);
+	}
+
 	public function testConcat(): void {
 		$lazyList1 = new LazyList(new ArrayIterator(range(1, 10, 1)));
 		$lazyList2 = new LazyList(new ArrayIterator(range(11, 20, 1)));
@@ -400,6 +406,11 @@ class LazyListTest extends TestCase {
 		$lazyList = new LazyList(new ArrayIterator(range(1, 10)));
 
 		$this->assertEquals(range(1, 3), $lazyList->take(3)->toArray());
+	}
+
+	public function testToMap(): void {
+		$pairs = LazyList::of([1, 'a'], [2, 'b']);
+		$this->assertEquals(Map::fromIterable([[1, 'a'], [2, 'b']]), $pairs->toMap());
 	}
 
 	public function testJoin(): void {
