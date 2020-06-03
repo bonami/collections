@@ -526,6 +526,12 @@ class ArrayListTest extends TestCase {
 		), $integers->zip($strings, $alphabet));
 	}
 
+	public function testZipMap(): void {
+		$ints = ArrayList::range(0, 2);
+		$map = $ints->zipMap(function (int $i): string { return chr(ord('a') + $i); });
+		$this->assertEquals(Map::fromIterable([[0, 'a'], [1, 'b'], [2, 'c']]), $map);
+	}
+
 	public function testJoin(): void {
 		$this->assertEquals('1, 2, 3', ArrayList::of(1, 2, 3)->join(', '));
 	}
@@ -544,6 +550,11 @@ class ArrayListTest extends TestCase {
 
 	public function testReverse(): void {
 		$this->assertEquals(ArrayList::of(2, 1), ArrayList::of(1, 2)->reverse());
+	}
+
+	public function testToMap(): void {
+		$pairs = ArrayList::of([1, 'a'], [2, 'b']);
+		$this->assertEquals(Map::fromIterable([[1, 'a'], [2, 'b']]), $pairs->toMap());
 	}
 
 	public function testToString(): void {
