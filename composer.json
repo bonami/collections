@@ -21,7 +21,8 @@
     "ergebnis/composer-normalize": "^2.0.2",
     "phpstan/phpstan": "^0.12",
     "phpunit/phpunit": "^8.5",
-    "bonami/coding-standards": "^0.1-dev"
+    "bonami/coding-standards": "^0.1-dev",
+    "phpbench/phpbench": "^1.0@dev"
   },
   "config": {
     "bin-dir": "bin"
@@ -59,6 +60,9 @@
     ],
     "phpcbf": [
       "bin/phpcbf --standard=./vendor/bonami/coding-standards/BonamiCodingStandards/ruleset.xml -p ./src ./tests"
+    ],
+    "bench": [
+      "bin/phpbench run benchmarks/ --report=default"
     ],
     "test": [
       "@phpunit",
