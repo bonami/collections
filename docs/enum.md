@@ -21,7 +21,7 @@ We can get instance of Enum by using `create` method.
 $redColor = Color::create(Color::RED);
 ```
 
-For inconvenience we can add static constructors that will simplify Enum usage.
+For more convinient instancing, we can add static constructors that will simplify Enum usage.
 ```php
 use Bonami\Collection\Enum;
 
@@ -32,15 +32,15 @@ class Color extends Enum {
 	const GREEN = "GREEN";
 	
 	public static function RED(): Color {
-		return Color::create(self::RED);
+		return self::create(self::RED);
 	}
 
 	public static function BLUE(): Color {
-		return Color::create(self::BLUE);
+		return self::create(self::BLUE);
 	}
 
 	public static function GREEN(): Color {
-		return Color::create(self::GREEN);
+		return self::create(self::GREEN);
 	}
 }
 
