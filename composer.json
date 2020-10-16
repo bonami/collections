@@ -21,7 +21,7 @@
     "ergebnis/composer-normalize": "^2.0.2",
     "phpstan/phpstan": "^0.12",
     "phpunit/phpunit": "^8.5",
-    "bonami/coding-standards": "^0.1-dev"
+    "bonami/coding-standards": "^0.2"
   },
   "config": {
     "bin-dir": "bin"
