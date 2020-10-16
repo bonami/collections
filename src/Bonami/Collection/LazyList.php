@@ -8,7 +8,6 @@ use InvalidArgumentException;
 use Iterator;
 use IteratorAggregate;
 use RuntimeException;
-use SplFixedArray;
 use Traversable;
 
 /**
@@ -435,9 +434,9 @@ class LazyList implements IteratorAggregate {
 	 * @return static<T>
 	 */
 	public function concat(iterable ...$iterables) {
-		$append = function (iterable ...$iterables): Generator {
+		$append = function (array $iterables): Generator {
 			yield from $this;
-			foreach (SplFixedArray::fromArray(...$iterables) as $iterator) {
+			foreach ($iterables as $iterator) {
 				yield from $iterator;
 			}
 		};
