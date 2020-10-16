@@ -21,7 +21,7 @@ final class Lambda {
 	 * @param int|null $numberOfArgs
 	 * @param array<mixed> $applied
 	 */
-	protected function __construct(callable $callable, int $numberOfArgs = null, array $applied = []) {
+	protected function __construct(callable $callable, ?int $numberOfArgs = null, array $applied = []) {
 		$this->callable = $callable;
 		$this->numberOfArgs = $numberOfArgs;
 		$this->applied = $applied;

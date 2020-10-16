@@ -36,7 +36,7 @@ trait ApplicativeHelpers {
 	 *
 	 * @return self<ArrayList<mixed>>
 	 */
-	final public static function traverse(iterable $iterable, callable $mapperToApplicative = null): self {
+	final public static function traverse(iterable $iterable, ?callable $mapperToApplicative = null): self {
 		$mapperToApplicative = $mapperToApplicative ?? identity();
 		return LazyList::fromIterable($iterable)
 			->reduce(
