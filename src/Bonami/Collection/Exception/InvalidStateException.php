@@ -4,6 +4,7 @@ namespace Bonami\Collection\Exception;
 
 use RuntimeException;
 
-class InvalidStateException extends RuntimeException implements CollectionException {
+class InvalidStateException extends RuntimeException implements CollectionException
+{
 
 }

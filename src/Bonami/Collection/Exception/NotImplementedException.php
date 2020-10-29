@@ -4,6 +4,7 @@ namespace Bonami\Collection\Exception;
 
 use RuntimeException;
 
-class NotImplementedException extends RuntimeException implements CollectionException {
+class NotImplementedException extends RuntimeException implements CollectionException
+{
 
 }
