@@ -21,7 +21,7 @@
     "ergebnis/composer-normalize": "^2.0.2",
     "phpstan/phpstan": "^0.12",
     "phpunit/phpunit": "^8.5",
-    "bonami/coding-standards": "^0.2"
+    "squizlabs/php_codesniffer": "^3.5.0"
   },
   "config": {
     "bin-dir": "bin"
@@ -55,10 +55,10 @@
       "bin/phpunit --colors=always"
     ],
     "phpcs": [
-      "bin/phpcs --standard=./vendor/bonami/coding-standards/BonamiCodingStandards/ruleset.xml -p ./src ./tests"
+      "bin/phpcs --standard=./ruleset.xml -p ./src ./tests"
     ],
     "phpcbf": [
-      "bin/phpcbf --standard=./vendor/bonami/coding-standards/BonamiCodingStandards/ruleset.xml -p ./src ./tests"
+      "bin/phpcbf --standard=./ruleset.xml -p ./src ./tests"
     ],
     "test": [
       "@phpunit",
