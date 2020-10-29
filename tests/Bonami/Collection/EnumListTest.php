@@ -1,20 +1,23 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace Bonami\Collection;
 
 use PHPUnit\Framework\TestCase;
 
-class EnumListTest extends TestCase {
+class EnumListTest extends TestCase
+{
 
-	public function testFromOnly(): void {
-		$item = DummyEnum::create(DummyEnum::HI);
+    public function testFromOnly(): void
+    {
+        $item = DummyEnum::create(DummyEnum::HI);
 
-		$this->assertEquals(
-			new EnumList([$item]),
-			EnumList::of($item)
-		);
-	}
-
+        $this->assertEquals(
+            new EnumList([$item]),
+            EnumList::of($item)
+        );
+    }
 }
 
 // @codingStandardsIgnoreStart

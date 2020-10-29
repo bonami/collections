@@ -2,9 +2,9 @@
 
 namespace Bonami\Collection\Hash;
 
-interface IHashable {
+interface IHashable
+{
 
-	/** @return int|string */
-	public function hashCode();
-
+    /** @return int|string */
+    public function hashCode();
 }

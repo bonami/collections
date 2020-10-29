@@ -2,6 +2,7 @@
 
 namespace Bonami\Collection\Exception;
 
-interface CollectionException {
+interface CollectionException
+{
 
 }

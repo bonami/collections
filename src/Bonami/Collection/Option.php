@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Bonami\Collection;
 
@@ -13,285 +15,316 @@ use Traversable;
  * @template T
  * @implements IteratorAggregate<int, T>
  */
-abstract class Option implements IHashable, IteratorAggregate {
+abstract class Option implements IHashable, IteratorAggregate
+{
+    use ApplicativeHelpers;
 
-	use ApplicativeHelpers;
+    /** @var self<T>|null */
+    private static $none;
 
-	/** @var self<T>|null */
-	private static $none;
+    /**
+     * @param T $value
+     * @return self<T>
+     */
+    final public static function of($value): self
+    {
+         return self::some($value);
+    }
 
-	/**
-	 * @param T $value
-	 * @return self<T>
-	 */
-	final public static function of($value): self {
-		return self::some($value);
-	}
+    /**
+     * @param ?T $value
+     * @return self<T>
+     */
+    final public static function fromNullable($value): self
+    {
+         return $value === null ? self::none() : self::some($value);
+    }
 
-	/**
-	 * @param ?T $value
-	 * @return self<T>
-	 */
-	final public static function fromNullable($value): self {
-		return $value === null ? self::none() : self::some($value);
-	}
+    /**
+     * @return self<T>
+     */
+    final public static function none(): Option
+    {
+         return self::$none ?? self::$none = new class extends Option {
 
-	/**
-	 * @return self<T>
-	 */
-	final public static function none(): Option {
-		return self::$none ?? self::$none = new class extends Option {
+            public function isDefined(): bool
+            {
+                return false;
+            }
 
-			public function isDefined(): bool {
-				return false;
-			}
+            public function map(callable $mapper): Option
+            {
+                return $this;
+            }
 
-			public function map(callable $mapper): Option {
-				return $this;
-			}
+            public function ap(Option $option): Option
+            {
+                return $this;
+            }
 
-			public function ap(Option $option): Option {
-				return $this;
-			}
+            public function flatMap(callable $mapper): Option
+            {
+                return $this;
+            }
 
-			public function flatMap(callable $mapper): Option {
-				return $this;
-			}
+            public function filter(callable $predicate): Option
+            {
+                return $this;
+            }
 
-			public function filter(callable $predicate): Option {
-				return $this;
-			}
+         /**
+          * Consider calling getOrElse instead
+          * @throws ValueIsNotPresentException
+          *
+          * @return T
+          */
+            public function getUnsafe()
+            {
+                throw new ValueIsNotPresentException("Can not get value for None");
+            }
 
-			/**
-			 * Consider calling getOrElse instead
-			 * @throws ValueIsNotPresentException
-			 *
-			 * @return T
-			 */
-			public function getUnsafe() {
-				throw new ValueIsNotPresentException("Can not get value for None");
-			}
+         /**
+          * @template E
+          * @param E $else
+          * @return E
+          */
+            public function getOrElse($else)
+            {
+                return $else;
+            }
 
-			/**
-			 * @template E
-			 * @param E $else
-			 * @return E
-			 */
-			public function getOrElse($else) {
-				return $else;
-			}
+            public function toTrySafe(): TrySafe
+            {
+                return TrySafe::failure(new ValueIsNotPresentException());
+            }
 
-			public function toTrySafe(): TrySafe {
-				return TrySafe::failure(new ValueIsNotPresentException());
-			}
+         /**
+          * @return int|string
+          */
+            public function hashCode()
+            {
+                return spl_object_hash($this); // There should be only one instance of none
+            }
 
-			/**
-			 * @return int|string
-			 */
-			public function hashCode() {
-				return spl_object_hash($this); // There should be only one instance of none
-			}
+         /**
+          * @return Traversable<int, T>
+          */
+            public function getIterator(): Traversable
+            {
+                return new EmptyIterator();
+            }
 
-			/**
-			 * @return Traversable<int, T>
-			 */
-			public function getIterator(): Traversable {
-				return new EmptyIterator();
-			}
+            public function orElse(Option $else): Option
+            {
+                return $else;
+            }
 
-			public function orElse(Option $else): Option {
-				return $else;
-			}
+            public function resolve(callable $handleNone, callable $handleSome)
+            {
+                return $handleNone();
+            }
 
-			public function resolve(callable $handleNone, callable $handleSome) {
-				return $handleNone();
-			}
+            public function __toString(): string
+            {
+                return 'None';
+            }
+         };
+    }
 
-			public function __toString(): string {
-				return 'None';
-			}
+    /**
+     * @param T $value
+     * @return self<T>
+     */
+    final public static function some($value): self
+    {
+         return new class ($value) extends Option {
 
-		};
-	}
+             /** @var T */
+             private $value;
 
-	/**
-	 * @param T $value
-	 * @return self<T>
-	 */
-	final public static function some($value): self {
-		return new class($value) extends Option {
+             /** @param T $value */
+            protected function __construct($value)
+            {
+                $this->value = $value;
+            }
 
-			/** @var T */
-			private $value;
+            public function isDefined(): bool
+            {
+                return true;
+            }
 
-			/** @param T $value */
-			protected function __construct($value) {
-				$this->value = $value;
-			}
+            public function ap(Option $option): Option
+            {
+                assert(is_callable($this->value));
+                return $option->map(function ($value) {
+                    return Lambda::of($this->value)($value);
+                });
+            }
 
-			public function isDefined(): bool {
-				return true;
-			}
+            public function map(callable $mapper): Option
+            {
+                return self::of($mapper($this->value));
+            }
 
-			public function ap(Option $option): Option {
-				assert(is_callable($this->value));
-				return $option->map(function ($value) {
-					return Lambda::of($this->value)($value);
-				});
-			}
+            public function flatMap(callable $mapper): Option
+            {
+                $option = $mapper($this->value);
+                assert($option instanceof Option);
+                return $option;
+            }
 
-			public function map(callable $mapper): Option {
-				return self::of($mapper($this->value));
-			}
+            public function filter(callable $predicate): Option
+            {
+                return $predicate($this->value) ? $this : self::none();
+            }
 
-			public function flatMap(callable $mapper): Option {
-				$option = $mapper($this->value);
-				assert($option instanceof Option);
-				return $option;
-			}
+         /**
+          * Consider calling getOrElse instead
+          * @throws ValueIsNotPresentException
+          *
+          * @return T
+          */
+            public function getUnsafe()
+            {
+                return $this->value;
+            }
 
-			public function filter(callable $predicate): Option {
-				return $predicate($this->value) ? $this : self::none();
-			}
+         /**
+          * @template E
+          * @param E $else
+          * @return T
+          */
+            public function getOrElse($else)
+            {
+                return $this->value;
+            }
 
-			/**
-			 * Consider calling getOrElse instead
-			 * @throws ValueIsNotPresentException
-			 *
-			 * @return T
-			 */
-			public function getUnsafe() {
-				return $this->value;
-			}
+            public function toTrySafe(): TrySafe
+            {
+                return TrySafe::success($this->value);
+            }
 
-			/**
-			 * @template E
-			 * @param E $else
-			 * @return T
-			 */
-			public function getOrElse($else) {
-				return $this->value;
-			}
+         /**
+          * @return int|string
+          */
+            public function hashCode()
+            {
+                $valueHash = $this->value instanceof IHashable
+                    ? $this->value->hashCode()
+                    : hashKey($this->value);
+                return __CLASS__ . "::some({$valueHash})";
+            }
 
-			public function toTrySafe(): TrySafe {
-				return TrySafe::success($this->value);
-			}
+         /**
+          * @return Traversable<int, T>
+          */
+            public function getIterator()
+            {
+                return new ArrayIterator([$this->value]);
+            }
 
-			/**
-			 * @return int|string
-			 */
-			public function hashCode() {
-				$valueHash = $this->value instanceof IHashable
-					? $this->value->hashCode()
-					: hashKey($this->value);
-				return __CLASS__ . "::some({$valueHash})";
-			}
+            public function orElse(Option $else): Option
+            {
+                return $this;
+            }
 
-			/**
-			 * @return Traversable<int, T>
-			 */
-			public function getIterator() {
-				return new ArrayIterator([$this->value]);
-			}
+            public function resolve(callable $handleNone, callable $handleSome)
+            {
+                return $handleSome($this->value);
+            }
 
-			public function orElse(Option $else): Option {
-				return $this;
-			}
+            public function __toString(): string
+            {
+                return 'Some(' . $this->value . ')';
+            }
+         };
+    }
 
-			public function resolve(callable $handleNone, callable $handleSome) {
-				return $handleSome($this->value);
-			}
+    abstract public function isDefined(): bool;
 
-			public function __toString(): string {
-				return 'Some(' . $this->value . ')';
-			}
+    /**
+     * @param callable(T): bool $predicate
+     * @return self<T>
+     */
+    abstract public function filter(callable $predicate): self;
 
-		};
-	}
+    /**
+     * @param self<mixed> $option
+     *
+     * @return self<mixed>
+     */
+    abstract public function ap(self $option): self;
 
-	abstract public function isDefined(): bool;
+    /**
+     * @param callable(mixed): mixed $mapper
+     *
+     * @return self<mixed>
+     */
+    abstract public function map(callable $mapper): self;
 
-	/**
-	 * @param callable(T): bool $predicate
-	 * @return self<T>
-	 */
-	abstract public function filter(callable $predicate): self;
+    /**
+     * @param callable(mixed): self<mixed> $mapper
+     *
+     * @return self<mixed>
+     */
+    abstract public function flatMap(callable $mapper): self;
 
-	/**
-	 * @param self<mixed> $option
-	 *
-	 * @return self<mixed>
-	 */
-	abstract public function ap(self $option): self;
+    /**
+     * @template R
+     * @param callable(R, T): R $reducer
+     * @param R $initialReduction
+     *
+     * @return R
+     */
+    final public function reduce(callable $reducer, $initialReduction)
+    {
+         return LazyList::fromIterable($this)->reduce($reducer, $initialReduction);
+    }
 
-	/**
-	 * @param callable(mixed): mixed $mapper
-	 *
-	 * @return self<mixed>
-	 */
-	abstract public function map(callable $mapper): self;
+    /**
+     * Consider calling getOrElse instead
+     * @throws ValueIsNotPresentException
+     *
+     * @return T
+     */
+    abstract public function getUnsafe();
 
-	/**
-	 * @param callable(mixed): self<mixed> $mapper
-	 *
-	 * @return self<mixed>
-	 */
-	abstract public function flatMap(callable $mapper): self;
+    /**
+     * @template E
+     * @param E $else
+     * @return T|E
+     */
+    abstract public function getOrElse($else);
 
-	/**
-	 * @template R
-	 * @param callable(R, T): R $reducer
-	 * @param R $initialReduction
-	 *
-	 * @return R
-	 */
-	final public function reduce(callable $reducer, $initialReduction) {
-		return LazyList::fromIterable($this)->reduce($reducer, $initialReduction);
-	}
+    /**
+     * @return TrySafe<T>
+     */
+    abstract public function toTrySafe(): TrySafe;
 
-	/**
-	 * Consider calling getOrElse instead
-	 * @throws ValueIsNotPresentException
-	 *
-	 * @return T
-	 */
-	abstract public function getUnsafe();
+    /**
+     * @param self<T> $else
+     *
+     * @return self<T>
+     */
+    abstract public function orElse(self $else): self;
 
-	/**
-	 * @template E
-	 * @param E $else
-	 * @return T|E
-	 */
-	abstract public function getOrElse($else);
+    /**
+     * @template F
+     * @template S
+     * @param callable(): F $handleNone
+     * @param callable(T): S $handleSome
+     *
+     * @return F|S
+     */
+    abstract public function resolve(callable $handleNone, callable $handleSome);
 
-	/**
-	 * @return TrySafe<T>
-	 */
-	abstract public function toTrySafe(): TrySafe;
-
-	/**
-	 * @param self<T> $else
-	 *
-	 * @return self<T>
-	 */
-	abstract public function orElse(self $else): self;
-
-	/**
-	 * @template F
-	 * @template S
-	 * @param callable(): F $handleNone
-	 * @param callable(T): S $handleSome
-	 *
-	 * @return F|S
-	 */
-	abstract public function resolve(callable $handleNone, callable $handleSome);
-
-	/**
-	 * @param self<T> $value
-	 * @return bool
-	 */
-	final public function equals($value): bool {
-		return $value instanceof Option
-			&& $value->hashCode() === $this->hashCode();
-	}
+    /**
+     * @param self<T> $value
+     * @return bool
+     */
+    final public function equals($value): bool
+    {
+         return $value instanceof Option
+         && $value->hashCode() === $this->hashCode();
+    }
 }

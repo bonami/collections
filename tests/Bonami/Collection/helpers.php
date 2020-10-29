@@ -9,8 +9,9 @@ namespace Bonami\Collection;
  *
  * @return void
  */
-function testEqualsReflexivity(callable $assertEquals, callable $equals, $a): void {
-	$assertEquals(true, $equals($a, $a));
+function testEqualsReflexivity(callable $assertEquals, callable $equals, $a): void
+{
+    $assertEquals(true, $equals($a, $a));
 }
 
 /**
@@ -22,11 +23,12 @@ function testEqualsReflexivity(callable $assertEquals, callable $equals, $a): vo
  *
  * @return void
  */
-function testEqualsSymmetry(callable $assertEquals, callable $equals, $a, $b): void {
-	$assertEquals(
-		$equals($a, $b),
-		$equals($b, $a)
-	);
+function testEqualsSymmetry(callable $assertEquals, callable $equals, $a, $b): void
+{
+    $assertEquals(
+        $equals($a, $b),
+        $equals($b, $a)
+    );
 }
 
 /**
@@ -39,11 +41,12 @@ function testEqualsSymmetry(callable $assertEquals, callable $equals, $a, $b): v
  *
  * @return void
  */
-function testEqualsTransitivity(callable $assertEquals, callable $equals, $a, $b, $c): void {
-	$assertEquals(
-		$equals($a, $b) && $equals($b, $c),
-		$equals($a, $c)
-	);
+function testEqualsTransitivity(callable $assertEquals, callable $equals, $a, $b, $c): void
+{
+    $assertEquals(
+        $equals($a, $b) && $equals($b, $c),
+        $equals($a, $c)
+    );
 }
 
 /* @see https://wiki.haskell.org/Functor#Functor_Laws */
@@ -54,11 +57,12 @@ function testEqualsTransitivity(callable $assertEquals, callable $equals, $a, $b
  *
  * @return void
  */
-function testFunctorIdentity(callable $assertEquals, $functor): void {
-	$assertEquals(
-		$functor,
-		$functor->map(identity())
-	);
+function testFunctorIdentity(callable $assertEquals, $functor): void
+{
+    $assertEquals(
+        $functor,
+        $functor->map(identity())
+    );
 }
 
 /**
@@ -69,11 +73,12 @@ function testFunctorIdentity(callable $assertEquals, $functor): void {
  *
  * @return void
  */
-function testFunctorComposition(callable $assertEquals, $functor, callable $f, callable $g): void {
-	$assertEquals(
-		$functor->map($g)->map($f),
-		$functor->map(compose($f, $g))
-	);
+function testFunctorComposition(callable $assertEquals, $functor, callable $f, callable $g): void
+{
+    $assertEquals(
+        $functor->map($g)->map($f),
+        $functor->map(compose($f, $g))
+    );
 }
 
 
@@ -86,11 +91,12 @@ function testFunctorComposition(callable $assertEquals, $functor, callable $f, c
  *
  * @return void
  */
-function testApplicativeIdentity(callable $assertEquals, callable $pure, $applicative): void {
-	$assertEquals(
-		$pure(identity())->ap($applicative),
-		$applicative
-	);
+function testApplicativeIdentity(callable $assertEquals, callable $pure, $applicative): void
+{
+    $assertEquals(
+        $pure(identity())->ap($applicative),
+        $applicative
+    );
 }
 
 /**
@@ -101,11 +107,12 @@ function testApplicativeIdentity(callable $assertEquals, callable $pure, $applic
  *
  * @return void
  */
-function testApplicativeHomomorphism(callable $assertEquals, callable $pure, $value, callable $f): void {
-	$assertEquals(
-		$pure($f)->ap($pure($value)),
-		$pure($f($value))
-	);
+function testApplicativeHomomorphism(callable $assertEquals, callable $pure, $value, callable $f): void
+{
+    $assertEquals(
+        $pure($f)->ap($pure($value)),
+        $pure($f($value))
+    );
 }
 
 /**
@@ -116,11 +123,12 @@ function testApplicativeHomomorphism(callable $assertEquals, callable $pure, $va
  *
  * @return void
  */
-function testApplicativeInterchange(callable $assertEquals, callable $pure, $value, $applicativeF): void {
-	$assertEquals(
-		$applicativeF->ap($pure($value)),
-		$pure(applicator($value))->ap($applicativeF)
-	);
+function testApplicativeInterchange(callable $assertEquals, callable $pure, $value, $applicativeF): void
+{
+    $assertEquals(
+        $applicativeF->ap($pure($value)),
+        $pure(applicator($value))->ap($applicativeF)
+    );
 }
 
 /**
@@ -132,36 +140,45 @@ function testApplicativeInterchange(callable $assertEquals, callable $pure, $val
  *
  * @return void
  */
-function testApplicativeComposition(callable $assertEquals, callable $pure, $applicative, $applicativeF, $applicativeG): void {
-	$curriedComposition = Lambda::of(function (callable $f, callable $g): callable {
-		return compose($f, $g);
-	});
+function testApplicativeComposition(
+    callable $assertEquals,
+    callable $pure,
+    $applicative,
+    $applicativeF,
+    $applicativeG
+): void {
+    $curriedComposition = Lambda::of(function (callable $f, callable $g): callable {
+        return compose($f, $g);
+    });
 
-	$assertEquals(
-		$pure($curriedComposition)->ap($applicativeF)->ap($applicativeG)->ap($applicative),
-		$applicativeF->ap($applicativeG->ap($applicative))
-	);
+    $assertEquals(
+        $pure($curriedComposition)->ap($applicativeF)->ap($applicativeG)->ap($applicative),
+        $applicativeF->ap($applicativeG->ap($applicative))
+    );
 }
 
-interface CallSpy {
+interface CallSpy
+{
 
-	public function __invoke(): void;
-	/** @return array<int, array<mixed>> */
-	public function getCalls(): array;
-
+    public function __invoke(): void;
+    /** @return array<int, array<mixed>> */
+    public function getCalls(): array;
 }
 
-function createInvokableSpy(): CallSpy {
-	return new class implements CallSpy {
-		/** @var array<int, array<mixed>> $calls */
-		private $calls = [];
+function createInvokableSpy(): CallSpy
+{
+    return new class implements CallSpy {
+        /** @var array<int, array<mixed>> $calls */
+        private $calls = [];
 
-		public function __invoke(): void {
-			$this->calls[] = func_get_args();
-		}
+        public function __invoke(): void
+        {
+            $this->calls[] = func_get_args();
+        }
 
-		public function getCalls(): array {
-			return $this->calls;
-		}
-	};
+        public function getCalls(): array
+        {
+            return $this->calls;
+        }
+    };
 }
