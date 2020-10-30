@@ -12,17 +12,17 @@ use function is_object;
 abstract class Enum implements IHashable
 {
 
-    /** @var array<string, Map<int|string, static>> */
+    /** @phpstan-var array<string, Map<int|string, static>> */
     private static $instances = [];
-    /** @var array<string, array<int|string, static>> */
+    /** @phpstan-var array<string, array<int|string, static>> */
     private static $instanceIndex;
-    /** @var array<string, array<int|string, string>> */
+    /** @phpstan-var array<string, array<int|string, string>> */
     private static $constNameIndex;
-    /** @var int|string */
+    /** @phpstan-var int|string */
     private $value;
 
     /**
-     * @param int|string $value
+     * @phpstan-param int|string $value
      */
     protected function __construct($value)
     {
@@ -30,9 +30,9 @@ abstract class Enum implements IHashable
     }
 
     /**
-     * @param mixed $value
+     * @phpstan-param mixed $value
      *
-     * @return static
+     * @phpstan-return static
      */
     public static function create($value)
     {
@@ -54,7 +54,7 @@ abstract class Enum implements IHashable
     }
 
     /**
-     * @return EnumList<static>
+     * @phpstan-return EnumList<static>
      */
     public static function instanceList(): EnumList
     {
@@ -62,9 +62,9 @@ abstract class Enum implements IHashable
     }
 
     /**
-     * @param static ...$enums
+     * @phpstan-param static ...$enums
      *
-     * @return EnumList<static>
+     * @phpstan-return EnumList<static>
      */
     public static function getListComplement(self ...$enums)
     {
@@ -72,7 +72,7 @@ abstract class Enum implements IHashable
     }
 
     /**
-     * @return Map<int|string, static>
+     * @phpstan-return Map<int|string, static>
      */
     public static function instanceMap(): Map
     {
@@ -82,7 +82,7 @@ abstract class Enum implements IHashable
             return self::$instances[$class];
         }
 
-        /** @var iterable<int, array<int, static>> $pairs */
+        /** @phpstan-var iterable<int, array{0: int|string, 1: static}> $pairs */
         $pairs = array_map(
             function ($value) {
                 return [$value, new static($value)];
@@ -94,9 +94,9 @@ abstract class Enum implements IHashable
     }
 
     /**
-     * @param int|string $value
+     * @phpstan-param int|string $value
      *
-     * @return bool
+     * @phpstan-return bool
      */
     public static function exists($value): bool
     {
@@ -104,7 +104,7 @@ abstract class Enum implements IHashable
     }
 
     /**
-     * @return int|string
+     * @phpstan-return int|string
      */
     public function getValue()
     {
@@ -129,7 +129,7 @@ abstract class Enum implements IHashable
     }
 
     /**
-     * @return array<string>
+     * @phpstan-return array<string>
      */
     private static function getClassConstants(): array
     {

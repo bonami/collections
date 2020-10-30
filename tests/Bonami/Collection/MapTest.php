@@ -12,6 +12,7 @@ class MapTest extends TestCase
 
     public function testFromIterable(): void
     {
+        /** @phpstan-var iterable<array{0: string, 1: int}> */
         $iterator = new ArrayIterator([
             ['a', 1],
             ['b', 2],
@@ -402,10 +403,10 @@ class MapTest extends TestCase
     /**
      * @dataProvider providerChunks
      *
-     * @param Map<int, array<string>> $sourceMap
-     * @param array<Map<int, array<string>>> $expectList
+     * @phpstan-param Map<int, array<string>> $sourceMap
+     * @phpstan-param array<Map<int, array<string>>> $expectList
      *
-     * @return void
+     * @phpstan-return void
      */
     public function testChunk(Map $sourceMap, array $expectList): void
     {
@@ -413,7 +414,7 @@ class MapTest extends TestCase
     }
 
     /**
-     * @return array<string, array<string, mixed>>
+     * @phpstan-return array<string, array<string, mixed>>
      */
     public function providerChunks(): array
     {
@@ -620,10 +621,10 @@ class MapTest extends TestCase
     }
 
     /**
-     * @param int $deepness
-     * @param int $identification
+     * @phpstan-param int $deepness
+     * @phpstan-param int $identification
      *
-     * @return array<string, mixed>
+     * @phpstan-return array<string, mixed>
      */
     private function createRecursiveArray(int $deepness, int $identification): array
     {

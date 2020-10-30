@@ -11,8 +11,8 @@ class InvalidEnumValueException extends InvalidArgumentException
 {
 
     /**
-     * @param mixed $value
-     * @param string $enumClass
+     * @phpstan-param mixed $value
+     * @phpstan-param class-string<\Bonami\Collection\Enum> $enumClass
      */
     public function __construct($value, string $enumClass)
     {

@@ -37,9 +37,9 @@ function tautology(): callable
 /**
  * Returns function that supplies $args as an arguments to passed function
  *
- * @param mixed... $args
+ * @phpstan-param mixed... $args
  *
- * @return callable
+ * @phpstan-return callable
  */
 function applicator(...$args): callable
 {
@@ -56,9 +56,9 @@ function compose(callable $f, callable $g): callable
 }
 
 /**
- * @param mixed $key
+ * @phpstan-param mixed $key
  *
- * @return int|string
+ * @phpstan-return int|string
  */
 function hashKey($key)
 {

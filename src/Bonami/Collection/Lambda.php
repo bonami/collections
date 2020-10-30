@@ -20,9 +20,10 @@ final class Lambda
     protected $numberOfArgs;
 
     /**
-     * @param callable $callable
-     * @param int|null $numberOfArgs
-     * @param array<mixed> $applied
+     * @phpstan-param callable $callable      - closure to wrap and convert into curried closure
+     * @phpstan-param int|null $numberOfArgs  - if ommited, number of arguments is detected
+     *                                          with slight performance impact
+     * @phpstan-param array<mixed> $applied   - applied arguments tracked for delayed full aplication of final argument
      */
     protected function __construct(callable $callable, ?int $numberOfArgs = null, array $applied = [])
     {
@@ -64,9 +65,9 @@ final class Lambda
     }
 
     /**
-     * @param mixed... $args
+     * @phpstan-param mixed... $args
      *
-     * @return mixed
+     * @phpstan-return mixed
      * @throws ReflectionException
      */
     public function __invoke(...$args)

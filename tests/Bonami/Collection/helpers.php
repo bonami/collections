@@ -3,11 +3,11 @@
 namespace Bonami\Collection;
 
 /**
- * @param callable(mixed, mixed): void $assertEquals
- * @param callable(mixed, mixed): bool $equals
- * @param mixed $a
+ * @phpstan-param callable(mixed, mixed): void $assertEquals
+ * @phpstan-param callable(mixed, mixed): bool $equals
+ * @phpstan-param mixed $a
  *
- * @return void
+ * @phpstan-return void
  */
 function testEqualsReflexivity(callable $assertEquals, callable $equals, $a): void
 {
@@ -15,13 +15,13 @@ function testEqualsReflexivity(callable $assertEquals, callable $equals, $a): vo
 }
 
 /**
- * @template T
- * @param callable(bool, bool): void $assertEquals
- * @param callable(mixed, mixed): bool $equals
- * @param T $a
- * @param T $b
+ * @phpstan-template T
+ * @phpstan-param callable(bool, bool): void $assertEquals
+ * @phpstan-param callable(mixed, mixed): bool $equals
+ * @phpstan-param T $a
+ * @phpstan-param T $b
  *
- * @return void
+ * @phpstan-return void
  */
 function testEqualsSymmetry(callable $assertEquals, callable $equals, $a, $b): void
 {
@@ -32,14 +32,14 @@ function testEqualsSymmetry(callable $assertEquals, callable $equals, $a, $b): v
 }
 
 /**
- * @template T
- * @param callable(bool, bool): void $assertEquals
- * @param callable(mixed, mixed): bool $equals
- * @param T $a
- * @param T $b
- * @param T $c
+ * @phpstan-template T
+ * @phpstan-param callable(bool, bool): void $assertEquals
+ * @phpstan-param callable(mixed, mixed): bool $equals
+ * @phpstan-param T $a
+ * @phpstan-param T $b
+ * @phpstan-param T $c
  *
- * @return void
+ * @phpstan-return void
  */
 function testEqualsTransitivity(callable $assertEquals, callable $equals, $a, $b, $c): void
 {
@@ -52,26 +52,30 @@ function testEqualsTransitivity(callable $assertEquals, callable $equals, $a, $b
 /* @see https://wiki.haskell.org/Functor#Functor_Laws */
 
 /**
- * @param callable(mixed, mixed): void $assertEquals
- * @param mixed $functor - this should implement some generic functor interface
+ * @phpstan-template A
+ * @phpstan-param callable(ArrayList<A>|Option<A>|TrySafe<A>, ArrayList<A>|Option<A>|TrySafe<A>): void $assertEquals
+ * @phpstan-param ArrayList<A>|Option<A>|TrySafe<A> $functor - this should implement some generic functor interface
  *
- * @return void
+ * @phpstan-return void
  */
 function testFunctorIdentity(callable $assertEquals, $functor): void
 {
+    $id = function ($a) {
+        return $a;
+    };
     $assertEquals(
         $functor,
-        $functor->map(identity())
+        $functor->map($id)
     );
 }
 
 /**
- * @param callable(mixed, mixed): void $assertEquals
- * @param mixed $functor - this should implement some generic functor interface
- * @param callable(mixed): mixed $f
- * @param callable(mixed): mixed $g
+ * @phpstan-param callable(mixed, mixed): void $assertEquals
+ * @phpstan-param mixed $functor - this should implement some generic functor interface
+ * @phpstan-param callable(mixed): mixed $f
+ * @phpstan-param callable(mixed): mixed $g
  *
- * @return void
+ * @phpstan-return void
  */
 function testFunctorComposition(callable $assertEquals, $functor, callable $f, callable $g): void
 {
@@ -85,11 +89,11 @@ function testFunctorComposition(callable $assertEquals, $functor, callable $f, c
 /* @see https://en.wikibooks.org/wiki/Haskell/Applicative_functors#Applicative_functor_laws */
 
 /**
- * @param callable(mixed, mixed): void $assertEquals
- * @param callable(mixed): mixed $pure
- * @param mixed $applicative - this should implement some generic applicative interface
+ * @phpstan-param callable(mixed, mixed): void $assertEquals
+ * @phpstan-param callable(mixed): mixed $pure
+ * @phpstan-param mixed $applicative - this should implement some generic applicative interface
  *
- * @return void
+ * @phpstan-return void
  */
 function testApplicativeIdentity(callable $assertEquals, callable $pure, $applicative): void
 {
@@ -100,12 +104,12 @@ function testApplicativeIdentity(callable $assertEquals, callable $pure, $applic
 }
 
 /**
- * @param callable(mixed, mixed): void $assertEquals
- * @param callable(mixed): mixed $pure
- * @param mixed $value
- * @param callable(mixed): mixed $f
+ * @phpstan-param callable(mixed, mixed): void $assertEquals
+ * @phpstan-param callable(mixed): mixed $pure
+ * @phpstan-param mixed $value
+ * @phpstan-param callable(mixed): mixed $f
  *
- * @return void
+ * @phpstan-return void
  */
 function testApplicativeHomomorphism(callable $assertEquals, callable $pure, $value, callable $f): void
 {
@@ -116,12 +120,12 @@ function testApplicativeHomomorphism(callable $assertEquals, callable $pure, $va
 }
 
 /**
- * @param callable(mixed, mixed): void $assertEquals
- * @param callable(mixed): mixed $pure
- * @param mixed $value
- * @param mixed $applicativeF - this should implement some generic applicative interface
+ * @phpstan-param callable(mixed, mixed): void $assertEquals
+ * @phpstan-param callable(mixed): mixed $pure
+ * @phpstan-param mixed $value
+ * @phpstan-param mixed $applicativeF - this should implement some generic applicative interface
  *
- * @return void
+ * @phpstan-return void
  */
 function testApplicativeInterchange(callable $assertEquals, callable $pure, $value, $applicativeF): void
 {
@@ -132,13 +136,13 @@ function testApplicativeInterchange(callable $assertEquals, callable $pure, $val
 }
 
 /**
- * @param callable(mixed, mixed): void $assertEquals
- * @param callable(mixed): mixed $pure
- * @param mixed $applicative - this should implement some generic applicative interface
- * @param mixed $applicativeF - this should implement some generic applicative interface
- * @param mixed $applicativeG - this should implement some generic applicative interface
+ * @phpstan-param callable(mixed, mixed): void $assertEquals
+ * @phpstan-param callable(mixed): mixed $pure
+ * @phpstan-param mixed $applicative - this should implement some generic applicative interface
+ * @phpstan-param mixed $applicativeF - this should implement some generic applicative interface
+ * @phpstan-param mixed $applicativeG - this should implement some generic applicative interface
  *
- * @return void
+ * @phpstan-return void
  */
 function testApplicativeComposition(
     callable $assertEquals,
@@ -161,7 +165,7 @@ interface CallSpy
 {
 
     public function __invoke(): void;
-    /** @return array<int, array<mixed>> */
+    /** @phpstan-return array<int, array<mixed>> */
     public function getCalls(): array;
 }
 
