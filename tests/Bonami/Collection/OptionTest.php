@@ -226,24 +226,32 @@ class OptionTest extends TestCase
             Option::none(),
         ];
 
+        /** @phpstan-var array<Option<int>> $emptyIterable */
         $emptyIterable = [];
 
-        self::assertEquals([42, 666], Option::traverse($iterable)->getUnsafe()->toArray());
-        self::assertEquals([], Option::traverse($emptyIterable)->getUnsafe()->toArray());
-        self::assertSame(Option::none(), Option::traverse($iterableWithNone));
+        self::assertEquals([42, 666], Option::sequence($iterable)->getUnsafe()->toArray());
+        self::assertEquals([], Option::sequence($emptyIterable)->getUnsafe()->toArray());
+        self::assertSame(Option::none(), Option::sequence($iterableWithNone));
 
         $numbersLowerThan10 = [1, 2, 3, 7, 9];
+
+        /** @phpstan-var callable(int): Option<int> */
+        $wrapLowerThan10 = function (int $int): Option {
+            return $int < 10 ? Option::some($int) : Option::none();
+        };
+
+        /** @phpstan-var callable(int): Option<int> */
+        $wrapLowerThan9 = function (int $int): Option {
+            return $int < 9 ? Option::some($int) : Option::none();
+        };
+
         self::assertEquals(
             $numbersLowerThan10,
-            Option::traverse($numbersLowerThan10, function (int $int): Option {
-                return $int < 10 ? Option::some($int) : Option::none();
-            })->getUnsafe()->toArray()
+            Option::traverse($numbersLowerThan10, $wrapLowerThan10)->getUnsafe()->toArray()
         );
         self::assertSame(
             Option::none(),
-            Option::traverse($numbersLowerThan10, function (int $int): Option {
-                return $int < 9 ? Option::some($int) : Option::none();
-            })
+            Option::traverse($numbersLowerThan10, $wrapLowerThan9)
         );
     }
 
@@ -259,6 +267,7 @@ class OptionTest extends TestCase
             Option::none(),
         ];
 
+        /** @phpstan-var array<Option<int>> $emptyIterable */
         $emptyIterable = [];
 
         self::assertEquals([42, 666], Option::sequence($iterable)->getUnsafe()->toArray());
