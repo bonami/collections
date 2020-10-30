@@ -982,24 +982,23 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
     }
 
     /**
-     * Create array tuples from List and given iterables
+     * Create array tuples from List and given iterable
      *
-     * It simply iterates through List and iterables alongside, picks one item at time and
-     * combines them into array.
+     * It simply iterates through List and iterable alongside, picks one item at time and
+     * combines them into array tuple.
      *
-     * Resulting array tuples will have size for each passed iterable + one for list itself.
+     * Zipping will end early when one of list or iterable is shorter.
      *
-     * Zipping will end early when one of the passed iterable or list is shorted then rest.
+     * Complexity: o(n) where n is size of shortest collection
      *
-     * Complexity: o(n*m) where m is number of passed iterables and n is size of shortest collection
+     * @phpstan-template B
+     * @phpstan-param iterable<B> $iterable
      *
-     * @param iterable<mixed> ...$iterables
-     *
-     * @return self<array<int, mixed>>
+     * @phpstan-return self<array{0: T, 1: B}>
      */
-    public function zip(iterable ...$iterables): self
+    public function zip(iterable $iterable): self
     {
-        return self::fromIterable(LazyList::fromIterable($this->items)->zip(...$iterables));
+        return self::fromIterable(LazyList::fromIterable($this->items)->zip($iterable));
     }
 
     /**

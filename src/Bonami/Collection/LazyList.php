@@ -417,15 +417,13 @@ class LazyList implements IteratorAggregate
     }
 
     /**
-     * @param iterable<mixed> ...$iterables
+     * @phpstan-template B
+     * @phpstan-param iterable<B> $iterable
      *
-     * @return self<array<int, mixed>>
+     * @phpstan-return self<array{0: T, 1: B}>
      */
-    public function zip(iterable ...$iterables): self
+    public function zip(iterable $iterable): self
     {
-        $toTraversable = function (iterable $iterable): Traversable {
-            return $this->createTraversable($iterable);
-        };
         $rewind = static function (Iterator $iterator): void {
             $iterator->rewind();
         };
@@ -435,10 +433,8 @@ class LazyList implements IteratorAggregate
         $moveNext = static function (Iterator $iterator): void {
             $iterator->next();
         };
-        $zip = function (array $iterables) use ($toTraversable, $rewind, $isValid, $moveNext): Generator {
-            $traversables = new self(
-                array_map($toTraversable, array_merge([$this->getIterator()], $iterables))
-            );
+        $zip = function (iterable $iterable) use ($rewind, $isValid, $moveNext): Generator {
+            $traversables = self::of($this->getIterator(), $this->createTraversable($iterable));
 
             $traversables->each($rewind);
             while ($traversables->all($isValid)) {
@@ -448,7 +444,7 @@ class LazyList implements IteratorAggregate
                 $traversables->each($moveNext);
             }
         };
-        return new self($zip($iterables));
+        return new self($zip($iterable));
     }
 
     /**
