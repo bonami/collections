@@ -151,7 +151,7 @@ class ArrayListTest extends TestCase
 
     public function testLift(): void
     {
-        $lifted = ArrayList::lift(function ($a, $b) {
+        $lifted = ArrayList::lift(function ($a, $b): string {
             return $a . $b;
         });
 
@@ -162,6 +162,7 @@ class ArrayListTest extends TestCase
 
     public function testTraverse(): void
     {
+        /** @phpstan-var callable(int): ArrayList<int> $fillAForOdd */
         $fillAForOdd = function (int $i): ArrayList {
             return $i % 2 === 0 ? ArrayList::of($i) : ArrayList::fromEmpty();
         };
@@ -180,7 +181,7 @@ class ArrayListTest extends TestCase
         );
     }
 
-    public function testTraverseWithMultipleValues(): void
+    public function testSequenceWithMultipleValues(): void
     {
         $this->assertEquals(
             ArrayList::of(
@@ -189,7 +190,7 @@ class ArrayListTest extends TestCase
                 ArrayList::of(1, 'b'),
                 ArrayList::of(2, 'b')
             ),
-            ArrayList::traverse([ArrayList::of(1, 2), ArrayList::of('a', 'b')])
+            ArrayList::sequence([ArrayList::of(1, 2), ArrayList::of('a', 'b')])
         );
     }
 
