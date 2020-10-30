@@ -198,7 +198,7 @@ class ArrayListTest extends TestCase
     {
         $this->assertEquals(
             ArrayList::of([0], [1]),
-            ArrayList::of(0, 1)->flatMap(static function ($i) {
+            ArrayList::of(0, 1)->flatMap(static function (int $i): array {
                 return [[$i]];
             })
         );

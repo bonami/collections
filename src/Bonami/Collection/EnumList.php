@@ -3,14 +3,14 @@
 namespace Bonami\Collection;
 
 /**
- * @template T of Enum
- * @extends ArrayList<T>
+ * @phpstan-template T of Enum
+ * @phpstan-extends ArrayList<T>
  */
 class EnumList extends ArrayList
 {
 
     /**
-     * @return ArrayList<int|string>
+     * @phpstan-return ArrayList<int|string>
      */
     public function getValueList(): ArrayList
     {
@@ -20,7 +20,7 @@ class EnumList extends ArrayList
     }
 
     /**
-     * @return array<int, int|string>
+     * @phpstan-return array<int, int|string>
      */
     public function getValues(): array
     {

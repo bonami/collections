@@ -12,17 +12,17 @@ use IteratorAggregate;
 use Traversable;
 
 /**
- * @template T
- * @implements IteratorAggregate<int, T>
+ * @phpstan-template T
+ * @phpstan-implements IteratorAggregate<int, T>
  */
 abstract class Option implements IHashable, IteratorAggregate
 {
-    /** @var self<T>|null */
+    /** @phpstan-var self<T>|null */
     private static $none;
 
     /**
-     * @param T $value
-     * @return self<T>
+     * @phpstan-param T $value
+     * @phpstan-return self<T>
      */
     final public static function of($value): self
     {
@@ -30,8 +30,8 @@ abstract class Option implements IHashable, IteratorAggregate
     }
 
     /**
-     * @param ?T $value
-     * @return self<T>
+     * @phpstan-param ?T $value
+     * @phpstan-return self<T>
      */
     final public static function fromNullable($value): self
     {
@@ -39,7 +39,7 @@ abstract class Option implements IHashable, IteratorAggregate
     }
 
     /**
-     * @return self<T>
+     * @phpstan-return self<T>
      */
     final public static function none(): Option
     {
@@ -74,7 +74,7 @@ abstract class Option implements IHashable, IteratorAggregate
           * Consider calling getOrElse instead
           * @throws ValueIsNotPresentException
           *
-          * @return T
+          * @phpstan-return T
           */
             public function getUnsafe()
             {
@@ -82,9 +82,9 @@ abstract class Option implements IHashable, IteratorAggregate
             }
 
          /**
-          * @template E
-          * @param E $else
-          * @return E
+          * @phpstan-template E
+          * @phpstan-param E $else
+          * @phpstan-return E
           */
             public function getOrElse($else)
             {
@@ -97,7 +97,7 @@ abstract class Option implements IHashable, IteratorAggregate
             }
 
          /**
-          * @return int|string
+          * @phpstan-return int|string
           */
             public function hashCode()
             {
@@ -105,7 +105,7 @@ abstract class Option implements IHashable, IteratorAggregate
             }
 
          /**
-          * @return Traversable<int, T>
+          * @phpstan-return Traversable<int, T>
           */
             public function getIterator(): Traversable
             {
@@ -130,17 +130,17 @@ abstract class Option implements IHashable, IteratorAggregate
     }
 
     /**
-     * @param T $value
-     * @return self<T>
+     * @phpstan-param T $value
+     * @phpstan-return self<T>
      */
     final public static function some($value): self
     {
          return new class ($value) extends Option {
 
-             /** @var T */
+             /** @phpstan-var T */
              private $value;
 
-             /** @param T $value */
+             /** @phpstan-param T $value */
             protected function __construct($value)
             {
                 $this->value = $value;
@@ -180,7 +180,7 @@ abstract class Option implements IHashable, IteratorAggregate
           * Consider calling getOrElse instead
           * @throws ValueIsNotPresentException
           *
-          * @return T
+          * @phpstan-return T
           */
             public function getUnsafe()
             {
@@ -188,9 +188,9 @@ abstract class Option implements IHashable, IteratorAggregate
             }
 
          /**
-          * @template E
-          * @param E $else
-          * @return T
+          * @phpstan-template E
+          * @phpstan-param E $else
+          * @phpstan-return T
           */
             public function getOrElse($else)
             {
@@ -203,7 +203,7 @@ abstract class Option implements IHashable, IteratorAggregate
             }
 
          /**
-          * @return int|string
+          * @phpstan-return int|string
           */
             public function hashCode()
             {
@@ -214,7 +214,7 @@ abstract class Option implements IHashable, IteratorAggregate
             }
 
          /**
-          * @return Traversable<int, T>
+          * @phpstan-return Traversable<int, T>
           */
             public function getIterator()
             {
@@ -241,38 +241,40 @@ abstract class Option implements IHashable, IteratorAggregate
     abstract public function isDefined(): bool;
 
     /**
-     * @param callable(T): bool $predicate
-     * @return self<T>
+     * @phpstan-param callable(T): bool $predicate
+     * @phpstan-return self<T>
      */
     abstract public function filter(callable $predicate): self;
 
     /**
-     * @param self<mixed> $option
+     * @phpstan-param self<mixed> $option
      *
-     * @return self<mixed>
+     * @phpstan-return self<mixed>
      */
     abstract public function ap(self $option): self;
 
     /**
-     * @param callable(mixed): mixed $mapper
+     * @phpstan-template B
+     * @phpstan-param callable(T): B $mapper
      *
-     * @return self<mixed>
+     * @phpstan-return self<B>
      */
     abstract public function map(callable $mapper): self;
 
     /**
-     * @param callable(mixed): self<mixed> $mapper
+     * @phpstan-template B
+     * @phpstan-param callable(T): self<B> $mapper
      *
-     * @return self<mixed>
+     * @phpstan-return self<B>
      */
     abstract public function flatMap(callable $mapper): self;
 
     /**
-     * @template R
-     * @param callable(R, T): R $reducer
-     * @param R $initialReduction
+     * @phpstan-template R
+     * @phpstan-param callable(R, T): R $reducer
+     * @phpstan-param R $initialReduction
      *
-     * @return R
+     * @phpstan-return R
      */
     final public function reduce(callable $reducer, $initialReduction)
     {
@@ -283,42 +285,40 @@ abstract class Option implements IHashable, IteratorAggregate
      * Consider calling getOrElse instead
      * @throws ValueIsNotPresentException
      *
-     * @return T
+     * @phpstan-return T
      */
     abstract public function getUnsafe();
 
     /**
-     * @template E
-     * @param E $else
-     * @return T|E
+     * @phpstan-param T $else
+     * @phpstan-return T
      */
     abstract public function getOrElse($else);
 
     /**
-     * @return TrySafe<T>
+     * @phpstan-return TrySafe<T>
      */
     abstract public function toTrySafe(): TrySafe;
 
     /**
-     * @param self<T> $else
+     * @phpstan-param self<T> $else
      *
-     * @return self<T>
+     * @phpstan-return self<T>
      */
     abstract public function orElse(self $else): self;
 
     /**
-     * @template F
-     * @template S
-     * @param callable(): F $handleNone
-     * @param callable(T): S $handleSome
+     * @phpstan-template B
+     * @phpstan-param callable(): B $handleNone
+     * @phpstan-param callable(T): B $handleSome
      *
-     * @return F|S
+     * @phpstan-return B
      */
     abstract public function resolve(callable $handleNone, callable $handleSome);
 
     /**
-     * @param self<T> $value
-     * @return bool
+     * @phpstan-param self<T> $value
+     * @phpstan-return bool
      */
     final public function equals($value): bool
     {
@@ -330,7 +330,7 @@ abstract class Option implements IHashable, IteratorAggregate
      * Upgrades callable to accept and return `self` as arguments.
      *
      * @phpstan-param callable $callable
-     * @return callable
+     * @phpstan-return callable
      */
     final public static function lift(callable $callable): callable
     {

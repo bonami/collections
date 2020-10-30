@@ -15,7 +15,7 @@ function testEqualsReflexivity(callable $assertEquals, callable $equals, $a): vo
 }
 
 /**
- * @template T
+ * @phpstan-template T
  * @param callable(bool, bool): void $assertEquals
  * @param callable(mixed, mixed): bool $equals
  * @param T $a
@@ -32,7 +32,7 @@ function testEqualsSymmetry(callable $assertEquals, callable $equals, $a, $b): v
 }
 
 /**
- * @template T
+ * @phpstan-template T
  * @param callable(bool, bool): void $assertEquals
  * @param callable(mixed, mixed): bool $equals
  * @param T $a
@@ -52,16 +52,20 @@ function testEqualsTransitivity(callable $assertEquals, callable $equals, $a, $b
 /* @see https://wiki.haskell.org/Functor#Functor_Laws */
 
 /**
- * @param callable(mixed, mixed): void $assertEquals
- * @param mixed $functor - this should implement some generic functor interface
+ * @phpstan-template A
+ * @phpstan-param callable(ArrayList<A>|Option<A>|TrySafe<A>, ArrayList<A>|Option<A>|TrySafe<A>): void $assertEquals
+ * @phpstan-param ArrayList<A>|Option<A>|TrySafe<A> $functor - this should implement some generic functor interface
  *
  * @return void
  */
 function testFunctorIdentity(callable $assertEquals, $functor): void
 {
+    $id = function ($a) {
+        return $a;
+    };
     $assertEquals(
         $functor,
-        $functor->map(identity())
+        $functor->map($id)
     );
 }
 

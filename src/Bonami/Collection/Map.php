@@ -23,20 +23,20 @@ use function is_scalar;
 use function iterator_to_array;
 
 /**
- * @template K
- * @template V
- * @implements IteratorAggregate<K, V>
+ * @phpstan-template K
+ * @phpstan-template V
+ * @phpstan-implements IteratorAggregate<K, V>
  */
 class Map implements Countable, IteratorAggregate
 {
 
-    /** @var array<int|string, K> */
+    /** @phpstan-var array<int|string, K> */
     protected $keys;
-    /** @var array<int|string, V> */
+    /** @phpstan-var array<int|string, V> */
     protected $values;
 
     /**
-     * @param array<int, array{0: K, 1: V}> $items
+     * @phpstan-param array<int, array{0: K, 1: V}> $items
      */
     public function __construct(array $items)
     {
@@ -60,9 +60,9 @@ class Map implements Countable, IteratorAggregate
      *
      * @see fromIterable if you need to create Map from array of pairs (2-dimensional array)
      *
-     * @param array<K, V> $array
+     * @phpstan-param array<K, V> $array
      *
-     * @return static<K, V>
+     * @phpstan-return static<K, V>
      *
      */
     public static function fromAssociativeArray(array $array)
@@ -76,9 +76,9 @@ class Map implements Countable, IteratorAggregate
      *
      * Complexity: o(n) - there are different hidden constants cost varying on given iterable.
      *
-     * @param Map<K, V>|iterable<int, array<int, K|V>> $iterable
+     * @phpstan-param Map<K, V>|iterable<array{0: K, 1: V}> $iterable
      *
-     * @return static<K, V>
+     * @phpstan-return static<K, V>
      */
     public static function fromIterable(iterable $iterable)
     {
@@ -98,7 +98,7 @@ class Map implements Countable, IteratorAggregate
               return new static($iterable->toArray());
         }
 
-        return new static($iterable instanceof Traversable ? iterator_to_array($iterable) : $iterable);
+        return new static($iterable instanceof Traversable ? iterator_to_array($iterable, false) : $iterable);
     }
 
     /**
@@ -106,7 +106,7 @@ class Map implements Countable, IteratorAggregate
      *
      * Complexity: o(1)
      *
-     * @return static<K, V>
+     * @phpstan-return static<K, V>
      */
     public static function fromEmpty()
     {
@@ -118,10 +118,10 @@ class Map implements Countable, IteratorAggregate
      *
      * Complexity: o(1)
      *
-     * @param K $key
-     * @param V $value
+     * @phpstan-param K $key
+     * @phpstan-param V $value
      *
-     * @return static<K, V>
+     * @phpstan-return static<K, V>
      */
     public static function fromOnly($key, $value)
     {
@@ -136,11 +136,9 @@ class Map implements Countable, IteratorAggregate
      *
      * @see getOrElse for getting default value in case the key does not exists
      *
-     * @param K $key
+     * @phpstan-param K $key
      *
-     * @throws OutOfBoundsException
-     *
-     * @return Option<V>
+     * @phpstan-return Option<V>
      */
     public function get($key): Option
     {
@@ -161,11 +159,11 @@ class Map implements Countable, IteratorAggregate
      * @see get for getting value the safe way
      * @see getOrElse for getting default value in case the key does not exists
      *
-     * @param K $key
+     * @phpstan-param K $key
      *
      * @throws OutOfBoundsException
      *
-     * @return V
+     * @phpstan-return V
      */
     public function getUnsafe($key)
     {
@@ -196,7 +194,7 @@ class Map implements Countable, IteratorAggregate
      *
      * Complexity: o(n)
      *
-     * @return ArrayList<K>
+     * @phpstan-return ArrayList<K>
      */
     public function keys(): ArrayList
     {
@@ -208,7 +206,7 @@ class Map implements Countable, IteratorAggregate
      *
      * Complexity: o(n)
      *
-     * @return ArrayList<V>
+     * @phpstan-return ArrayList<V>
      */
     public function values(): ArrayList
     {
@@ -222,10 +220,10 @@ class Map implements Countable, IteratorAggregate
      *
      * @see get for getting value the safe way when no default value is suitable
      *
-     * @param K $key
-     * @param V $defaultValue
+     * @phpstan-param K $key
+     * @phpstan-param V $defaultValue
      *
-     * @return V
+     * @phpstan-return V
      */
     public function getOrElse($key, $defaultValue)
     {
@@ -251,7 +249,7 @@ class Map implements Countable, IteratorAggregate
      * Complexity: o(1) - getting the iterator itself is o(1) because it uses yield internally.
      * Iterating over the iterator is of course o(n)
      *
-     * @return Traversable<K, V>
+     * @phpstan-return Traversable<K, V>
      */
     public function getIterator(): Traversable
     {
@@ -265,7 +263,7 @@ class Map implements Countable, IteratorAggregate
      *
      * Complexity: o(1)
      *
-     * @return int
+     * @phpstan-return int
      */
     public function count(): int
     {
@@ -279,7 +277,7 @@ class Map implements Countable, IteratorAggregate
      *
      * @see isNotEmpty
      *
-     * @return bool
+     * @phpstan-return bool
      */
     public function isEmpty(): bool
     {
@@ -293,7 +291,7 @@ class Map implements Countable, IteratorAggregate
      *
      * @see isEmpty
      *
-     * @return bool
+     * @phpstan-return bool
      */
     public function isNotEmpty(): bool
     {
@@ -308,10 +306,10 @@ class Map implements Countable, IteratorAggregate
      *
      * @see exists if you need to check value existance more losely other then strict comparison
      *
-     * @param V $value
-     * @param bool|null $strictComparison
+     * @phpstan-param V $value
+     * @phpstan-param bool|null $strictComparison
      *
-     * @return bool
+     * @phpstan-return bool
      */
     public function contains($value, ?bool $strictComparison = true): bool
     {
@@ -323,9 +321,9 @@ class Map implements Countable, IteratorAggregate
      *
      * Complexity: o(1)
      *
-     * @param K $key
+     * @phpstan-param K $key
      *
-     * @return bool
+     * @phpstan-return bool
      */
     public function has($key): bool
     {
@@ -341,13 +339,14 @@ class Map implements Countable, IteratorAggregate
      * @see mapValues - for mapping just values and keeping Map as result
      * @see mapKeys - for mapping just keys and keeping Map as result
      *
-     * @param callable(mixed, mixed): mixed $mapper - ($value: mixed, $key: mixed) => mixed
+     * @phpstan-template B
+     * @phpstan-param callable(V, K): B $mapper
      *
-     * @return ArrayList<mixed>
+     * @phpstan-return ArrayList<B>
      */
     public function map(callable $mapper): ArrayList
     {
-         /** @var array<int, array<K, V>> $mapped */
+         /** @phpstan-var array<int, array<K, V>> $mapped */
          $mapped = array_map($mapper, $this->values, $this->keys);
 
          return ArrayList::fromIterable($mapped);
@@ -359,13 +358,13 @@ class Map implements Countable, IteratorAggregate
      *
      * Complexity: o(n)
      *
-     * @template M
      * @see map - for mapping both keys and values and returning ArrayList as result
      * @see mapValues - for mapping just values and keeping Map as result
      *
-     * @param callable(K, V): M $mapper - ($key: mixed, $value: mixed) => mixed
+     * @phpstan-template B
+     * @phpstan-param callable(K, V): B $mapper
      *
-     * @return self<M, V>
+     * @phpstan-return self<B, V>
      */
     public function mapKeys(callable $mapper): self
     {
@@ -393,13 +392,13 @@ class Map implements Countable, IteratorAggregate
      *
      * Complexity: o(n)
      *
-     * @template M
+     * @phpstan-template B
      * @see map - for mapping both keys and values and returning ArrayList as result
      * @see mapKeys - for mapping just keys and keeping Map as result
      *
-     * @param callable(V, K): M $mapper - ($value: mixed, $key: mixed) => mixed
+     * @phpstan-param callable(V, K): B $mapper
      *
-     * @return self<V, M>
+     * @phpstan-return self<V, B>
      */
     public function mapValues(callable $mapper): self
     {
@@ -420,7 +419,7 @@ class Map implements Countable, IteratorAggregate
      *
      * Complexity: o(n)
      *
-     * @return ArrayList<array<int, K|V>>
+     * @phpstan-return ArrayList<array{0: K, 1: V}>
      */
     public function pairs(): ArrayList
     {
@@ -434,11 +433,11 @@ class Map implements Countable, IteratorAggregate
      *
      * Complexity: o(n)
      *
-     * @return array<int, array<int, K|V>>
+     * @phpstan-return array<int, array{0: K, 1: V}>
      */
     public function getItems(): array
     {
-         /** @var array<int, array<int, K|V>> $zipped */
+         /** @phpstan-var array<int, array{0: K, 1: V}> */
          $zipped = array_map(null, $this->keys, $this->values);
 
          return $zipped;
@@ -455,10 +454,11 @@ class Map implements Countable, IteratorAggregate
      *
      * Complexity: o(n)
      *
-     * @return array<int|string, V>
+     * @phpstan-return array<K, V>
      */
     public function toAssociativeArray(): array
     {
+         /** @phpstan-var array<K, V> */
          $assoc = array_combine(
              array_map(function ($key) {
                 return (string) $key;
@@ -478,9 +478,9 @@ class Map implements Countable, IteratorAggregate
      *   - n is number of items of original collection
      *   - m is number of items of given collection
      *
-     * @param Map<K, V> $mergeMap
+     * @phpstan-param Map<K, V> $mergeMap
      *
-     * @return static<K, V>
+     * @phpstan-return static<K, V>
      */
     public function concat(Map $mergeMap)
     {
@@ -511,9 +511,9 @@ class Map implements Countable, IteratorAggregate
      * @see filterKeys - for filtering original map with predicate in keys only
      * @see withoutKeys - for simply removing values by given keys no matter what the value is
      *
-     * @param Map<K, V> $map
+     * @phpstan-param Map<K, V> $map
      *
-     * @return static<K, V>
+     * @phpstan-return static<K, V>
      */
     public function minus(Map $map)
     {
@@ -530,9 +530,9 @@ class Map implements Countable, IteratorAggregate
      *
      * Complexity: o(n)
      *
-     * @param callable(V, K): void $sideEffect
+     * @phpstan-param callable(V, K): void $sideEffect
      *
-     * @return void
+     * @phpstan-return void
      */
     public function each(callable $sideEffect): void
     {
@@ -548,9 +548,9 @@ class Map implements Countable, IteratorAggregate
      *
      * @see filterKeys - if your predicate needs just keys
      *
-     * @param callable(mixed, mixed): bool $predicate
+     * @phpstan-param callable(V, K): bool $predicate
      *
-     * @return static<K, V>
+     * @phpstan-return static<K, V>
      */
     public function filter(callable $predicate)
     {
@@ -571,9 +571,9 @@ class Map implements Countable, IteratorAggregate
      *
      * @see filter - if your predicate needs values too
      *
-     * @param callable(K): bool $predicate
+     * @phpstan-param callable(K): bool $predicate
      *
-     * @return static<K, V>
+     * @phpstan-return static<K, V>
      */
     public function filterKeys(callable $predicate)
     {
@@ -593,9 +593,9 @@ class Map implements Countable, IteratorAggregate
      *
      * @see exists - if you just need to check if some pair matches given predicate
      *
-     * @param callable(V, K): bool $predicate
+     * @phpstan-param callable(V, K): bool $predicate
      *
-     * @return Option<V>
+     * @phpstan-return Option<V>
      */
     public function find(callable $predicate): Option
     {
@@ -612,11 +612,11 @@ class Map implements Countable, IteratorAggregate
      *
      * Complexity: o(n) - where n is `$size`
      *
-     * @return static<K, V>
+     * @phpstan-return static<K, V>
      */
     public function take(int $size)
     {
-         /** @var array<int, array<int, K|V>> $zipped */
+         /** @phpstan-var array<int, array{0: K, 1: V}> */
          $zipped = array_map(
              null,
              array_slice($this->keys, 0, $size, true),
@@ -633,9 +633,9 @@ class Map implements Countable, IteratorAggregate
      *
      * @see find - if you just need to find concreate value-key pair that satisfies given predicate
      *
-     * @param callable(V, K): bool $predicate
+     * @phpstan-param callable(V, K): bool $predicate
      *
-     * @return bool
+     * @phpstan-return bool
      */
     public function exists(callable $predicate): bool
     {
@@ -652,9 +652,9 @@ class Map implements Countable, IteratorAggregate
      *
      * Complexity: o(n) - stops immediately when predicate does not match
      *
-     * @param callable(V, K): bool $predicate
+     * @phpstan-param callable(V, K): bool $predicate
      *
-     * @return bool
+     * @phpstan-return bool
      */
     public function all(callable $predicate): bool
     {
@@ -671,11 +671,11 @@ class Map implements Countable, IteratorAggregate
      *
      * Complexity: o(n)
      *
-     * @return static<K, V>
+     * @phpstan-return static<K, V>
      */
     public function withoutNulls()
     {
-         return $this->filter(static function ($item) {
+         return $this->filter(static function ($item, $_): bool {
              return $item !== null;
          });
     }
@@ -688,9 +688,9 @@ class Map implements Countable, IteratorAggregate
      *
      * Complexity: o(n)
      *
-     * @param iterable<K> $keys
+     * @phpstan-param iterable<K> $keys
      *
-     * @return static<K, V>
+     * @phpstan-return static<K, V>
      */
     public function getByKeys(iterable $keys)
     {
@@ -725,9 +725,9 @@ class Map implements Countable, IteratorAggregate
      *
      * Complexity: o(n)
      *
-     * @param iterable<K> $keys
+     * @phpstan-param iterable<K> $keys
      *
-     * @return static<K, V>
+     * @phpstan-return static<K, V>
      */
     public function withoutKeys(iterable $keys)
     {
@@ -760,9 +760,9 @@ class Map implements Countable, IteratorAggregate
      *
      * Complexity: o(n)
      *
-     * @param K $key
+     * @phpstan-param K $key
      *
-     * @return static<K, V>
+     * @phpstan-return static<K, V>
      */
     public function withoutKey($key)
     {
@@ -788,11 +788,11 @@ class Map implements Countable, IteratorAggregate
      *
      * Complexity: o(n*log(n))
      *
-     * @param callable(K, K):int|null $comparator - A standard comparator expecting two arguments
+     * @phpstan-param callable(K, K):int|null $comparator - A standard comparator expecting two arguments
      *                                  returning values -1, 0 or 1. When no comparator is passed,
      *                                  standard <=> operator is used to between values.
      *
-     * @return static<K, V>
+     * @phpstan-return static<K, V>
      */
     public function sortKeys(?callable $comparator = null)
     {
@@ -807,15 +807,15 @@ class Map implements Countable, IteratorAggregate
      *
      * Complexity: o(n*log(n))
      *
-     * @param callable(V, V):int|null $comparator - A standard comparator expecting two arguments
+     * @phpstan-param callable(V, V):int|null $comparator - A standard comparator expecting two arguments
      *                                  returning values -1, 0 or 1. When no comparator is passed,
      *                                  standard <=> operator is used to between values.
      *
-     * @return static<K, V>
+     * @phpstan-return static<K, V>
      */
     public function sortValues(?callable $comparator = null)
     {
-         $comparator ??= comparator();
+         $comparator = $comparator ?? comparator();
          return static::fromIterable(
              $this->pairs()->sort(function (array $a, array $b) use ($comparator) {
                 return $comparator($a[1], $b[1]);
@@ -828,14 +828,14 @@ class Map implements Countable, IteratorAggregate
      *
      * Complexity: o(n)
      *
-     * @template R
-     * @param callable(R, V, K): R $reducer - takes up to 3 parametrs and returns next reduction step:
+     * @phpstan-template R
+     * @phpstan-param callable(R, V, K): R $reducer - takes up to 3 parametrs and returns next reduction step:
      *                          (?prevReduction, ?currentValue, ?currentKey) => nextReduction
      *
-     * @param R $initialReduction - an initial reduction used for the first reduction step as prevReduction.
+     * @phpstan-param R $initialReduction - an initial reduction used for the first reduction step as prevReduction.
      *                                It is also immediately returned if the collection is empty.
      *
-     * @return R
+     * @phpstan-return R
      */
     public function reduce(callable $reducer, $initialReduction)
     {
@@ -854,9 +854,9 @@ class Map implements Countable, IteratorAggregate
      *
      * Complexity: o(n)
      *
-     * @param int $size - A size of resulting Map chunk
+     * @phpstan-param int $size - A size of resulting Map chunk
      *
-     * @return ArrayList<Map<K, V>> - a list of Map chunks of size $size
+     * @phpstan-return ArrayList<Map<K, V>> - a list of Map chunks of size $size
      */
     public function chunk(int $size): ArrayList
     {

@@ -87,9 +87,11 @@ class OptionTest extends TestCase
 
     public function testFlatMap(): void
     {
+        /** @phpstan-var callable(string): Option<string> */
         $mapperToSome = function (string $s): Option {
             return Option::some("Hello {$s}");
         };
+        /** @phpstan-var callable(string): Option<string> */
         $mapperToNone = function (string $s): Option {
             return Option::none();
         };
@@ -369,8 +371,8 @@ class OptionTest extends TestCase
     }
 
     /**
-     * @template A
-     * @template B
+     * @phpstan-template A
+     * @phpstan-template B
      * @param A $a
      * @param B $b
      *

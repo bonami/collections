@@ -77,12 +77,15 @@ class TrySafeTest extends TestCase
 
     public function testFlatMap(): void
     {
+        /** @phpstan-var callable(string): TrySafe<string> */
         $mapperToSuccess = function (string $s): TrySafe {
             return TrySafe::success("Hello {$s}");
         };
+        /** @phpstan-var callable(string): TrySafe<string> */
         $mapperToFailure = function (string $s): TrySafe {
             return $this->createFailure();
         };
+        /** @phpstan-var callable(string): TrySafe<string> */
         $mapperThatThrows = function () {
             throw new Exception();
         };
@@ -249,7 +252,7 @@ class TrySafeTest extends TestCase
     }
 
     /**
-     * @template T
+     * @phpstan-template T
      * @param T $a
      * @param T $b
      *

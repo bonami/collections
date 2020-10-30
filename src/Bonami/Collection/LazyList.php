@@ -13,18 +13,16 @@ use RuntimeException;
 use Traversable;
 
 /**
- * @template T
- * @implements IteratorAggregate<int, T>
+ * @phpstan-template T
+ * @phpstan-implements IteratorAggregate<int, T>
  */
 class LazyList implements IteratorAggregate
 {
-    use ApplicativeHelpers;
-
-    /** @var iterable<T> */
+    /** @phpstan-var iterable<int, T> */
     private $items;
 
     /**
-     * @param iterable<T> $iterable
+     * @phpstan-param iterable<int, T> $iterable
      */
     public function __construct(iterable $iterable)
     {
@@ -32,11 +30,11 @@ class LazyList implements IteratorAggregate
     }
 
     /**
-     * @param int $low
-     * @param int $high
-     * @param int $step
+     * @phpstan-param int $low
+     * @phpstan-param int $high
+     * @phpstan-param int $step
      *
-     * @return static<int>
+     * @phpstan-return static<int>
      */
     public static function range(int $low, int $high = PHP_INT_MAX, int $step = 1): self
     {
@@ -51,10 +49,10 @@ class LazyList implements IteratorAggregate
     }
 
     /**
-     * @param T $item
-     * @param int|null $size
+     * @phpstan-param T $item
+     * @phpstan-param int|null $size - When no size is passed, infinite items are filled (lazily)
      *
-     * @return self<T>
+     * @phpstan-return self<T>
      */
     public static function fill($item, ?int $size = null): self
     {
@@ -72,20 +70,20 @@ class LazyList implements IteratorAggregate
     }
 
     /**
-     * @return self<mixed>
+     * @phpstan-return self<T>
      */
     public static function fromEmpty(): self
     {
-         /** @var array<mixed> $empty */
+         /** @phpstan-var array<mixed> $empty */
          $empty = [];
 
          return new self($empty);
     }
 
     /**
-     * @param array<T> ...$items
+     * @phpstan-param array<int, T> ...$items
      *
-     * @return self<T>
+     * @phpstan-return self<T>
      */
     public static function fromArray(array ...$items): self
     {
@@ -93,9 +91,9 @@ class LazyList implements IteratorAggregate
     }
 
     /**
-     * @param Traversable<int, T> $items
+     * @phpstan-param Traversable<T> $items
      *
-     * @return self<T>
+     * @phpstan-return self<T>
      */
     public static function fromTraversable(Traversable $items): self
     {
@@ -103,9 +101,9 @@ class LazyList implements IteratorAggregate
     }
 
     /**
-     * @param iterable<T> $iterable
+     * @phpstan-param iterable<T> $iterable
      *
-     * @return self<T>
+     * @phpstan-return self<T>
      */
     public static function fromIterable(iterable $iterable): self
     {
@@ -113,9 +111,9 @@ class LazyList implements IteratorAggregate
     }
 
     /**
-     * @param T ...$items
+     * @phpstan-param T ...$items
      *
-     * @return self<T>
+     * @phpstan-return self<T>
      */
     public static function of(...$items): self
     {
@@ -123,9 +121,10 @@ class LazyList implements IteratorAggregate
     }
 
     /**
-     * @param callable(mixed, int): mixed $mapper
+     * @phpstan-template B
+     * @phpstan-param callable(T, int): B $mapper
      *
-     * @return self<mixed>
+     * @phpstan-return self<mixed>
      */
     public function map(callable $mapper)
     {
@@ -138,9 +137,9 @@ class LazyList implements IteratorAggregate
     }
 
     /**
-     * @param self<mixed> $lazyList
+     * @phpstan-param self<mixed> $lazyList
      *
-     * @return self<mixed>
+     * @phpstan-return self<Lambda|mixed>
      */
     public function ap(self $lazyList): self
     {
@@ -148,17 +147,20 @@ class LazyList implements IteratorAggregate
              return Lambda::of($mapper);
          })->toList();
 
-         return $lazyList->flatMap(function ($value) use ($mappers) {
-             return $mappers->map(function (Lambda $mapper) use ($value) {
+         return $lazyList->flatMap(function ($value) use ($mappers): iterable {
+             /** @phpstan-var self<Lambda|mixed> $applied */
+             $applied = $mappers->map(function (Lambda $mapper) use ($value) {
                  return ($mapper)($value);
              });
+             return $applied;
          });
     }
 
     /**
-     * @param callable(mixed, int): iterable<mixed> $mapper
+     * @phpstan-template B
+     * @phpstan-param callable(T, int): iterable<B> $mapper
      *
-     * @return self<mixed>
+     * @phpstan-return self<T>
      */
     public function flatMap(callable $mapper): self
     {
@@ -166,7 +168,7 @@ class LazyList implements IteratorAggregate
     }
 
     /**
-     * @return self<mixed>
+     * @phpstan-return self<mixed>
      */
     public function flatten(): self
     {
@@ -183,7 +185,7 @@ class LazyList implements IteratorAggregate
     }
 
     /**
-     * @param callable(mixed, int): void $sideEffect
+     * @phpstan-param callable(T, int): void $sideEffect
      */
     public function each(callable $sideEffect): void
     {
@@ -195,17 +197,17 @@ class LazyList implements IteratorAggregate
     /**
      * Computes reduction of the elements of the collection.
      *
-     * @template R
-     * @param callable(R, mixed): R $reducer a binary operation for reduction
-     * @param R $initialReduction
+     * @phpstan-template R
+     * @phpstan-param callable(R, T, int): R $reducer a binary operation for reduction
+     * @phpstan-param R $initialReduction
      *
-     * @return R
+     * @phpstan-return R
      */
     public function reduce(callable $reducer, $initialReduction)
     {
          $reduction = $initialReduction;
-        foreach ($this->items as $item) {
-              $reduction = $reducer($reduction, $item);
+        foreach ($this->items as $key => $item) {
+              $reduction = $reducer($reduction, $item, $key);
         }
         return $reduction;
     }
@@ -213,18 +215,18 @@ class LazyList implements IteratorAggregate
     /**
      * Computes a prefix scan (reduction) of the elements of the collection.
      *
-     * @template R
-     * @param callable(R, mixed): R $scanner a binary operation for scan (reduction)
-     * @param R $initialReduction
+     * @phpstan-template R
+     * @phpstan-param callable(R, T, int): R $scanner a binary operation for scan (reduction)
+     * @phpstan-param R $initialReduction
      *
-     * @return self<R> collection with intermediate scan (reduction) results
+     * @phpstan-return self<R> collection with intermediate scan (reduction) results
      */
     public function scan(callable $scanner, $initialReduction): self
     {
          $scan = function (callable $scanner, $initialReduction): Generator {
              $prefixReduction = $initialReduction;
-            foreach ($this->items as $item) {
-                $prefixReduction = $scanner($prefixReduction, $item);
+            foreach ($this->items as $key => $item) {
+                $prefixReduction = $scanner($prefixReduction, $item, $key);
                 yield $prefixReduction;
             }
          };
@@ -233,15 +235,15 @@ class LazyList implements IteratorAggregate
     }
 
     /**
-     * @param callable(mixed): bool $predicate
+     * @phpstan-param callable(T, int): bool $predicate
      *
-     * @return static<T>
+     * @phpstan-return static<T>
      */
     public function takeWhile(callable $predicate)
     {
          $takeWhile = function (callable $whileCallback): Generator {
-            foreach ($this->items as $item) {
-                if (!$whileCallback($item)) {
+            foreach ($this->items as $key => $item) {
+                if (!$whileCallback($item, $key)) {
                     break;
                 }
                 yield $item;
@@ -251,9 +253,9 @@ class LazyList implements IteratorAggregate
     }
 
     /**
-     * @param int $size
+     * @phpstan-param int $size
      *
-     * @return static<T>
+     * @phpstan-return static<T>
      */
     public function take(int $size)
     {
@@ -271,7 +273,7 @@ class LazyList implements IteratorAggregate
     }
 
     /**
-     * @return self<static<T>>
+     * @phpstan-return self<static<T>>
      */
     public function chunk(int $size): self
     {
@@ -295,15 +297,17 @@ class LazyList implements IteratorAggregate
     }
 
     /**
-     * @return Option<T>
+     * @phpstan-return Option<T>
      */
     public function head(): Option
     {
-         return $this->find(tautology());
+         return $this->find(static function ($_): bool {
+            return true;
+         });
     }
 
     /**
-     * @return Option<T>
+     * @phpstan-return Option<T>
      */
     public function last(): Option
     {
@@ -316,15 +320,15 @@ class LazyList implements IteratorAggregate
     }
 
     /**
-     * @param callable(mixed, int): bool $predicate
+     * @phpstan-param callable(T, int): bool $predicate
      *
-     * @return static<T>
+     * @phpstan-return static<T>
      */
     public function filter(callable $predicate)
     {
-         $filter = function (callable $filterCallback): Generator {
+         $filter = function (callable $predicate): Generator {
             foreach ($this->items as $key => $item) {
-                if ($filterCallback($item, $key)) {
+                if ($predicate($item, $key)) {
                     yield $item;
                 }
             }
@@ -333,14 +337,14 @@ class LazyList implements IteratorAggregate
     }
 
     /**
-     * @param callable(mixed): bool $predicate
+     * @phpstan-param callable(T, int): bool $predicate
      *
-     * @return Option<T>
+     * @phpstan-return Option<T>
      */
     public function find(callable $predicate): Option
     {
-        foreach ($this->items as $item) {
-            if ($predicate($item)) {
+        foreach ($this->items as $key => $item) {
+            if ($predicate($item, $key)) {
                 return Option::some($item);
             }
         }
@@ -349,16 +353,16 @@ class LazyList implements IteratorAggregate
     }
 
     /**
-     * @param callable(mixed): bool $predicate
+     * @phpstan-param callable(T, int): bool $predicate
      *
-     * @return static<T>
+     * @phpstan-return static<T>
      */
     public function dropWhile(callable $predicate)
     {
          $drop = function (callable $dropCallback): Generator {
              $dropping = true;
-            foreach ($this->items as $item) {
-                if ($dropping && $dropCallback($item)) {
+            foreach ($this->items as $key => $item) {
+                if ($dropping && $dropCallback($item, $key)) {
                     continue;
                 }
 
@@ -372,27 +376,27 @@ class LazyList implements IteratorAggregate
     }
 
     /**
-     * @param int $count
+     * @phpstan-param int $count
      *
-     * @return static<T>
+     * @phpstan-return static<T>
      */
     public function drop(int $count)
     {
          $i = 0;
-         return $this->dropWhile(static function () use ($count, &$i) {
+         return $this->dropWhile(static function ($_) use ($count, &$i): bool {
              return $i++ < $count;
          });
     }
 
     /**
-     * @param callable(mixed): bool $predicate
+     * @phpstan-param callable(T, int): bool $predicate
      *
-     * @return bool
+     * @phpstan-return bool
      */
     public function exists(callable $predicate): bool
     {
-        foreach ($this->items as $item) {
-            if ($predicate($item)) {
+        foreach ($this->items as $key => $item) {
+            if ($predicate($item, $key)) {
                 return true;
             }
         }
@@ -401,14 +405,14 @@ class LazyList implements IteratorAggregate
     }
 
     /**
-     * @param callable(mixed): bool $predicate
+     * @phpstan-param callable(T, int): bool $predicate
      *
-     * @return bool
+     * @phpstan-return bool
      */
     public function all(callable $predicate): bool
     {
-        foreach ($this->items as $item) {
-            if (!$predicate($item)) {
+        foreach ($this->items as $key => $item) {
+            if (!$predicate($item, $key)) {
                 return false;
             }
         }
@@ -454,9 +458,10 @@ class LazyList implements IteratorAggregate
      *
      * Complexity: o(n)
      *
-     * @param callable $mapper - ($value: mixed, $index: int) => mixed
+     * @phpstan-template B
+     * @phpstan-param callable(T, int): B $mapper
      *
-     * @return Map<T, mixed>
+     * @phpstan-return Map<T, B>
      */
     public function zipMap(callable $mapper): Map
     {
@@ -468,9 +473,9 @@ class LazyList implements IteratorAggregate
     }
 
     /**
-     * @param iterable<T> ...$iterables
+     * @phpstan-param iterable<T> ...$iterables
      *
-     * @return static<T>
+     * @phpstan-return static<T>
      */
     public function concat(iterable ...$iterables)
     {
@@ -484,8 +489,8 @@ class LazyList implements IteratorAggregate
     }
 
     /**
-     * @param T ...$items
-     * @return static<T>
+     * @phpstan-param T ...$items
+     * @phpstan-return static<T>
      */
     public function add(...$items)
     {
@@ -493,10 +498,10 @@ class LazyList implements IteratorAggregate
     }
 
     /**
-     * @param int $position
-     * @param iterable<T> $iterable
+     * @phpstan-param int $position
+     * @phpstan-param iterable<T> $iterable
      *
-     * @return static<T>
+     * @phpstan-return static<T>
      */
     public function insertOnPosition(int $position, iterable $iterable)
     {
@@ -519,7 +524,7 @@ class LazyList implements IteratorAggregate
     }
 
     /**
-     * @return array<int, T>
+     * @phpstan-return array<int, T>
      */
     public function toArray(): array
     {
@@ -532,7 +537,7 @@ class LazyList implements IteratorAggregate
     }
 
     /**
-     * @return Traversable<T>
+     * @phpstan-return Traversable<int, T>
      */
     public function getIterator(): Traversable
     {
@@ -540,7 +545,7 @@ class LazyList implements IteratorAggregate
     }
 
     /**
-     * @return ArrayList<T>
+     * @phpstan-return ArrayList<T>
      */
     public function toList(): ArrayList
     {
@@ -555,16 +560,18 @@ class LazyList implements IteratorAggregate
      *
      * Complexity: o(n)
      *
-     * @return Map<mixed, mixed>
+     * @phpstan-return Map<mixed, mixed>
      */
     public function toMap(): Map
     {
-         return Map::fromIterable($this->toArray());
+        /** @phpstan-var array<array{0: mixed, 1: mixed}> */
+        $pairs = $this->toArray();
+        return Map::fromIterable($pairs);
     }
 
     /**
-     * @param iterable<T> $iterable
-     * @return Traversable<T>
+     * @phpstan-param iterable<T> $iterable
+     * @phpstan-return Traversable<T>
      */
     private function createTraversable(iterable $iterable): Traversable
     {
@@ -580,7 +587,7 @@ class LazyList implements IteratorAggregate
               return new ArrayIterator($iterable);
         }
 
-     // Fallback to generator, be aware, that it is not rewindable!
+        // Fallback to generator, be aware, that it is not rewindable!
         return (function (iterable $iterable): Generator {
             yield from $iterable;
         })($iterable);
@@ -590,7 +597,7 @@ class LazyList implements IteratorAggregate
      * Upgrades callable to accept and return `self` as arguments.
      *
      * @phpstan-param callable $callable
-     * @return callable
+     * @phpstan-return callable
      */
     final public static function lift(callable $callable): callable
     {
@@ -620,7 +627,9 @@ class LazyList implements IteratorAggregate
      */
     final public static function traverse(iterable $iterable, callable $mapperToApplicative): self
     {
-        $mapperToApplicative = $mapperToApplicative ?? static function ($a) { return $a; };
+        $mapperToApplicative = $mapperToApplicative ?? static function ($a) {
+            return $a;
+        };
         return LazyList::fromIterable($iterable)
             ->reduce(
                 function (self $reducedApplicative, $impureItem) use ($mapperToApplicative): self {
@@ -655,7 +664,9 @@ class LazyList implements IteratorAggregate
         /**
          * @phpstan-var callable(self<A>): self<A> $identity
          */
-        $identity = static function ($a) { return $a; };
+        $identity = static function ($a) {
+            return $a;
+        };
         return self::traverse($iterable, $identity);
     }
 }

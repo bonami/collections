@@ -5,16 +5,16 @@ namespace Bonami\Collection\Mutable;
 use function Bonami\Collection\hashKey;
 
 /**
- * @template K
- * @template V
- * @extends \Bonami\Collection\Map<K, V>
+ * @phpstan-template K
+ * @phpstan-template V
+ * @phpstan-extends \Bonami\Collection\Map<K, V>
  */
 class Map extends \Bonami\Collection\Map
 {
 
     /**
-     * @param K $key
-     * @param V $value
+     * @phpstan-param K $key
+     * @phpstan-param V $value
      */
     public function add($key, $value): void
     {
@@ -24,10 +24,10 @@ class Map extends \Bonami\Collection\Map
     }
 
     /**
-     * @param K $key
-     * @param V $value
+     * @phpstan-param K $key
+     * @phpstan-param V $value
      *
-     * @return V
+     * @phpstan-return V
      */
     public function getOrAdd($key, $value)
     {
