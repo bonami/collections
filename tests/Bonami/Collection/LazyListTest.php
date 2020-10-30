@@ -419,20 +419,19 @@ class LazyListTest extends TestCase
     {
         $lazyList1 = new LazyList(new ArrayIterator(range(1, 10, 1)));
         $lazyList2 = new LazyList(new ArrayIterator(range(11, 20, 1)));
-        $lazyList3 = new LazyList(new ArrayIterator(range(21, 30, 1)));
 
         $this->assertEquals([
-            [1, 11, 21],
-            [2, 12, 22],
-            [3, 13, 23],
-            [4, 14, 24],
-            [5, 15, 25],
-            [6, 16, 26],
-            [7, 17, 27],
-            [8, 18, 28],
-            [9, 19, 29],
-            [10, 20, 30],
-        ], $lazyList1->zip($lazyList2, $lazyList3)->toArray());
+            [1, 11],
+            [2, 12],
+            [3, 13],
+            [4, 14],
+            [5, 15],
+            [6, 16],
+            [7, 17],
+            [8, 18],
+            [9, 19],
+            [10, 20],
+        ], $lazyList1->zip($lazyList2)->toArray());
     }
 
     public function testZipMap(): void

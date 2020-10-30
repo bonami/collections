@@ -618,18 +618,17 @@ class ArrayListTest extends TestCase
     {
         $strings = ArrayList::of('This', 'Is', 'Not', 'Test', 'Of', 'Emergency', 'Broadcast', 'System');
         $integers = ArrayList::range(0, 14, 2);
-        $alphabet = range('a', 'h');
 
         $this->assertEquals(ArrayList::of(
-            [0, 'This', 'a'],
-            [2, 'Is', 'b'],
-            [4, 'Not', 'c'],
-            [6, 'Test', 'd'],
-            [8, 'Of', 'e'],
-            [10, 'Emergency', 'f'],
-            [12, 'Broadcast', 'g'],
-            [14, 'System', 'h']
-        ), $integers->zip($strings, $alphabet));
+            [0, 'This'],
+            [2, 'Is'],
+            [4, 'Not'],
+            [6, 'Test'],
+            [8, 'Of'],
+            [10, 'Emergency'],
+            [12, 'Broadcast'],
+            [14, 'System']
+        ), $integers->zip($strings));
     }
 
     public function testZipMap(): void
