@@ -76,13 +76,13 @@ abstract class Enum implements IHashable
      */
     public static function instanceMap(): Map
     {
-         $class = static::class;
+        $class = static::class;
 
         if (isset(self::$instances[$class])) {
-              return self::$instances[$class];
+            return self::$instances[$class];
         }
 
-     /** @var iterable<int, array<int, static>> $pairs */
+        /** @var iterable<int, array<int, static>> $pairs */
         $pairs = array_map(
             function ($value) {
                 return [$value, new static($value)];
@@ -90,7 +90,7 @@ abstract class Enum implements IHashable
             self::getClassConstants()
         );
 
-         return self::$instances[$class] = Map::fromIterable($pairs);
+        return self::$instances[$class] = Map::fromIterable($pairs);
     }
 
     /**
