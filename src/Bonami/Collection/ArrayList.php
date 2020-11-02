@@ -899,7 +899,9 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
                 return $item !== $itemToRemove;
             })
             : $this->filter(static function ($item) use ($itemToRemove): bool {
+                // phpcs:disable SlevomatCodingStandard.Operators.DisallowEqualOperators.DisallowedNotEqualOperator
                 return $item != $itemToRemove;
+                // phpcs:enable SlevomatCodingStandard.Operators.DisallowEqualOperators.DisallowedNotEqualOperator
             });
     }
 
