@@ -47,7 +47,7 @@ final class Lambda
     {
         $isNumberOfArgsInvalid = $callable instanceof Lambda
             && $callable->numberOfArgs !== null
-            && (($callable->numberOfArgs - count($callable->applied)) !== $numberOfArgs);
+            && ($callable->numberOfArgs - count($callable->applied) !== $numberOfArgs);
 
         if ($isNumberOfArgsInvalid) {
             throw new InvalidStateException("Passed number of arguments seems to be invalid");
@@ -83,7 +83,7 @@ final class Lambda
         }
         $numberOfArgsLeft = $this->numberOfArgs - count($newApplied);
 
-        return ($numberOfArgsLeft > 0)
+        return $numberOfArgsLeft > 0
             ? new static($this->callable, $this->numberOfArgs, $newApplied)
             : ($this->callable)(...$newApplied);
     }

@@ -169,11 +169,11 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
         switch (true) {
             case is_array($iterable):
                 return $iterable;
-            case ($iterable instanceof self):
+            case $iterable instanceof self:
                 return $iterable->items;
-            case ($iterable instanceof Map):
+            case $iterable instanceof Map:
                 return $iterable->values()->items;
-            case ($iterable instanceof Traversable):
+            case $iterable instanceof Traversable:
                 return iterator_to_array($iterable, false);
             default:
                 throw new NotImplementedException('Unimplemented iterable argument');

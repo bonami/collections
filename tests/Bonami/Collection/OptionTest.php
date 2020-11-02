@@ -49,11 +49,11 @@ class OptionTest extends TestCase
 
         $this->equals(
             Option::some(5),
-            (Option::lift($plus)($xOpt, $yOpt))
+            Option::lift($plus)($xOpt, $yOpt)
         );
         $this->equals(
             $none,
-            (Option::lift($plus)($xOpt, $none))
+            Option::lift($plus)($xOpt, $none)
         );
     }
 
