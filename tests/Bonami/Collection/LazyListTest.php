@@ -6,6 +6,7 @@ namespace Bonami\Collection;
 
 use ArrayIterator;
 use EmptyIterator;
+use Generator;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
@@ -270,14 +271,7 @@ class LazyListTest extends TestCase
 
     public function testTakeFilteredInfiniteLazyList(): void
     {
-        $generator = static function () {
-            $i = 0;
-            while (true) {
-                yield $i++;
-            }
-        };
-
-        $lazyList = new LazyList($generator());
+        $lazyList = LazyList::range(1, PHP_INT_MAX);
         $taken = $lazyList->filter(static function ($x) {
             return $x < 10;
         })->filter(static function ($x) {
