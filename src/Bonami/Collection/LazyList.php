@@ -14,6 +14,7 @@ use Traversable;
 
 /**
  * @phpstan-template T
+ *
  * @phpstan-implements IteratorAggregate<int, T>
  */
 class LazyList implements IteratorAggregate
@@ -122,6 +123,7 @@ class LazyList implements IteratorAggregate
 
     /**
      * @phpstan-template B
+     *
      * @phpstan-param callable(T, int): B $mapper
      *
      * @phpstan-return self<mixed>
@@ -158,6 +160,7 @@ class LazyList implements IteratorAggregate
 
     /**
      * @phpstan-template B
+     *
      * @phpstan-param callable(T, int): iterable<B> $mapper
      *
      * @phpstan-return self<T>
@@ -198,6 +201,7 @@ class LazyList implements IteratorAggregate
      * Computes reduction of the elements of the collection.
      *
      * @phpstan-template R
+     *
      * @phpstan-param callable(R, T, int): R $reducer a binary operation for reduction
      * @phpstan-param R $initialReduction
      *
@@ -216,6 +220,7 @@ class LazyList implements IteratorAggregate
      * Computes a prefix scan (reduction) of the elements of the collection.
      *
      * @phpstan-template R
+     *
      * @phpstan-param callable(R, T, int): R $scanner a binary operation for scan (reduction)
      * @phpstan-param R $initialReduction
      *
@@ -422,6 +427,7 @@ class LazyList implements IteratorAggregate
 
     /**
      * @phpstan-template B
+     *
      * @phpstan-param iterable<B> $iterable
      *
      * @phpstan-return self<array{0: T, 1: B}>
@@ -459,6 +465,7 @@ class LazyList implements IteratorAggregate
      * Complexity: o(n)
      *
      * @phpstan-template B
+     *
      * @phpstan-param callable(T, int): B $mapper
      *
      * @phpstan-return Map<T, B>
@@ -490,6 +497,7 @@ class LazyList implements IteratorAggregate
 
     /**
      * @phpstan-param T ...$items
+     *
      * @phpstan-return static<T>
      */
     public function add(...$items)
@@ -571,6 +579,7 @@ class LazyList implements IteratorAggregate
 
     /**
      * @phpstan-param iterable<T> $iterable
+     *
      * @phpstan-return Traversable<T>
      */
     private function createTraversable(iterable $iterable): Traversable
@@ -597,6 +606,7 @@ class LazyList implements IteratorAggregate
      * Upgrades callable to accept and return `self` as arguments.
      *
      * @phpstan-param callable $callable
+     *
      * @phpstan-return callable
      */
     final public static function lift(callable $callable): callable
@@ -655,6 +665,7 @@ class LazyList implements IteratorAggregate
      * If all instances are Some, the result is Some<ArrayList<A>>
      *
      * @phpstan-template A
+     *
      * @phpstan-param iterable<self<A>> $iterable
      *
      * @phpstan-return self<ArrayList<A>>

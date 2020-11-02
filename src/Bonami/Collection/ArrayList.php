@@ -36,6 +36,7 @@ use function usort;
 
 /**
  * @phpstan-template T
+ *
  * @phpstan-implements IteratorAggregate<int, T>
  */
 class ArrayList implements Countable, IteratorAggregate, JsonSerializable
@@ -105,7 +106,6 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      * @phpstan-param int $step - a size of step between each item of range
      *
      * @phpstan-return self<int>
-     *
      */
     public static function range(int $min, int $max, int $step = 1): self
     {
@@ -158,6 +158,7 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      * Complexity: o(n) or o(1) - depending on type of iterable collection passed.
      *
      * @see fromIterable
+     *
      * @internal
      *
      * @phpstan-param iterable<int, T> $iterable
@@ -300,6 +301,7 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      * Complexity: o(n)
      *
      * @phpstan-template B
+     *
      * @phpstan-param callable(T, int): B $mapper
      *
      * @phpstan-return self<mixed>
@@ -354,10 +356,10 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      * @see flatten
      *
      * @phpstan-template B
+     *
      * @phpstan-param callable(T, int): iterable<B> $mapper
      *
      * @phpstan-return self<B>
-     *
      */
     public function flatMap(callable $mapper): self
     {
@@ -404,6 +406,7 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      * @see IHashable::hashCode
      *
      * @phpstan-template B
+     *
      * @phpstan-param callable(T, int): B $mapper
      *
      * @phpstan-return self<B>
@@ -439,6 +442,7 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      * @see IHashable::hashCode
      *
      * @phpstan-template B
+     *
      * @phpstan-param callable(T, int): B $discriminator
      *
      * @phpstan-return static<T>
@@ -652,6 +656,7 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      * Complexity: o(n)
      *
      * @phpstan-template M
+     *
      * @phpstan-param callable(T, int): M $indexCallback
      *
      * @phpstan-return Map<M, T>
@@ -681,8 +686,10 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      * Complexity: o(n)
      *
      * @phpstan-template R
+     *
      * @phpstan-param callable(R, T, int): R $reducer - ($carry: mixed, $item: mixed, $key: int) => mixed
      * @phpstan-param R $initialReduction - initial value used as seed for $carry
+     *
      * @phpstan-return R - reduced values. If the list is empty, $initialReduction is directly returned
      */
     public function reduce(callable $reducer, $initialReduction)
@@ -942,6 +949,7 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      * Complexity: o(n)
      *
      * @phpstan-template G
+     *
      * @phpstan-param callable(T, int): G $groupBy
      *
      * @phpstan-return Map<G, static<T>>
@@ -988,6 +996,7 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      * Complexity: o(n)
      *
      * @phpstan-template V
+     *
      * @phpstan-param iterable<V> $values
      *
      * @phpstan-return Map<T, V>
@@ -1008,6 +1017,7 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      * Complexity: o(n) where n is size of shortest collection
      *
      * @phpstan-template B
+     *
      * @phpstan-param iterable<B> $iterable
      *
      * @phpstan-return self<array{0: T, 1: B}>
@@ -1023,6 +1033,7 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      * Complexity: o(n)
      *
      * @phpstan-template B
+     *
      * @phpstan-param callable(T, int): B $mapper
      *
      * @phpstan-return Map<T, B>
@@ -1134,6 +1145,7 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      * Upgrades callable to accept and return `self` as arguments.
      *
      * @phpstan-param callable $callable
+     *
      * @phpstan-return callable
      */
     final public static function lift(callable $callable): callable
@@ -1192,6 +1204,7 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      * If all instances are Some, the result is Some<ArrayList<A>>
      *
      * @phpstan-template A
+     *
      * @phpstan-param iterable<self<A>> $iterable
      *
      * @phpstan-return self<ArrayList<A>>

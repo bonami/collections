@@ -27,6 +27,7 @@ use function iterator_to_array;
 /**
  * @phpstan-template K
  * @phpstan-template V
+ *
  * @phpstan-implements IteratorAggregate<K, V>
  */
 class Map implements Countable, IteratorAggregate
@@ -66,7 +67,6 @@ class Map implements Countable, IteratorAggregate
      * @phpstan-param array<K, V> $array
      *
      * @phpstan-return static<K, V>
-     *
      */
     public static function fromAssociativeArray(array $array)
     {
@@ -119,6 +119,7 @@ class Map implements Countable, IteratorAggregate
      * @throws OutOfBoundsException
      *
      * @phpstan-return V
+     *
      * @see getOrElse for getting default value in case the key does not exists
      *
      * @phpstan-param K $key
@@ -288,6 +289,7 @@ class Map implements Countable, IteratorAggregate
      * @see mapValues - for mapping just values and keeping Map as result
      *
      * @phpstan-template B
+     *
      * @phpstan-param callable(K, V): B $mapper
      *
      * @phpstan-return self<B, V>
@@ -331,6 +333,7 @@ class Map implements Countable, IteratorAggregate
      * Complexity: o(n)
      *
      * @phpstan-template B
+     *
      * @see map - for mapping both keys and values and returning ArrayList as result
      * @see mapKeys - for mapping just keys and keeping Map as result
      *
@@ -810,6 +813,7 @@ class Map implements Countable, IteratorAggregate
      * Complexity: o(n)
      *
      * @phpstan-template R
+     *
      * @phpstan-param callable(R, V, K): R $reducer - takes up to 3 parametrs and returns next reduction step:
      *                          (?prevReduction, ?currentValue, ?currentKey) => nextReduction
      *
@@ -877,6 +881,7 @@ class Map implements Countable, IteratorAggregate
      * @see mapKeys - for mapping just keys and keeping Map as result
      *
      * @phpstan-template B
+     *
      * @phpstan-param callable(V, K): B $mapper
      *
      * @phpstan-return ArrayList<B>

@@ -14,12 +14,14 @@ use Traversable;
 
 /**
  * @phpstan-template T
+ *
  * @phpstan-implements IteratorAggregate<int, T>
  */
 abstract class TrySafe implements IHashable, IteratorAggregate
 {
     /**
      * @phpstan-param T $value
+     *
      * @phpstan-return self<T>
      */
     final public static function of($value): self
@@ -29,6 +31,7 @@ abstract class TrySafe implements IHashable, IteratorAggregate
 
     /**
      * @phpstan-param callable(): T $callable
+     *
      * @phpstan-return self<T>
      */
     final public static function fromCallable(callable $callable): self
@@ -42,6 +45,7 @@ abstract class TrySafe implements IHashable, IteratorAggregate
 
     /**
      * @phpstan-param T $value
+     *
      * @phpstan-return self<T>
      */
     final public static function success($value): self
@@ -119,6 +123,7 @@ abstract class TrySafe implements IHashable, IteratorAggregate
 
             /**
              * @phpstan-param T $else
+             *
              * @phpstan-return T
              */
             public function getOrElse($else)
@@ -165,6 +170,7 @@ abstract class TrySafe implements IHashable, IteratorAggregate
 
     /**
      * @phpstan-param Throwable $failure
+     *
      * @phpstan-return self<T>
      */
     final public static function failure(Throwable $failure): TrySafe
@@ -211,6 +217,7 @@ abstract class TrySafe implements IHashable, IteratorAggregate
 
             /**
              * Consider calling getOrElse instead
+             *
              * @throws ValueIsNotPresentException
              *
              * @phpstan-return T
@@ -222,6 +229,7 @@ abstract class TrySafe implements IHashable, IteratorAggregate
 
             /**
              * @phpstan-param T $else
+             *
              * @phpstan-return T
              */
             public function getOrElse($else)
@@ -272,6 +280,7 @@ abstract class TrySafe implements IHashable, IteratorAggregate
 
     /**
      * @phpstan-template B
+     *
      * @phpstan-param callable(T): B $mapper
      *
      * @phpstan-return self<B>
@@ -280,6 +289,7 @@ abstract class TrySafe implements IHashable, IteratorAggregate
 
     /**
      * @phpstan-template B
+     *
      * @phpstan-param callable(T): self<B> $mapper
      *
      * @phpstan-return self<B>
@@ -288,6 +298,7 @@ abstract class TrySafe implements IHashable, IteratorAggregate
 
     /**
      * @phpstan-template R
+     *
      * @phpstan-param callable(R, T): R $reducer
      * @phpstan-param R $initialReduction
      *
@@ -300,6 +311,7 @@ abstract class TrySafe implements IHashable, IteratorAggregate
 
     /**
      * @phpstan-param self<T> $value
+     *
      * @phpstan-return bool
      */
     final public function equals($value): bool
@@ -324,6 +336,7 @@ abstract class TrySafe implements IHashable, IteratorAggregate
 
     /**
      * Consider calling getOrElse instead
+     *
      * @throws ValueIsNotPresentException
      *
      * @phpstan-return T
@@ -332,6 +345,7 @@ abstract class TrySafe implements IHashable, IteratorAggregate
 
     /**
      * @phpstan-param T $else
+     *
      * @phpstan-return T
      */
     abstract public function getOrElse($else);
@@ -348,6 +362,7 @@ abstract class TrySafe implements IHashable, IteratorAggregate
 
     /**
      * @phpstan-template B
+     *
      * @phpstan-param callable(Throwable): B $handleFailure
      * @phpstan-param callable(T): B $handleSuccess
      *
@@ -359,6 +374,7 @@ abstract class TrySafe implements IHashable, IteratorAggregate
      * Upgrades callable to accept and return `self` as arguments.
      *
      * @phpstan-param callable $callable
+     *
      * @phpstan-return callable
      */
     final public static function lift(callable $callable): callable
@@ -417,6 +433,7 @@ abstract class TrySafe implements IHashable, IteratorAggregate
      * If all instances are Some, the result is Some<ArrayList<A>>
      *
      * @phpstan-template A
+     *
      * @phpstan-param iterable<self<A>> $iterable
      *
      * @phpstan-return self<ArrayList<A>>

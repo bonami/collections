@@ -18,6 +18,7 @@ function testEqualsReflexivity(callable $assertEquals, callable $equals, $a): vo
 
 /**
  * @phpstan-template T
+ *
  * @phpstan-param callable(bool, bool): void $assertEquals
  * @phpstan-param callable(mixed, mixed): bool $equals
  * @phpstan-param T $a
@@ -35,6 +36,7 @@ function testEqualsSymmetry(callable $assertEquals, callable $equals, $a, $b): v
 
 /**
  * @phpstan-template T
+ *
  * @phpstan-param callable(bool, bool): void $assertEquals
  * @phpstan-param callable(mixed, mixed): bool $equals
  * @phpstan-param T $a
@@ -55,6 +57,7 @@ function testEqualsTransitivity(callable $assertEquals, callable $equals, $a, $b
 
 /**
  * @phpstan-template A
+ *
  * @phpstan-param callable(ArrayList<A>|Option<A>|TrySafe<A>, ArrayList<A>|Option<A>|TrySafe<A>): void $assertEquals
  * @phpstan-param ArrayList<A>|Option<A>|TrySafe<A> $functor - this should implement some generic functor interface
  *

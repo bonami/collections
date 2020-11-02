@@ -6,6 +6,7 @@ namespace Bonami\Collection;
 
 /**
  * @phpstan-template T of Enum
+ *
  * @phpstan-extends ArrayList<T>
  */
 class EnumList extends ArrayList

@@ -251,6 +251,7 @@ class TrySafeTest extends TestCase
 
     /**
      * @phpstan-template T
+     *
      * @phpstan-param T $a
      * @phpstan-param T $b
      *
