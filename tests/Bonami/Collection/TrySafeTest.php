@@ -266,9 +266,7 @@ class TrySafeTest extends TestCase
         }
     }
 
-    /**
-     * @phpstan-return TrySafe<mixed>
-     */
+    /** @phpstan-return TrySafe<mixed> */
     private function createFailure(): TrySafe
     {
         return TrySafe::failure($this->createHashableException());

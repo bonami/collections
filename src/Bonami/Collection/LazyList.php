@@ -22,9 +22,7 @@ class LazyList implements IteratorAggregate
     /** @phpstan-var iterable<int, T> */
     private $items;
 
-    /**
-     * @phpstan-param iterable<int, T> $iterable
-     */
+    /** @phpstan-param iterable<int, T> $iterable */
     public function __construct(iterable $iterable)
     {
          $this->items = $iterable;
@@ -70,9 +68,7 @@ class LazyList implements IteratorAggregate
         return new static($fill($item, $size));
     }
 
-    /**
-     * @phpstan-return self<T>
-     */
+    /** @phpstan-return self<T> */
     public static function fromEmpty(): self
     {
          /** @phpstan-var array<mixed> $empty */
@@ -170,9 +166,7 @@ class LazyList implements IteratorAggregate
          return $this->map($mapper)->flatten();
     }
 
-    /**
-     * @phpstan-return self<mixed>
-     */
+    /** @phpstan-return self<mixed> */
     public function flatten(): self
     {
          $flatten = function (): Generator {
@@ -187,9 +181,7 @@ class LazyList implements IteratorAggregate
         return new self($flatten());
     }
 
-    /**
-     * @phpstan-param callable(T, int): void $sideEffect
-     */
+    /** @phpstan-param callable(T, int): void $sideEffect */
     public function each(callable $sideEffect): void
     {
         foreach ($this->items as $key => $item) {
@@ -277,9 +269,7 @@ class LazyList implements IteratorAggregate
         return new static($take($size));
     }
 
-    /**
-     * @phpstan-return self<static<T>>
-     */
+    /** @phpstan-return self<static<T>> */
     public function chunk(int $size): self
     {
          assert($size > 0, 'Size must be positive');
@@ -301,9 +291,7 @@ class LazyList implements IteratorAggregate
         return new self($chunk($size));
     }
 
-    /**
-     * @phpstan-return Option<T>
-     */
+    /** @phpstan-return Option<T> */
     public function head(): Option
     {
          return $this->find(static function ($_): bool {
@@ -311,9 +299,7 @@ class LazyList implements IteratorAggregate
          });
     }
 
-    /**
-     * @phpstan-return Option<T>
-     */
+    /** @phpstan-return Option<T> */
     public function last(): Option
     {
          // No first item implies there is also no last item, thus we have to return none
@@ -531,9 +517,7 @@ class LazyList implements IteratorAggregate
         return new static($insertOnPosition($position, $iterable));
     }
 
-    /**
-     * @phpstan-return array<int, T>
-     */
+    /** @phpstan-return array<int, T> */
     public function toArray(): array
     {
          return iterator_to_array($this->getIterator(), false);
@@ -544,17 +528,13 @@ class LazyList implements IteratorAggregate
          return implode($glue, $this->toArray());
     }
 
-    /**
-     * @phpstan-return Traversable<int, T>
-     */
+    /** @phpstan-return Traversable<int, T> */
     public function getIterator(): Traversable
     {
          return $this->createTraversable($this->items);
     }
 
-    /**
-     * @phpstan-return ArrayList<T>
-     */
+    /** @phpstan-return ArrayList<T> */
     public function toList(): ArrayList
     {
          return ArrayList::fromIterable($this);
@@ -672,9 +652,7 @@ class LazyList implements IteratorAggregate
      */
     final public static function sequence(iterable $iterable): self
     {
-        /**
-         * @phpstan-var callable(self<A>): self<A> $identity
-         */
+        /** @phpstan-var callable(self<A>): self<A> $identity */
         $identity = static function ($a) {
             return $a;
         };

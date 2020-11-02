@@ -31,9 +31,7 @@ abstract class Option implements IHashable, IteratorAggregate
         return $value === null ? self::none() : self::some($value);
     }
 
-    /**
-     * @phpstan-return self<T>
-     */
+    /** @phpstan-return self<T> */
     final public static function none(): Option
     {
         return self::$none ?? self::$none = new class extends Option {
@@ -92,17 +90,13 @@ abstract class Option implements IHashable, IteratorAggregate
                 return TrySafe::failure(new ValueIsNotPresentException());
             }
 
-            /**
-             * @phpstan-return int|string
-             */
+            /** @phpstan-return int|string */
             public function hashCode()
             {
                 return spl_object_hash($this); // There should be only one instance of none
             }
 
-            /**
-             * @phpstan-return Traversable<int, T>
-             */
+            /** @phpstan-return Traversable<int, T> */
             public function getIterator(): Traversable
             {
                 return new EmptyIterator();
@@ -202,9 +196,7 @@ abstract class Option implements IHashable, IteratorAggregate
                 return TrySafe::success($this->value);
             }
 
-            /**
-             * @phpstan-return int|string
-             */
+            /** @phpstan-return int|string */
             public function hashCode()
             {
                 $valueHash = $this->value instanceof IHashable
@@ -213,9 +205,7 @@ abstract class Option implements IHashable, IteratorAggregate
                 return self::class . "::some({$valueHash})";
             }
 
-            /**
-             * @phpstan-return Traversable<int, T>
-             */
+            /** @phpstan-return Traversable<int, T> */
             public function getIterator()
             {
                 return new ArrayIterator([$this->value]);
@@ -298,9 +288,7 @@ abstract class Option implements IHashable, IteratorAggregate
      */
     final public static function sequence(iterable $iterable): self
     {
-        /**
-         * @phpstan-var callable(self<A>): self<A> $identity
-         */
+        /** @phpstan-var callable(self<A>): self<A> $identity */
         $identity = static function ($a) {
             return $a;
         };
@@ -390,9 +378,7 @@ abstract class Option implements IHashable, IteratorAggregate
      */
     abstract public function getOrElse($else);
 
-    /**
-     * @phpstan-return TrySafe<T>
-     */
+    /** @phpstan-return TrySafe<T> */
     abstract public function toTrySafe(): TrySafe;
 
     /**

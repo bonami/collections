@@ -12,9 +12,7 @@ namespace Bonami\Collection;
 class EnumList extends ArrayList
 {
 
-    /**
-     * @phpstan-return ArrayList<int|string>
-     */
+    /** @phpstan-return ArrayList<int|string> */
     public function getValueList(): ArrayList
     {
         return $this->map(static function (Enum $enum) {
@@ -22,9 +20,7 @@ class EnumList extends ArrayList
         });
     }
 
-    /**
-     * @phpstan-return array<int, int|string>
-     */
+    /** @phpstan-return array<int, int|string> */
     public function getValues(): array
     {
         return $this->getValueList()->toArray();

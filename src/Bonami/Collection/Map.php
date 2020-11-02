@@ -39,9 +39,7 @@ class Map implements Countable, IteratorAggregate
     /** @phpstan-var array<int|string, V> */
     protected $values;
 
-    /**
-     * @phpstan-param array<int, array{0: K, 1: V}> $items
-     */
+    /** @phpstan-param array<int, array{0: K, 1: V}> $items */
     public function __construct(array $items)
     {
         $this->keys = [];

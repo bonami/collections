@@ -26,9 +26,7 @@ abstract class Enum implements IHashable
     /** @phpstan-var int|string */
     private $value;
 
-    /**
-     * @phpstan-param int|string $value
-     */
+    /** @phpstan-param int|string $value */
     protected function __construct($value)
     {
         $this->value = $value;
@@ -58,17 +56,13 @@ abstract class Enum implements IHashable
         return self::$instanceIndex[$class][$value];
     }
 
-    /**
-     * @phpstan-return EnumList<static>
-     */
+    /** @phpstan-return EnumList<static> */
     public static function instanceList(): EnumList
     {
         return EnumList::fromIterable(self::instanceMap()->values());
     }
 
-    /**
-     * @phpstan-return Map<int|string, static>
-     */
+    /** @phpstan-return Map<int|string, static> */
     public static function instanceMap(): Map
     {
         $class = static::class;
@@ -88,9 +82,7 @@ abstract class Enum implements IHashable
         return self::$instances[$class] = Map::fromIterable($pairs);
     }
 
-    /**
-     * @phpstan-return array<string>
-     */
+    /** @phpstan-return array<string> */
     private static function getClassConstants(): array
     {
         return (new ReflectionClass(static::class))->getConstants();
@@ -144,9 +136,7 @@ abstract class Enum implements IHashable
         return (string)$this->getValue();
     }
 
-    /**
-     * @phpstan-return int|string
-     */
+    /** @phpstan-return int|string */
     public function getValue()
     {
         return $this->value;

@@ -415,9 +415,7 @@ class MapTest extends TestCase
         $this->assertEquals(ArrayList::fromIterable($expectList), $sourceMap->chunk(2));
     }
 
-    /**
-     * @phpstan-return array<string, array<string, mixed>>
-     */
+    /** @phpstan-return array<string, array<string, mixed>> */
     public function providerChunks(): array
     {
         $object12 = $this->createObject(12);

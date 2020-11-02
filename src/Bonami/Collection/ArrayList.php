@@ -1211,9 +1211,7 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      */
     final public static function sequence(iterable $iterable): self
     {
-        /**
-         * @phpstan-var callable(self<A>): self<A> $identity
-         */
+        /** @phpstan-var callable(self<A>): self<A> $identity */
         $identity = static function ($a) {
             return $a;
         };
