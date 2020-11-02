@@ -12,7 +12,7 @@ class LambdaTest extends TestCase
 
     public function testCurry(): void
     {
-        $curried = Lambda::of(function (int $a, int $b): int {
+        $curried = Lambda::of(static function (int $a, int $b): int {
             return $a + $b;
         });
 
@@ -24,7 +24,7 @@ class LambdaTest extends TestCase
 
     public function testCurryN(): void
     {
-        $curried = Lambda::of(function (string $greeting, string $name, int $times): string {
+        $curried = Lambda::of(static function (string $greeting, string $name, int $times): string {
             return str_repeat("{$greeting} {$name},", $times);
         });
 
@@ -41,7 +41,7 @@ class LambdaTest extends TestCase
 
     public function testCurryVarArg(): void
     {
-        $curried = Lambda::of(function (string $greeting, int ...$ints): string {
+        $curried = Lambda::of(static function (string $greeting, int ...$ints): string {
             return $greeting . join(',', $ints);
         });
 
@@ -52,10 +52,10 @@ class LambdaTest extends TestCase
 
     public function testMap(): void
     {
-        $greeter = function (string $name) {
+        $greeter = static function (string $name) {
             return "Hello {$name}";
         };
-        $countChars = function (string $string): int {
+        $countChars = static function (string $string): int {
             return strlen($string);
         };
 
@@ -64,7 +64,7 @@ class LambdaTest extends TestCase
 
     public function testFromCallableWithNumberOfArgsDontWrapMultipleTimes(): void
     {
-        $curried = Lambda::of(function (int $a, int $b): int {
+        $curried = Lambda::of(static function (int $a, int $b): int {
             return $a + $b;
         });
 
@@ -75,7 +75,7 @@ class LambdaTest extends TestCase
     public function testFromCallableWithNumberOfArgsThrowsOnInvalidNumberOfArgs(): void
     {
         self::expectException(InvalidStateException::class);
-        $curried = Lambda::of(function (int $a, int $b): int {
+        $curried = Lambda::of(static function (int $a, int $b): int {
             return $a + $b;
         });
 

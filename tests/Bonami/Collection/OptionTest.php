@@ -43,7 +43,7 @@ class OptionTest extends TestCase
         $xOpt = Option::some(1);
         $yOpt = Option::some(4);
 
-        $plus = function (int $x, int $y): int {
+        $plus = static function (int $x, int $y): int {
             return $x + $y;
         };
 
@@ -59,10 +59,10 @@ class OptionTest extends TestCase
 
     public function testMap(): void
     {
-        $mapper = function (string $s): string {
+        $mapper = static function (string $s): string {
             return "Hello {$s}";
         };
-        $mapperToNull = function (string $s) {
+        $mapperToNull = static function (string $s) {
             return null;
         };
 
@@ -88,11 +88,11 @@ class OptionTest extends TestCase
     public function testFlatMap(): void
     {
         /** @phpstan-var callable(string): Option<string> */
-        $mapperToSome = function (string $s): Option {
+        $mapperToSome = static function (string $s): Option {
             return Option::some("Hello {$s}");
         };
         /** @phpstan-var callable(string): Option<string> */
-        $mapperToNone = function (string $s): Option {
+        $mapperToNone = static function (string $s): Option {
             return Option::none();
         };
 
@@ -118,7 +118,7 @@ class OptionTest extends TestCase
     {
         $some = Option::some("Hello world");
 
-        $falsyPredicate = function (): bool {
+        $falsyPredicate = static function (): bool {
             return false;
         };
 
@@ -182,7 +182,7 @@ class OptionTest extends TestCase
 
     public function testReduce(): void
     {
-        $reducer = function (int $reduction, int $val): int {
+        $reducer = static function (int $reduction, int $val): int {
             return $reduction + $val;
         };
         $initialReduction = 4;
@@ -199,7 +199,7 @@ class OptionTest extends TestCase
 
     public function testAp(): void
     {
-        $plus = function (int $x, int $y): int {
+        $plus = static function (int $x, int $y): int {
             return $x + $y;
         };
 
@@ -238,12 +238,12 @@ class OptionTest extends TestCase
         $numbersLowerThan10 = [1, 2, 3, 7, 9];
 
         /** @phpstan-var callable(int): Option<int> */
-        $wrapLowerThan10 = function (int $int): Option {
+        $wrapLowerThan10 = static function (int $int): Option {
             return $int < 10 ? Option::some($int) : Option::none();
         };
 
         /** @phpstan-var callable(int): Option<int> */
-        $wrapLowerThan9 = function (int $int): Option {
+        $wrapLowerThan9 = static function (int $int): Option {
             return $int < 9 ? Option::some($int) : Option::none();
         };
 
@@ -318,10 +318,10 @@ class OptionTest extends TestCase
         $assertEquals = function ($a, $b): void {
             $this->equals($a, $b);
         };
-        $optionEquals = function (Option $a, Option $b): bool {
+        $optionEquals = static function (Option $a, Option $b): bool {
             return $a->equals($b);
         };
-        $pure = function ($value): Option {
+        $pure = static function ($value): Option {
             return Option::of($value);
         };
 
@@ -330,10 +330,10 @@ class OptionTest extends TestCase
         $someThree = Option::some(3);
         $none = Option::none();
 
-        $plus2 = function (int $x): int {
+        $plus2 = static function (int $x): int {
             return $x + 2;
         };
-        $multiple2 = function (int $x): int {
+        $multiple2 = static function (int $x): int {
             return $x * 2;
         };
 

@@ -76,7 +76,7 @@ abstract class Enum implements IHashable
 
         /** @phpstan-var iterable<int, array{0: int|string, 1: static}> $pairs */
         $pairs = array_map(
-            function ($value) {
+            static function ($value) {
                 return [$value, new static($value)];
             },
             self::getClassConstants()

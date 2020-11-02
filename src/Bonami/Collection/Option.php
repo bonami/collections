@@ -254,8 +254,8 @@ abstract class Option implements IHashable, IteratorAggregate
      */
     final public static function lift(callable $callable): callable
     {
-        return function (self ...$arguments) use ($callable): self {
-            $reducer = function (self $applicative, self $argument): self {
+        return static function (self ...$arguments) use ($callable): self {
+            $reducer = static function (self $applicative, self $argument): self {
                 /** @phpstan-var mixed $argument */
                 return $applicative->ap($argument);
             };
@@ -315,12 +315,12 @@ abstract class Option implements IHashable, IteratorAggregate
         };
         return LazyList::fromIterable($iterable)
             ->reduce(
-                function (self $reducedApplicative, $impureItem) use ($mapperToApplicative): self {
+                static function (self $reducedApplicative, $impureItem) use ($mapperToApplicative): self {
                     $applicative = $mapperToApplicative($impureItem);
                     assert($applicative instanceof self);
                     return $reducedApplicative
-                        ->map(function (ArrayList $resultIterable): callable {
-                            return function ($item) use ($resultIterable): ArrayList {
+                        ->map(static function (ArrayList $resultIterable): callable {
+                            return static function ($item) use ($resultIterable): ArrayList {
                                 return $resultIterable->concat(ArrayList::of($item));
                             };
                         })

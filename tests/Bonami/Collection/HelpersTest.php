@@ -11,10 +11,10 @@ class HelpersTest extends TestCase
 
     public function testCompose(): void
     {
-        $multiplyBy3 = function (int $x): int {
+        $multiplyBy3 = static function (int $x): int {
             return $x * 3;
         };
-        $add2 = function (int $x): int {
+        $add2 = static function (int $x): int {
             return $x + 2;
         };
 

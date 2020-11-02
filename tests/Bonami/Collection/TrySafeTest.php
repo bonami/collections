@@ -25,10 +25,10 @@ class TrySafeTest extends TestCase
 
     public function testCreateFromCallable(): void
     {
-        $returnValueCallable = function () {
+        $returnValueCallable = static function () {
             return 666;
         };
-        $throwCallable = function () {
+        $throwCallable = static function () {
             throw new Exception();
         };
 
@@ -42,7 +42,7 @@ class TrySafeTest extends TestCase
         $xSuccess = TrySafe::success(1);
         $ySuccess = TrySafe::success(4);
 
-        $plus = function (int $x, int $y): int {
+        $plus = static function (int $x, int $y): int {
             return $x + $y;
         };
 
@@ -58,10 +58,10 @@ class TrySafeTest extends TestCase
 
     public function testMap(): void
     {
-        $mapper = function (string $s): string {
+        $mapper = static function (string $s): string {
             return "Hello {$s}";
         };
-        $mapperThatThrows = function () {
+        $mapperThatThrows = static function () {
             throw new Exception();
         };
 
@@ -78,7 +78,7 @@ class TrySafeTest extends TestCase
     public function testFlatMap(): void
     {
         /** @phpstan-var callable(string): TrySafe<string> */
-        $mapperToSuccess = function (string $s): TrySafe {
+        $mapperToSuccess = static function (string $s): TrySafe {
             return TrySafe::success("Hello {$s}");
         };
         /** @phpstan-var callable(string): TrySafe<string> */
@@ -86,7 +86,7 @@ class TrySafeTest extends TestCase
             return $this->createFailure();
         };
         /** @phpstan-var callable(string): TrySafe<string> */
-        $mapperThatThrows = function () {
+        $mapperThatThrows = static function () {
             throw new Exception();
         };
 
@@ -106,14 +106,14 @@ class TrySafeTest extends TestCase
         $failure = new Exception();
 
         $recoveredFailure = TrySafe::failure($failure)
-            ->recover(function (Throwable $failure): int {
+            ->recover(static function (Throwable $failure): int {
                 return 666;
             });
         self::assertTrue($recoveredFailure->isSuccess());
 
         $exceptionThatRecoveryThrows = new Exception();
         $recoveryEndedWithFailure = TrySafe::failure($failure)
-            ->recover(function (Throwable $failure) use ($exceptionThatRecoveryThrows) {
+            ->recover(static function (Throwable $failure) use ($exceptionThatRecoveryThrows) {
                 throw $exceptionThatRecoveryThrows;
             });
 
@@ -167,7 +167,7 @@ class TrySafeTest extends TestCase
 
     public function testReduce(): void
     {
-        $reducer = function (int $reduction, int $val): int {
+        $reducer = static function (int $reduction, int $val): int {
             return $reduction + $val;
         };
         $initialReduction = 4;
@@ -187,10 +187,10 @@ class TrySafeTest extends TestCase
         $assertEquals = function ($a, $b): void {
             $this->equals($a, $b);
         };
-        $tryEquals = function (TrySafe $a, TrySafe $b): bool {
+        $tryEquals = static function (TrySafe $a, TrySafe $b): bool {
             return $a->equals($b);
         };
-        $pure = function ($value): TrySafe {
+        $pure = static function ($value): TrySafe {
             return TrySafe::of($value);
         };
 
@@ -199,10 +199,10 @@ class TrySafeTest extends TestCase
         $successThree = TrySafe::success(3);
         $failure = $this->createFailure();
 
-        $plus2 = function (int $x): int {
+        $plus2 = static function (int $x): int {
             return $x + 2;
         };
-        $multiple2 = function (int $x): int {
+        $multiple2 = static function (int $x): int {
             return $x * 2;
         };
         $throws = function () {

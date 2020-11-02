@@ -109,10 +109,10 @@ class ArrayListTest extends TestCase
     public function testAp(): void
     {
         $callbacks = ArrayList::of(
-            function ($a, $b) {
+            static function ($a, $b) {
                 return $a . $b;
             },
-            function ($a, $b) {
+            static function ($a, $b) {
                 return [$a, $b];
             }
         );
@@ -137,10 +137,10 @@ class ArrayListTest extends TestCase
     public function testApNone(): void
     {
         $callbacks = ArrayList::of(
-            function ($a, $b) {
+            static function ($a, $b) {
                 return $a . $b;
             },
-            function ($a, $b) {
+            static function ($a, $b) {
                 return [$a, $b];
             }
         );
@@ -153,7 +153,7 @@ class ArrayListTest extends TestCase
 
     public function testLift(): void
     {
-        $lifted = ArrayList::lift(function ($a, $b): string {
+        $lifted = ArrayList::lift(static function ($a, $b): string {
             return $a . $b;
         });
 
@@ -165,7 +165,7 @@ class ArrayListTest extends TestCase
     public function testTraverse(): void
     {
         /** @phpstan-var callable(int): ArrayList<int> $fillAForOdd */
-        $fillAForOdd = function (int $i): ArrayList {
+        $fillAForOdd = static function (int $i): ArrayList {
             return $i % 2 === 0 ? ArrayList::of($i) : ArrayList::fromEmpty();
         };
 
@@ -456,7 +456,7 @@ class ArrayListTest extends TestCase
         $a = ArrayList::of(1, 2);
         $acc = 0;
 
-        $a->each(function (int $i) use (&$acc): void {
+        $a->each(static function (int $i) use (&$acc): void {
             $acc += $i;
         });
         $this->assertEquals(3, $acc);
@@ -636,7 +636,7 @@ class ArrayListTest extends TestCase
     public function testZipMap(): void
     {
         $ints = ArrayList::range(0, 2);
-        $map = $ints->zipMap(function (int $i): string {
+        $map = $ints->zipMap(static function (int $i): string {
             return chr(ord('a') + $i);
         });
         $this->assertEquals(Map::fromIterable([[0, 'a'], [1, 'b'], [2, 'c']]), $map);

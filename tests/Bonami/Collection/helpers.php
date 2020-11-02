@@ -62,7 +62,7 @@ function testEqualsTransitivity(callable $assertEquals, callable $equals, $a, $b
  */
 function testFunctorIdentity(callable $assertEquals, $functor): void
 {
-    $id = function ($a) {
+    $id = static function ($a) {
         return $a;
     };
     $assertEquals(
@@ -152,7 +152,7 @@ function testApplicativeComposition(
     $applicativeF,
     $applicativeG
 ): void {
-    $curriedComposition = Lambda::of(function (callable $f, callable $g): callable {
+    $curriedComposition = Lambda::of(static function (callable $f, callable $g): callable {
         return compose($f, $g);
     });
 

@@ -22,7 +22,7 @@ class LazyListTest extends TestCase
     public function testInfinityRange(): void
     {
         $range = LazyList::range(1)
-            ->filter(function (int $number): bool {
+            ->filter(static function (int $number): bool {
                 return $number % 3 === 0;
             })
             ->take(10)
@@ -77,7 +77,7 @@ class LazyListTest extends TestCase
     public function testMap(): void
     {
         $lazyList = new LazyList(new ArrayIterator(range(1, 10)));
-        $mapped = $lazyList->map(function ($item) {
+        $mapped = $lazyList->map(static function ($item) {
             return $item * 10;
         });
 
@@ -87,7 +87,7 @@ class LazyListTest extends TestCase
     public function testMapWithKey(): void
     {
         $lazyList = new LazyList(new ArrayIterator(range(1, 10, 2)));
-        $mapped = $lazyList->map(function ($item, $index) {
+        $mapped = $lazyList->map(static function ($item, $index) {
             return $index;
         });
 
@@ -97,10 +97,10 @@ class LazyListTest extends TestCase
     public function testAp(): void
     {
         $callbacks = LazyList::of(
-            function ($a, $b) {
+            static function ($a, $b) {
                 return $a . $b;
             },
-            function ($a, $b) {
+            static function ($a, $b) {
                 return [$a, $b];
             }
         );
@@ -125,10 +125,10 @@ class LazyListTest extends TestCase
     public function testApNone(): void
     {
         $callbacks = LazyList::of(
-            function ($a, $b) {
+            static function ($a, $b) {
                 return $a . $b;
             },
-            function ($a, $b) {
+            static function ($a, $b) {
                 return [$a, $b];
             }
         );
@@ -141,7 +141,7 @@ class LazyListTest extends TestCase
 
     public function testLift(): void
     {
-        $lifted = LazyList::lift(function ($a, $b) {
+        $lifted = LazyList::lift(static function ($a, $b) {
             return $a . $b;
         });
 
@@ -184,7 +184,7 @@ class LazyListTest extends TestCase
     public function testFlatMap(): void
     {
         $lazyList = new LazyList([1, 2, 3]);
-        $mapped = $lazyList->flatMap(function (int $item): array {
+        $mapped = $lazyList->flatMap(static function (int $item): array {
             return [$item, [$item * 2]];
         });
         $this->assertEquals([1, [2], 2, [4], 3, [6]], $mapped->toArray());
@@ -209,7 +209,7 @@ class LazyListTest extends TestCase
         $lazyList = new LazyList(new ArrayIterator(range(1, 10)));
 
         $accumulator = 0;
-        $lazyList->each(function (int $item) use (&$accumulator): void {
+        $lazyList->each(static function (int $item) use (&$accumulator): void {
             $accumulator += $item;
         });
 
@@ -220,7 +220,7 @@ class LazyListTest extends TestCase
     {
         $lazyList = new LazyList(range(1, 3));
 
-        $sum = $lazyList->reduce(function ($sum, $item) {
+        $sum = $lazyList->reduce(static function ($sum, $item) {
             return $sum + $item;
         }, 0);
         $this->assertEquals(6, $sum);
@@ -230,7 +230,7 @@ class LazyListTest extends TestCase
     {
         $lazyList = LazyList::fill(1);
 
-        $sum = $lazyList->scan(function ($sum, $item) {
+        $sum = $lazyList->scan(static function ($sum, $item) {
             return $sum + $item;
         }, 0);
         $this->assertEquals([1, 2, 3], $sum->take(3)->toArray());
@@ -239,10 +239,10 @@ class LazyListTest extends TestCase
     public function testMapRepeatedCall(): void
     {
         $lazyList = new LazyList(new ArrayIterator(range(1, 10)));
-        $mapped1 = $lazyList->map(function ($item) {
+        $mapped1 = $lazyList->map(static function ($item) {
             return $item * 10;
         });
-        $mapped2 = $lazyList->map(function ($item) {
+        $mapped2 = $lazyList->map(static function ($item) {
             return $item * 100;
         });
 
@@ -253,7 +253,7 @@ class LazyListTest extends TestCase
     public function testTakeWhile(): void
     {
         $lazyList = new LazyList(new ArrayIterator(range(1, 10)));
-        $taken = $lazyList->takeWhile(function (int $i): bool {
+        $taken = $lazyList->takeWhile(static function (int $i): bool {
             return $i <= 3;
         });
 
@@ -270,7 +270,7 @@ class LazyListTest extends TestCase
 
     public function testTakeFilteredInfiniteLazyList(): void
     {
-        $generator = function () {
+        $generator = static function () {
             $i = 0;
             while (true) {
                 yield $i++;
@@ -278,9 +278,9 @@ class LazyListTest extends TestCase
         };
 
         $lazyList = new LazyList($generator());
-        $taken = $lazyList->filter(function ($x) {
+        $taken = $lazyList->filter(static function ($x) {
             return $x < 10;
-        })->filter(function ($x) {
+        })->filter(static function ($x) {
             return $x >= 5;
         })->take(5);
 
@@ -299,7 +299,7 @@ class LazyListTest extends TestCase
                 [7, 8, 9],
                 [10],
             ],
-            $chunked->map(function ($chunk) {
+            $chunked->map(static function ($chunk) {
                 return iterator_to_array($chunk);
             })->toArray()
         );
@@ -342,7 +342,7 @@ class LazyListTest extends TestCase
     public function testFilter(): void
     {
         $lazyList = new LazyList(new ArrayIterator(range(1, 10)));
-        $filtered = $lazyList->filter(function (int $item) {
+        $filtered = $lazyList->filter(static function (int $item) {
             return $item % 2 == 0;
         });
 
@@ -352,7 +352,7 @@ class LazyListTest extends TestCase
     public function testFindWhenItemExists(): void
     {
         $lazyList = new LazyList(new ArrayIterator(range(1, 10)));
-        $found = $lazyList->find(function (int $item) {
+        $found = $lazyList->find(static function (int $item) {
             return $item % 2 == 0;
         });
 
@@ -364,7 +364,7 @@ class LazyListTest extends TestCase
     public function testFindWhenItemDoesNotExist(): void
     {
         $lazyList = new LazyList(new ArrayIterator(range(1, 10)));
-        $found = $lazyList->find(function (int $item) {
+        $found = $lazyList->find(static function (int $item) {
             return $item === 666;
         });
 
@@ -375,7 +375,7 @@ class LazyListTest extends TestCase
     public function testDropWhile(): void
     {
         $lazyList = LazyList::range(1, 9)->concat(LazyList::range(0, 5));
-        $rest = $lazyList->dropWhile(function (int $item) {
+        $rest = $lazyList->dropWhile(static function (int $item) {
             return $item < 5;
         });
 
@@ -394,10 +394,10 @@ class LazyListTest extends TestCase
     {
         $lazyList = new LazyList(new ArrayIterator(range(1, 10)));
 
-        $this->assertTrue($lazyList->exists(function (int $item) {
+        $this->assertTrue($lazyList->exists(static function (int $item) {
             return $item > 5;
         }));
-        $this->assertFalse($lazyList->exists(function (int $item) {
+        $this->assertFalse($lazyList->exists(static function (int $item) {
             return $item > 10;
         }));
     }
@@ -406,13 +406,13 @@ class LazyListTest extends TestCase
     {
         $lazyList = new LazyList(new ArrayIterator(range(2, 10, 2)));
 
-        $this->assertTrue($lazyList->all(function (int $item) {
+        $this->assertTrue($lazyList->all(static function (int $item) {
             return $item < 11;
         }));
-        $this->assertTrue($lazyList->all(function (int $item) {
+        $this->assertTrue($lazyList->all(static function (int $item) {
             return $item % 2 == 0;
         }));
-        $this->assertFalse($lazyList->all(function (int $item) {
+        $this->assertFalse($lazyList->all(static function (int $item) {
             return $item < 10;
         }));
     }
@@ -439,7 +439,7 @@ class LazyListTest extends TestCase
     public function testZipMap(): void
     {
         $ints = LazyList::range(0, 2);
-        $map = $ints->zipMap(function (int $i): string {
+        $map = $ints->zipMap(static function (int $i): string {
             return chr(ord('a') + $i);
         });
         $this->assertEquals(Map::fromIterable([[0, 'a'], [1, 'b'], [2, 'c']]), $map);
@@ -507,7 +507,7 @@ class LazyListTest extends TestCase
     {
         $lazyList = new LazyList(new ArrayIterator(range(1, 10)));
         $numberOfCalls = 0;
-        $mapped = $lazyList->map(function ($item) use (&$numberOfCalls) {
+        $mapped = $lazyList->map(static function ($item) use (&$numberOfCalls) {
             $numberOfCalls++;
             return $item * 10;
         });

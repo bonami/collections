@@ -70,7 +70,7 @@ class MapTest extends TestCase
             [1, "a"],
             [2, "b"],
         ]);
-        $mapped = $map->map(function ($value, $key) {
+        $mapped = $map->map(static function ($value, $key) {
             return "$value:$key";
         });
         $this->assertEquals(ArrayList::fromIterable(["a:1", "b:2"]), $mapped);
@@ -83,7 +83,7 @@ class MapTest extends TestCase
             [2, "b"],
         ]);
 
-        $mapped = $map->mapKeys(function ($key) {
+        $mapped = $map->mapKeys(static function ($key) {
             return $key + 1;
         });
         $this->assertEquals(new Map([
@@ -99,7 +99,7 @@ class MapTest extends TestCase
             [2, "b"],
         ]);
 
-        $mapped = $map->mapValues(function ($value, $key) {
+        $mapped = $map->mapValues(static function ($value, $key) {
             return str_repeat($value, $key);
         });
         $this->assertEquals(new Map([
@@ -116,7 +116,7 @@ class MapTest extends TestCase
             [3, "c"],
             [4, "d"],
         ]);
-        $filtered = $map->filter(function ($value, $key) {
+        $filtered = $map->filter(static function ($value, $key) {
             return $key % 2 === 0 || $value === "c";
         });
         $this->assertEquals(new Map([
@@ -131,7 +131,7 @@ class MapTest extends TestCase
         $this->assertSame(Option::none(), Map::fromEmpty()->find(tautology()));
         $this->assertEquals(
             'b',
-            Map::fromIterable([[1, 'a'], [2, 'b']])->find(function ($value, $key): bool {
+            Map::fromIterable([[1, 'a'], [2, 'b']])->find(static function ($value, $key): bool {
                 return $key === 2 && $value !== 'a';
             })->getUnsafe()
         );
@@ -205,7 +205,7 @@ class MapTest extends TestCase
         $two = $this->createObject(2);
         $seven = $this->createObject(7);
         $map = new Map([[$three, 5], [$two, 6], [$seven, 8]]);
-        $result = $map->sortKeys(function ($key1, $key2) {
+        $result = $map->sortKeys(static function ($key1, $key2) {
             return $key1->prop <=> $key2->prop;
         });
 
@@ -263,15 +263,15 @@ class MapTest extends TestCase
             5,
         ]);
 
-        $this->assertEquals(87, $map->reduce(function (int $total, int $value) {
+        $this->assertEquals(87, $map->reduce(static function (int $total, int $value) {
             return $total + $value;
         }, 0));
 
-        $this->assertEquals(115, $map->reduce(function (int $total, int $value, int $key) {
+        $this->assertEquals(115, $map->reduce(static function (int $total, int $value, int $key) {
             return $total + $value + $key;
         }, 0));
 
-        $this->assertEquals(28, $map->reduce(function (int $total, int $value, int $key) {
+        $this->assertEquals(28, $map->reduce(static function (int $total, int $value, int $key) {
             return $total + $key;
         }, 0));
     }
@@ -279,7 +279,7 @@ class MapTest extends TestCase
     public function testFilterKeys(): void
     {
         $map = new Map([[1, 2], [3, 4], [5, 6]]);
-        $filtered = $map->filterKeys(function ($key) {
+        $filtered = $map->filterKeys(static function ($key) {
             return $key > 2;
         });
         $this->assertEquals(new Map([[3, 4], [5, 6]]), $filtered);
@@ -365,7 +365,7 @@ class MapTest extends TestCase
 
     public function testMinus(): void
     {
-        $objects = Map::fromIterable(LazyList::range(1, 14)->map(function ($i) {
+        $objects = Map::fromIterable(LazyList::range(1, 14)->map(static function ($i) {
             return [(object)['prop' => $i], $i];
         }));
 
@@ -551,10 +551,10 @@ class MapTest extends TestCase
             [2, 'B'],
             [3, 'C'],
         ]);
-        $this->assertTrue($map->exists(function ($value) {
+        $this->assertTrue($map->exists(static function ($value) {
             return $value === 'C';
         }));
-        $this->assertFalse($map->exists(function ($value) {
+        $this->assertFalse($map->exists(static function ($value) {
             return $value === 'D';
         }));
     }
@@ -567,17 +567,17 @@ class MapTest extends TestCase
             [3, 3],
             [4, 4],
         ]);
-        $this->assertTrue($map->exists(function ($value, $key) {
+        $this->assertTrue($map->exists(static function ($value, $key) {
             return $value === $key;
         }));
-        $this->assertFalse($map->exists(function ($value, $key) {
+        $this->assertFalse($map->exists(static function ($value, $key) {
             return $value !== $key;
         }));
     }
 
     public function testAll(): void
     {
-        $keySameAsValue = function ($value, $key) {
+        $keySameAsValue = static function ($value, $key) {
             return $value === $key;
         };
         $this->assertTrue(Map::fromIterable([[1, 1], [2, 2]])->all($keySameAsValue));
@@ -593,22 +593,22 @@ class MapTest extends TestCase
             [4, 0],
             [5, ''],
         ]);
-        $this->assertTrue((bool)$map->exists(function ($value) {
+        $this->assertTrue((bool)$map->exists(static function ($value) {
             return $value === 'A';
         }));
-        $this->assertTrue((bool)$map->exists(function ($value) {
+        $this->assertTrue((bool)$map->exists(static function ($value) {
             return $value === null;
         }));
-        $this->assertTrue((bool)$map->exists(function ($value) {
+        $this->assertTrue((bool)$map->exists(static function ($value) {
             return $value === false;
         }));
-        $this->assertTrue((bool)$map->exists(function ($value) {
+        $this->assertTrue((bool)$map->exists(static function ($value) {
             return $value === 0;
         }));
-        $this->assertTrue((bool)$map->exists(function ($value) {
+        $this->assertTrue((bool)$map->exists(static function ($value) {
             return $value === '';
         }));
-        $this->assertFalse((bool)$map->exists(function ($value) {
+        $this->assertFalse((bool)$map->exists(static function ($value) {
             return $value === 'X';
         }));
     }

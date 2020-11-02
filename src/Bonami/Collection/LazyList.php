@@ -143,13 +143,13 @@ class LazyList implements IteratorAggregate
      */
     public function ap(self $lazyList): self
     {
-         $mappers = $this->map(function (callable $mapper) {
+         $mappers = $this->map(static function (callable $mapper) {
              return Lambda::of($mapper);
          })->toList();
 
-         return $lazyList->flatMap(function ($value) use ($mappers): iterable {
+         return $lazyList->flatMap(static function ($value) use ($mappers): iterable {
              /** @phpstan-var self<Lambda|mixed> $applied */
-             $applied = $mappers->map(function (Lambda $mapper) use ($value) {
+             $applied = $mappers->map(static function (Lambda $mapper) use ($value) {
                  return ($mapper)($value);
              });
              return $applied;
@@ -466,7 +466,7 @@ class LazyList implements IteratorAggregate
     public function zipMap(callable $mapper): Map
     {
          return $this
-         ->map(function ($value, $key) use ($mapper): array {
+         ->map(static function ($value, $key) use ($mapper): array {
              return [$value, $mapper($value, $key)];
          })
          ->toMap();
@@ -588,7 +588,7 @@ class LazyList implements IteratorAggregate
         }
 
         // Fallback to generator, be aware, that it is not rewindable!
-        return (function (iterable $iterable): Generator {
+        return (static function (iterable $iterable): Generator {
             yield from $iterable;
         })($iterable);
     }
@@ -601,8 +601,8 @@ class LazyList implements IteratorAggregate
      */
     final public static function lift(callable $callable): callable
     {
-        return function (self ...$arguments) use ($callable): self {
-            $reducer = function (self $applicative, self $argument): self {
+        return static function (self ...$arguments) use ($callable): self {
+            $reducer = static function (self $applicative, self $argument): self {
                 /** @phpstan-var mixed $argument */
                 return $applicative->ap($argument);
             };
@@ -632,12 +632,12 @@ class LazyList implements IteratorAggregate
         };
         return LazyList::fromIterable($iterable)
             ->reduce(
-                function (self $reducedApplicative, $impureItem) use ($mapperToApplicative): self {
+                static function (self $reducedApplicative, $impureItem) use ($mapperToApplicative): self {
                     $applicative = $mapperToApplicative($impureItem);
                     assert($applicative instanceof self);
                     return $reducedApplicative
-                        ->map(function (ArrayList $resultIterable): callable {
-                            return function ($item) use ($resultIterable): ArrayList {
+                        ->map(static function (ArrayList $resultIterable): callable {
+                            return static function ($item) use ($resultIterable): ArrayList {
                                 return $resultIterable->concat(ArrayList::of($item));
                             };
                         })

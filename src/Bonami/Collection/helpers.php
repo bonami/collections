@@ -43,14 +43,14 @@ function tautology(): callable
  */
 function applicator(...$args): callable
 {
-    return function (callable $callable) use ($args) {
+    return static function (callable $callable) use ($args) {
         return $callable(...$args);
     };
 }
 
 function compose(callable $f, callable $g): callable
 {
-    return function (...$args) use ($f, $g) {
+    return static function (...$args) use ($f, $g) {
         return $f($g(...$args));
     };
 }
@@ -70,7 +70,7 @@ function hashKey($key)
         return spl_object_hash($key);
     }
     if (is_array($key)) {
-         return serialize(array_map(function ($value) {
+         return serialize(array_map(static function ($value) {
              return hashKey($value);
          }, $key));
     }

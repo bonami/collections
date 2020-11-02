@@ -296,7 +296,7 @@ class Map implements Countable, IteratorAggregate
         $map = self::fromEmpty();
 
         $keysValues = array_map($mapper, $this->keys, $this->values);
-        $keyHashes = array_map(function ($key) {
+        $keyHashes = array_map(static function ($key) {
             return hashKey($key);
         }, $keysValues);
 
@@ -368,7 +368,7 @@ class Map implements Countable, IteratorAggregate
     {
         /** @phpstan-var array<K, V> */
         $assoc = array_combine(
-            array_map(function ($key) {
+            array_map(static function ($key) {
                 return (string)$key;
             }, $this->keys),
             $this->values
@@ -650,7 +650,7 @@ class Map implements Countable, IteratorAggregate
     {
 
         $hashes = ArrayList::fromIterable(array_keys($this->keys))
-            ->minus(LazyList::fromIterable($keys)->map(function ($key) {
+            ->minus(LazyList::fromIterable($keys)->map(static function ($key) {
                 return hashKey($key);
             }));
 
@@ -731,7 +731,7 @@ class Map implements Countable, IteratorAggregate
     public function getByKeys(iterable $keys)
     {
         $hashes = ArrayList::fromIterable($keys)
-            ->map(function ($key) {
+            ->map(static function ($key) {
                 return hashKey($key);
             })
             ->filter(function ($keyHash) {
@@ -785,7 +785,7 @@ class Map implements Countable, IteratorAggregate
     {
         $comparator = $comparator ?? comparator();
         return static::fromIterable(
-            $this->pairs()->sort(function (array $a, array $b) use ($comparator) {
+            $this->pairs()->sort(static function (array $a, array $b) use ($comparator) {
                 return $comparator($a[1], $b[1]);
             })
         );
@@ -842,7 +842,7 @@ class Map implements Countable, IteratorAggregate
     {
         return LazyList::fromIterable(array_chunk($this->keys, $size, true))
             ->zip(array_chunk($this->values, $size, true))
-            ->map(function (array $zipped) {
+            ->map(static function (array $zipped) {
                 [$keysChunk, $valuesChunk] = $zipped;
 
                 $map = static::fromEmpty();
@@ -861,7 +861,7 @@ class Map implements Countable, IteratorAggregate
      */
     public function __toString(): string
     {
-        return '{' . $this->map(function ($value, $key): string {
+        return '{' . $this->map(static function ($value, $key): string {
             return "$key: $value";
         })->join(', ') . '}';
     }
