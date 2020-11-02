@@ -85,7 +85,6 @@ function testFunctorComposition(callable $assertEquals, $functor, callable $f, c
     );
 }
 
-
 /* @see https://en.wikibooks.org/wiki/Haskell/Applicative_functors#Applicative_functor_laws */
 
 /**
@@ -163,8 +162,8 @@ function testApplicativeComposition(
 
 interface CallSpy
 {
-
     public function __invoke(): void;
+
     /** @return array<int, array<mixed>> */
     public function getCalls(): array;
 }

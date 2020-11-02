@@ -21,21 +21,12 @@ abstract class Option implements IHashable, IteratorAggregate
     private static $none;
 
     /**
-     * @phpstan-param T $value
-     * @phpstan-return self<T>
-     */
-    final public static function of($value): self
-    {
-         return self::some($value);
-    }
-
-    /**
      * @phpstan-param ?T $value
      * @phpstan-return self<T>
      */
     final public static function fromNullable($value): self
     {
-         return $value === null ? self::none() : self::some($value);
+        return $value === null ? self::none() : self::some($value);
     }
 
     /**
@@ -43,7 +34,7 @@ abstract class Option implements IHashable, IteratorAggregate
      */
     final public static function none(): Option
     {
-         return self::$none ?? self::$none = new class extends Option {
+        return self::$none ?? self::$none = new class extends Option {
 
             public function isDefined(): bool
             {
@@ -70,22 +61,22 @@ abstract class Option implements IHashable, IteratorAggregate
                 return $this;
             }
 
-         /**
-          * Consider calling getOrElse instead
-          * @throws ValueIsNotPresentException
-          *
-          * @phpstan-return T
-          */
+            /**
+             * Consider calling getOrElse instead
+             * @throws ValueIsNotPresentException
+             *
+             * @phpstan-return T
+             */
             public function getUnsafe()
             {
                 throw new ValueIsNotPresentException("Can not get value for None");
             }
 
-         /**
-          * @phpstan-template E
-          * @phpstan-param E $else
-          * @phpstan-return E
-          */
+            /**
+             * @phpstan-template E
+             * @phpstan-param E $else
+             * @phpstan-return E
+             */
             public function getOrElse($else)
             {
                 return $else;
@@ -96,17 +87,17 @@ abstract class Option implements IHashable, IteratorAggregate
                 return TrySafe::failure(new ValueIsNotPresentException());
             }
 
-         /**
-          * @phpstan-return int|string
-          */
+            /**
+             * @phpstan-return int|string
+             */
             public function hashCode()
             {
                 return spl_object_hash($this); // There should be only one instance of none
             }
 
-         /**
-          * @phpstan-return Traversable<int, T>
-          */
+            /**
+             * @phpstan-return Traversable<int, T>
+             */
             public function getIterator(): Traversable
             {
                 return new EmptyIterator();
@@ -126,7 +117,7 @@ abstract class Option implements IHashable, IteratorAggregate
             {
                 return 'None';
             }
-         };
+        };
     }
 
     /**
@@ -135,12 +126,12 @@ abstract class Option implements IHashable, IteratorAggregate
      */
     final public static function some($value): self
     {
-         return new class ($value) extends Option {
+        return new class ($value) extends Option {
 
-             /** @phpstan-var T */
-             private $value;
+            /** @phpstan-var T */
+            private $value;
 
-             /** @phpstan-param T $value */
+            /** @phpstan-param T $value */
             protected function __construct($value)
             {
                 $this->value = $value;
@@ -176,22 +167,22 @@ abstract class Option implements IHashable, IteratorAggregate
                 return $predicate($this->value) ? $this : self::none();
             }
 
-         /**
-          * Consider calling getOrElse instead
-          * @throws ValueIsNotPresentException
-          *
-          * @phpstan-return T
-          */
+            /**
+             * Consider calling getOrElse instead
+             * @throws ValueIsNotPresentException
+             *
+             * @phpstan-return T
+             */
             public function getUnsafe()
             {
                 return $this->value;
             }
 
-         /**
-          * @phpstan-template E
-          * @phpstan-param E $else
-          * @phpstan-return T
-          */
+            /**
+             * @phpstan-template E
+             * @phpstan-param E $else
+             * @phpstan-return T
+             */
             public function getOrElse($else)
             {
                 return $this->value;
@@ -202,9 +193,9 @@ abstract class Option implements IHashable, IteratorAggregate
                 return TrySafe::success($this->value);
             }
 
-         /**
-          * @phpstan-return int|string
-          */
+            /**
+             * @phpstan-return int|string
+             */
             public function hashCode()
             {
                 $valueHash = $this->value instanceof IHashable
@@ -213,9 +204,9 @@ abstract class Option implements IHashable, IteratorAggregate
                 return __CLASS__ . "::some({$valueHash})";
             }
 
-         /**
-          * @phpstan-return Traversable<int, T>
-          */
+            /**
+             * @phpstan-return Traversable<int, T>
+             */
             public function getIterator()
             {
                 return new ArrayIterator([$this->value]);
@@ -235,16 +226,43 @@ abstract class Option implements IHashable, IteratorAggregate
             {
                 return 'Some(' . $this->value . ')';
             }
-         };
+        };
     }
 
-    abstract public function isDefined(): bool;
+    /**
+     * @phpstan-template B
+     * @phpstan-param callable(T): B $mapper
+     *
+     * @phpstan-return self<B>
+     */
+    abstract public function map(callable $mapper): self;
 
     /**
-     * @phpstan-param callable(T): bool $predicate
+     * @phpstan-param T $value
      * @phpstan-return self<T>
      */
-    abstract public function filter(callable $predicate): self;
+    final public static function of($value): self
+    {
+        return self::some($value);
+    }
+
+    /**
+     * Upgrades callable to accept and return `self` as arguments.
+     *
+     * @phpstan-param callable $callable
+     * @phpstan-return callable
+     */
+    final public static function lift(callable $callable): callable
+    {
+        return function (self ...$arguments) use ($callable): self {
+            $reducer = function (self $applicative, self $argument): self {
+                /** @phpstan-var mixed $argument */
+                return $applicative->ap($argument);
+            };
+            return LazyList::fromIterable($arguments)
+                ->reduce($reducer, self::of($callable));
+        };
+    }
 
     /**
      * @phpstan-param self<mixed> $option
@@ -254,12 +272,71 @@ abstract class Option implements IHashable, IteratorAggregate
     abstract public function ap(self $option): self;
 
     /**
-     * @phpstan-template B
-     * @phpstan-param callable(T): B $mapper
+     * Takes any `iterable<self<A>>` and sequence it into `self<ArrayList<A>>`. If any `self` is "empty", the result is
+     * "short circuited".
      *
-     * @phpstan-return self<B>
+     * E. g. when called upon Option, when any instance is a None, then result is None.
+     * If all instances are Some, the result is Some<ArrayList<A>>
+     *
+     * @phpstan-template A
+     * @phpstan-param iterable<self<A>> $iterable
+     *
+     * @phpstan-return self<ArrayList<A>>
      */
-    abstract public function map(callable $mapper): self;
+    final public static function sequence(iterable $iterable): self
+    {
+        /**
+         * @phpstan-var callable(self<A>): self<A> $identity
+         */
+        $identity = static function ($a) {
+            return $a;
+        };
+        return self::traverse($iterable, $identity);
+    }
+
+    /**
+     * Takes any `iterable<A>`, for each item `A` transforms to applicative with $mapperToApplicative
+     * `A => self<B>` and cumulates it in `self<ArrayList<B>>`.
+     *
+     * @see sequence - behaves same as traverse, execept it is called with identity
+     *
+     * @phpstan-template A
+     * @phpstan-template B
+     *
+     * @phpstan-param iterable<A> $iterable
+     * @phpstan-param callable(A): self<B> $mapperToApplicative
+     *
+     * @phpstan-return self<ArrayList<B>>
+     */
+    final public static function traverse(iterable $iterable, callable $mapperToApplicative): self
+    {
+        $mapperToApplicative = $mapperToApplicative ?? static function ($a) {
+            return $a;
+        };
+        return LazyList::fromIterable($iterable)
+            ->reduce(
+                function (self $reducedApplicative, $impureItem) use ($mapperToApplicative): self {
+                    $applicative = $mapperToApplicative($impureItem);
+                    assert($applicative instanceof self);
+                    return $reducedApplicative
+                        ->map(function (ArrayList $resultIterable): callable {
+                            return function ($item) use ($resultIterable): ArrayList {
+                                return $resultIterable->concat(ArrayList::of($item));
+                            };
+                        })
+                        ->ap($applicative);
+                },
+                self::of(ArrayList::fromEmpty())
+            );
+    }
+
+    abstract public function isDefined(): bool;
+
+    /**
+     * @phpstan-param callable(T): bool $predicate
+     * @phpstan-return self<T>
+     */
+    abstract public function filter(callable $predicate): self;
 
     /**
      * @phpstan-template B
@@ -278,7 +355,7 @@ abstract class Option implements IHashable, IteratorAggregate
      */
     final public function reduce(callable $reducer, $initialReduction)
     {
-         return LazyList::fromIterable($this)->reduce($reducer, $initialReduction);
+        return LazyList::fromIterable($this)->reduce($reducer, $initialReduction);
     }
 
     /**
@@ -322,84 +399,7 @@ abstract class Option implements IHashable, IteratorAggregate
      */
     final public function equals($value): bool
     {
-         return $value instanceof Option
-         && $value->hashCode() === $this->hashCode();
-    }
-
-    /**
-     * Upgrades callable to accept and return `self` as arguments.
-     *
-     * @phpstan-param callable $callable
-     * @phpstan-return callable
-     */
-    final public static function lift(callable $callable): callable
-    {
-        return function (self ...$arguments) use ($callable): self {
-            $reducer = function (self $applicative, self $argument): self {
-                /** @phpstan-var mixed $argument */
-                return $applicative->ap($argument);
-            };
-            return LazyList::fromIterable($arguments)
-                ->reduce($reducer, self::of($callable));
-        };
-    }
-
-    /**
-     * Takes any `iterable<A>`, for each item `A` transforms to applicative with $mapperToApplicative
-     * `A => self<B>` and cumulates it in `self<ArrayList<B>>`.
-     *
-     * @see sequence - behaves same as traverse, execept it is called with identity
-     *
-     * @phpstan-template A
-     * @phpstan-template B
-     *
-     * @phpstan-param iterable<A> $iterable
-     * @phpstan-param callable(A): self<B> $mapperToApplicative
-     *
-     * @phpstan-return self<ArrayList<B>>
-     */
-    final public static function traverse(iterable $iterable, callable $mapperToApplicative): self
-    {
-        $mapperToApplicative = $mapperToApplicative ?? static function ($a) {
-            return $a;
-        };
-        return LazyList::fromIterable($iterable)
-            ->reduce(
-                function (self $reducedApplicative, $impureItem) use ($mapperToApplicative): self {
-                    $applicative = $mapperToApplicative($impureItem);
-                    assert($applicative instanceof self);
-                    return $reducedApplicative
-                        ->map(function (ArrayList $resultIterable): callable {
-                            return function ($item) use ($resultIterable): ArrayList {
-                                return $resultIterable->concat(ArrayList::of($item));
-                            };
-                        })
-                        ->ap($applicative);
-                },
-                self::of(ArrayList::fromEmpty())
-            );
-    }
-
-    /**
-     * Takes any `iterable<self<A>>` and sequence it into `self<ArrayList<A>>`. If any `self` is "empty", the result is
-     * "short circuited".
-     *
-     * E. g. when called upon Option, when any instance is a None, then result is None.
-     * If all instances are Some, the result is Some<ArrayList<A>>
-     *
-     * @phpstan-template A
-     * @phpstan-param iterable<self<A>> $iterable
-     *
-     * @phpstan-return self<ArrayList<A>>
-     */
-    final public static function sequence(iterable $iterable): self
-    {
-        /**
-         * @phpstan-var callable(self<A>): self<A> $identity
-         */
-        $identity = static function ($a) {
-            return $a;
-        };
-        return self::traverse($iterable, $identity);
+        return $value instanceof Option
+            && $value->hashCode() === $this->hashCode();
     }
 }

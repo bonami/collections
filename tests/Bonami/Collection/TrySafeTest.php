@@ -56,6 +56,40 @@ class TrySafeTest extends TestCase
         );
     }
 
+    /**
+     * @return TrySafe<mixed>
+     */
+    private function createFailure(): TrySafe
+    {
+        return TrySafe::failure($this->createHashableException());
+    }
+
+    private function createHashableException(): Exception
+    {
+        return new class extends Exception implements IHashable {
+            public function hashCode()
+            {
+                return __CLASS__;
+            }
+        };
+    }
+
+    /**
+     * @phpstan-template T
+     * @param T $a
+     * @param T $b
+     *
+     * @return void
+     */
+    private function equals($a, $b): void
+    {
+        if ($a instanceof TrySafe && $b instanceof TrySafe) {
+            self::assertTrue($a->equals($b));
+        } else {
+            self::assertEquals($a, $b);
+        }
+    }
+
     public function testMap(): void
     {
         $mapper = function (string $s): string {
@@ -100,7 +134,6 @@ class TrySafeTest extends TestCase
         self::assertTrue($this->createFailure()->flatMap($mapperToFailure)->isFailure());
         self::assertTrue(TrySafe::success("world")->flatMap($mapperThatThrows)->isFailure());
     }
-
 
     public function testRecover(): void
     {
@@ -155,7 +188,6 @@ class TrySafeTest extends TestCase
         self::assertCount(1, $handleFailureSpy->getCalls());
         self::assertSame([[$exception]], $handleFailureSpy->getCalls());
     }
-
 
     public function testIterator(): void
     {
@@ -249,39 +281,5 @@ class TrySafeTest extends TestCase
         testApplicativeInterchange($assertEquals, $pure, 666, $pure($plus2));
         testApplicativeInterchange($assertEquals, $pure, 666, $pure($throws));
         testApplicativeInterchange($assertEquals, $pure, 666, $failure);
-    }
-
-    /**
-     * @phpstan-template T
-     * @param T $a
-     * @param T $b
-     *
-     * @return void
-     */
-    private function equals($a, $b): void
-    {
-        if ($a instanceof TrySafe && $b instanceof TrySafe) {
-            self::assertTrue($a->equals($b));
-        } else {
-            self::assertEquals($a, $b);
-        }
-    }
-
-    /**
-     * @return TrySafe<mixed>
-     */
-    private function createFailure(): TrySafe
-    {
-        return TrySafe::failure($this->createHashableException());
-    }
-
-    private function createHashableException(): Exception
-    {
-        return new class extends Exception implements IHashable {
-            public function hashCode()
-            {
-                return __CLASS__;
-            }
-        };
     }
 }

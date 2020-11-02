@@ -26,7 +26,7 @@ abstract class Enum implements IHashable
      */
     protected function __construct($value)
     {
-         $this->value = $value;
+        $this->value = $value;
     }
 
     /**
@@ -36,18 +36,18 @@ abstract class Enum implements IHashable
      */
     public static function create($value)
     {
-         $class = static::class;
+        $class = static::class;
         if (is_object($value)) {
-              throw new InvalidEnumValueException($value, static::class);
+            throw new InvalidEnumValueException($value, static::class);
         }
         if (!isset(self::$instanceIndex[$class])) {
-              $instances = self::instanceList();
-              $combined = array_combine($instances->getValues(), $instances->toArray());
-              assert(is_array($combined));
-              self::$instanceIndex[$class] = $combined;
+            $instances = self::instanceList();
+            $combined = array_combine($instances->getValues(), $instances->toArray());
+            assert(is_array($combined));
+            self::$instanceIndex[$class] = $combined;
         }
         if (!isset(self::$instanceIndex[$class][$value])) {
-              throw new InvalidEnumValueException($value, static::class);
+            throw new InvalidEnumValueException($value, static::class);
         }
 
         return self::$instanceIndex[$class][$value];
@@ -58,17 +58,7 @@ abstract class Enum implements IHashable
      */
     public static function instanceList(): EnumList
     {
-         return EnumList::fromIterable(self::instanceMap()->values());
-    }
-
-    /**
-     * @phpstan-param static ...$enums
-     *
-     * @phpstan-return EnumList<static>
-     */
-    public static function getListComplement(self ...$enums)
-    {
-         return self::instanceList()->minus($enums);
+        return EnumList::fromIterable(self::instanceMap()->values());
     }
 
     /**
@@ -94,13 +84,59 @@ abstract class Enum implements IHashable
     }
 
     /**
+     * @phpstan-return array<string>
+     */
+    private static function getClassConstants(): array
+    {
+        return (new ReflectionClass(static::class))->getConstants();
+    }
+
+    /**
+     * @phpstan-param static ...$enums
+     *
+     * @phpstan-return EnumList<static>
+     */
+    public static function getListComplement(self ...$enums)
+    {
+        return self::instanceList()->minus($enums);
+    }
+
+    /**
      * @phpstan-param int|string $value
      *
      * @phpstan-return bool
      */
     public static function exists($value): bool
     {
-         return static::instanceMap()->has($value);
+        return static::instanceMap()->has($value);
+    }
+
+    public function getConstName(): string
+    {
+        self::lazyInitConstNameIndex();
+
+        return self::$constNameIndex[static::class][$this->value];
+    }
+
+    private static function lazyInitConstNameIndex(): void
+    {
+        $class = static::class;
+        if (!isset(self::$constNameIndex)) {
+            self::$constNameIndex = [];
+        }
+
+        if (!isset(self::$constNameIndex[$class])) {
+            $constNameIndex = [];
+            foreach (self::getClassConstants() as $constName => $value) {
+                $constNameIndex[$value] = $constName;
+            }
+            self::$constNameIndex[$class] = $constNameIndex;
+        }
+    }
+
+    public function __toString()
+    {
+        return (string)$this->getValue();
     }
 
     /**
@@ -108,47 +144,11 @@ abstract class Enum implements IHashable
      */
     public function getValue()
     {
-         return $this->value;
-    }
-
-    public function getConstName(): string
-    {
-         self::lazyInitConstNameIndex();
-
-         return self::$constNameIndex[static::class][$this->value];
-    }
-
-    public function __toString()
-    {
-         return (string) $this->getValue();
+        return $this->value;
     }
 
     public function hashCode()
     {
-         return $this->getValue();
-    }
-
-    /**
-     * @phpstan-return array<string>
-     */
-    private static function getClassConstants(): array
-    {
-         return (new ReflectionClass(static::class))->getConstants();
-    }
-
-    private static function lazyInitConstNameIndex(): void
-    {
-         $class = static::class;
-        if (!isset(self::$constNameIndex)) {
-              self::$constNameIndex = [];
-        }
-
-        if (!isset(self::$constNameIndex[$class])) {
-              $constNameIndex = [];
-            foreach (self::getClassConstants() as $constName => $value) {
-                  $constNameIndex[$value] = $constName;
-            }
-            self::$constNameIndex[$class] = $constNameIndex;
-        }
+        return $this->getValue();
     }
 }

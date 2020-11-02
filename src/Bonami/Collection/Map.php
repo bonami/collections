@@ -40,13 +40,13 @@ class Map implements Countable, IteratorAggregate
      */
     public function __construct(array $items)
     {
-         $this->keys = [];
-         $this->values = [];
+        $this->keys = [];
+        $this->values = [];
 
         foreach ($items as [$key, $value]) {
-              $keyHash = hashKey($key);
-              $this->keys[$keyHash] = $key;
-              $this->values[$keyHash] = $value;
+            $keyHash = hashKey($key);
+            $this->keys[$keyHash] = $key;
+            $this->values[$keyHash] = $value;
         }
     }
 
@@ -67,50 +67,7 @@ class Map implements Countable, IteratorAggregate
      */
     public static function fromAssociativeArray(array $array)
     {
-         return new static(array_map(null, array_keys($array), $array));
-    }
-
-    /**
-     * Creates Map from collection of tuples,
-     * for example list of two element arrays.
-     *
-     * Complexity: o(n) - there are different hidden constants cost varying on given iterable.
-     *
-     * @phpstan-param Map<K, V>|iterable<array{0: K, 1: V}> $iterable
-     *
-     * @phpstan-return static<K, V>
-     */
-    public static function fromIterable(iterable $iterable)
-    {
-        if ($iterable instanceof static) {
-              $map = new static([]);
-              $map->keys = $iterable->keys;
-              $map->values = $iterable->values;
-
-              return $map;
-        }
-
-        if ($iterable instanceof self) {
-              return new static($iterable->getItems());
-        }
-
-        if ($iterable instanceof ArrayList) {
-              return new static($iterable->toArray());
-        }
-
-        return new static($iterable instanceof Traversable ? iterator_to_array($iterable, false) : $iterable);
-    }
-
-    /**
-     * Creates an empty Map
-     *
-     * Complexity: o(1)
-     *
-     * @phpstan-return static<K, V>
-     */
-    public static function fromEmpty()
-    {
-         return new static([]);
+        return new static(array_map(null, array_keys($array), $array));
     }
 
     /**
@@ -125,7 +82,7 @@ class Map implements Countable, IteratorAggregate
      */
     public static function fromOnly($key, $value)
     {
-         return new static([[$key, $value]]);
+        return new static([[$key, $value]]);
     }
 
     /**
@@ -142,9 +99,9 @@ class Map implements Countable, IteratorAggregate
      */
     public function get($key): Option
     {
-         $keyHash = hashKey($key);
+        $keyHash = hashKey($key);
         if (array_key_exists($keyHash, $this->values)) {
-              return Option::some($this->values[$keyHash]);
+            return Option::some($this->values[$keyHash]);
         }
         return Option::none();
     }
@@ -156,49 +113,37 @@ class Map implements Countable, IteratorAggregate
      *
      * Complexity: o(1)
      *
-     * @see get for getting value the safe way
+     * @throws OutOfBoundsException
+     *
+     * @phpstan-return V
      * @see getOrElse for getting default value in case the key does not exists
      *
      * @phpstan-param K $key
      *
-     * @throws OutOfBoundsException
-     *
-     * @phpstan-return V
+     * @see get for getting value the safe way
      */
     public function getUnsafe($key)
     {
-         $keyHash = hashKey($key);
+        $keyHash = hashKey($key);
         if (array_key_exists($keyHash, $this->values)) {
-              return $this->values[$keyHash];
+            return $this->values[$keyHash];
         }
 
         switch (true) {
             case is_scalar($key):
-                  $stringKey = $key;
+                $stringKey = $key;
                 break;
             case $key instanceof Enum:
-                  $stringKey = get_class($key) . '::' . $key->getValue();
+                $stringKey = get_class($key) . '::' . $key->getValue();
                 break;
             case $key instanceof IHashable:
-                  $stringKey = get_class($key) . ' keyhash:' . $keyHash;
+                $stringKey = get_class($key) . ' keyhash:' . $keyHash;
                 break;
             default:
-                  $stringKey = 'object';
+                $stringKey = 'object';
         }
 
         throw new OutOfBoundsException("Key ({$stringKey}) does not exist");
-    }
-
-    /**
-     * Gets all keys from the Map and wraps it into ArrayList
-     *
-     * Complexity: o(n)
-     *
-     * @phpstan-return ArrayList<K>
-     */
-    public function keys(): ArrayList
-    {
-         return ArrayList::fromIterable(array_values($this->keys));
     }
 
     /**
@@ -210,7 +155,7 @@ class Map implements Countable, IteratorAggregate
      */
     public function values(): ArrayList
     {
-         return ArrayList::fromIterable(array_values($this->values));
+        return ArrayList::fromIterable(array_values($this->values));
     }
 
     /**
@@ -227,9 +172,9 @@ class Map implements Countable, IteratorAggregate
      */
     public function getOrElse($key, $defaultValue)
     {
-         $keyHash = hashKey($key);
+        $keyHash = hashKey($key);
         if (array_key_exists($keyHash, $this->values)) {
-              return $this->values[$keyHash];
+            return $this->values[$keyHash];
         }
         return $defaultValue;
     }
@@ -254,20 +199,8 @@ class Map implements Countable, IteratorAggregate
     public function getIterator(): Traversable
     {
         foreach ($this->values as $keyHash => $value) {
-              yield $this->keys[$keyHash] => $value;
+            yield $this->keys[$keyHash] => $value;
         }
-    }
-
-    /**
-     * Counts number of elements in Map
-     *
-     * Complexity: o(1)
-     *
-     * @phpstan-return int
-     */
-    public function count(): int
-    {
-         return count($this->values);
     }
 
     /**
@@ -281,7 +214,19 @@ class Map implements Countable, IteratorAggregate
      */
     public function isEmpty(): bool
     {
-         return $this->count() === 0;
+        return $this->count() === 0;
+    }
+
+    /**
+     * Counts number of elements in Map
+     *
+     * Complexity: o(1)
+     *
+     * @phpstan-return int
+     */
+    public function count(): int
+    {
+        return count($this->values);
     }
 
     /**
@@ -295,7 +240,7 @@ class Map implements Countable, IteratorAggregate
      */
     public function isNotEmpty(): bool
     {
-         return $this->count() > 0;
+        return $this->count() > 0;
     }
 
     /**
@@ -313,7 +258,7 @@ class Map implements Countable, IteratorAggregate
      */
     public function contains($value, ?bool $strictComparison = true): bool
     {
-         return in_array($value, $this->values, $strictComparison ?? true);
+        return in_array($value, $this->values, $strictComparison ?? true);
     }
 
     /**
@@ -327,29 +272,7 @@ class Map implements Countable, IteratorAggregate
      */
     public function has($key): bool
     {
-         return array_key_exists(hashKey($key), $this->keys);
-    }
-
-    /**
-     * Constructs a list containing all elements after applying callback
-     * on each value-key pair from Map
-     *
-     * Complexity: o(n)
-     *
-     * @see mapValues - for mapping just values and keeping Map as result
-     * @see mapKeys - for mapping just keys and keeping Map as result
-     *
-     * @phpstan-template B
-     * @phpstan-param callable(V, K): B $mapper
-     *
-     * @phpstan-return ArrayList<B>
-     */
-    public function map(callable $mapper): ArrayList
-    {
-         /** @phpstan-var array<int, array<K, V>> $mapped */
-         $mapped = array_map($mapper, $this->values, $this->keys);
-
-         return ArrayList::fromIterable($mapped);
+        return array_key_exists(hashKey($key), $this->keys);
     }
 
     /**
@@ -368,22 +291,34 @@ class Map implements Countable, IteratorAggregate
      */
     public function mapKeys(callable $mapper): self
     {
-         $map = self::fromEmpty();
+        $map = self::fromEmpty();
 
-         $keysValues = array_map($mapper, $this->keys, $this->values);
-         $keyHashes = array_map(function ($key) {
-             return hashKey($key);
-         }, $keysValues);
+        $keysValues = array_map($mapper, $this->keys, $this->values);
+        $keyHashes = array_map(function ($key) {
+            return hashKey($key);
+        }, $keysValues);
 
-         $keys = array_combine($keyHashes, $keysValues);
-         $values = array_combine($keyHashes, $this->values);
-         assert(is_array($keys));
-         assert(is_array($values));
+        $keys = array_combine($keyHashes, $keysValues);
+        $values = array_combine($keyHashes, $this->values);
+        assert(is_array($keys));
+        assert(is_array($values));
 
-         $map->keys = $keys;
-         $map->values = $values;
+        $map->keys = $keys;
+        $map->values = $values;
 
-         return $map;
+        return $map;
+    }
+
+    /**
+     * Creates an empty Map
+     *
+     * Complexity: o(1)
+     *
+     * @phpstan-return static<K, V>
+     */
+    public static function fromEmpty()
+    {
+        return new static([]);
     }
 
     /**
@@ -402,45 +337,16 @@ class Map implements Countable, IteratorAggregate
      */
     public function mapValues(callable $mapper): self
     {
-         $map = self::fromEmpty();
-         $map->keys = $this->keys;
-         $values = array_combine(
-             array_keys($this->keys),
-             array_map($mapper, $this->values, $this->keys)
-         );
-         assert(is_array($values));
-         $map->values = $values;
+        $map = self::fromEmpty();
+        $map->keys = $this->keys;
+        $values = array_combine(
+            array_keys($this->keys),
+            array_map($mapper, $this->values, $this->keys)
+        );
+        assert(is_array($values));
+        $map->values = $values;
 
-         return $map;
-    }
-
-    /**
-     * Creates List containing key-value array pairs as items.
-     *
-     * Complexity: o(n)
-     *
-     * @phpstan-return ArrayList<array{0: K, 1: V}>
-     */
-    public function pairs(): ArrayList
-    {
-         return ArrayList::fromIterable($this->getItems());
-    }
-
-    /**
-     * Zips keys and values and returns 2-dimensional array of key-value pairs.
-     * Result should be same as array with which this exact map can be constructed
-     * via standard constructor.
-     *
-     * Complexity: o(n)
-     *
-     * @phpstan-return array<int, array{0: K, 1: V}>
-     */
-    public function getItems(): array
-    {
-         /** @phpstan-var array<int, array{0: K, 1: V}> */
-         $zipped = array_map(null, $this->keys, $this->values);
-
-         return $zipped;
+        return $map;
     }
 
     /**
@@ -458,16 +364,16 @@ class Map implements Countable, IteratorAggregate
      */
     public function toAssociativeArray(): array
     {
-         /** @phpstan-var array<K, V> */
-         $assoc = array_combine(
-             array_map(function ($key) {
-                return (string) $key;
-             }, $this->keys),
-             $this->values
-         );
-         assert(is_array($assoc));
+        /** @phpstan-var array<K, V> */
+        $assoc = array_combine(
+            array_map(function ($key) {
+                return (string)$key;
+            }, $this->keys),
+            $this->values
+        );
+        assert(is_array($assoc));
 
-         return $assoc;
+        return $assoc;
     }
 
     /**
@@ -484,16 +390,16 @@ class Map implements Countable, IteratorAggregate
      */
     public function concat(Map $mergeMap)
     {
-         $map = static::fromEmpty();
-         $keys = array_replace($this->keys, $mergeMap->keys);
-         $values = array_replace($this->values, $mergeMap->values);
+        $map = static::fromEmpty();
+        $keys = array_replace($this->keys, $mergeMap->keys);
+        $values = array_replace($this->values, $mergeMap->values);
 
-         assert($keys !== null);
-         assert($values !== null);
+        assert($keys !== null);
+        assert($values !== null);
 
-         $map->keys = $keys;
-         $map->values = $values;
-         return $map;
+        $map->keys = $keys;
+        $map->values = $values;
+        return $map;
     }
 
     /**
@@ -517,10 +423,33 @@ class Map implements Countable, IteratorAggregate
      */
     public function minus(Map $map)
     {
-         return $this->filter(static function ($value, $key) use ($map) {
-             $keyHash = hashKey($key);
-             return !(array_key_exists($keyHash, $map->values) && $map->values[$keyHash] === $value);
-         });
+        return $this->filter(static function ($value, $key) use ($map) {
+            $keyHash = hashKey($key);
+            return !(array_key_exists($keyHash, $map->values) && $map->values[$keyHash] === $value);
+        });
+    }
+
+    /**
+     * Filters out Map by given predicate executed on value-key pairs
+     *
+     * Complexity: o(n)
+     *
+     * @see filterKeys - if your predicate needs just keys
+     *
+     * @phpstan-param callable(V, K): bool $predicate
+     *
+     * @phpstan-return static<K, V>
+     */
+    public function filter(callable $predicate)
+    {
+        $filtered = [];
+        foreach ($this->values as $keyHash => $value) {
+            $key = $this->keys[$keyHash];
+            if ($predicate($value, $key)) {
+                $filtered[] = [$key, $value];
+            }
+        }
+        return new static($filtered);
     }
 
     /**
@@ -537,31 +466,8 @@ class Map implements Countable, IteratorAggregate
     public function each(callable $sideEffect): void
     {
         foreach ($this->values as $keyHash => $value) {
-              $sideEffect($value, $this->keys[$keyHash]);
+            $sideEffect($value, $this->keys[$keyHash]);
         }
-    }
-
-    /**
-     * Filters out Map by given predicate executed on value-key pairs
-     *
-     * Complexity: o(n)
-     *
-     * @see filterKeys - if your predicate needs just keys
-     *
-     * @phpstan-param callable(V, K): bool $predicate
-     *
-     * @phpstan-return static<K, V>
-     */
-    public function filter(callable $predicate)
-    {
-         $filtered = [];
-        foreach ($this->values as $keyHash => $value) {
-              $key = $this->keys[$keyHash];
-            if ($predicate($value, $key)) {
-                $filtered[] = [$key, $value];
-            }
-        }
-        return new static($filtered);
     }
 
     /**
@@ -577,7 +483,7 @@ class Map implements Countable, IteratorAggregate
      */
     public function filterKeys(callable $predicate)
     {
-         $filtered = [];
+        $filtered = [];
         foreach ($this->keys as $keyHash => $key) {
             if ($predicate($key)) {
                 $filtered[] = [$key, $this->values[$keyHash]];
@@ -616,14 +522,62 @@ class Map implements Countable, IteratorAggregate
      */
     public function take(int $size)
     {
-         /** @phpstan-var array<int, array{0: K, 1: V}> */
-         $zipped = array_map(
-             null,
-             array_slice($this->keys, 0, $size, true),
-             array_slice($this->values, 0, $size, true)
-         );
+        /** @phpstan-var array<int, array{0: K, 1: V}> */
+        $zipped = array_map(
+            null,
+            array_slice($this->keys, 0, $size, true),
+            array_slice($this->values, 0, $size, true)
+        );
 
-         return static::fromIterable($zipped);
+        return static::fromIterable($zipped);
+    }
+
+    /**
+     * Creates Map from collection of tuples,
+     * for example list of two element arrays.
+     *
+     * Complexity: o(n) - there are different hidden constants cost varying on given iterable.
+     *
+     * @phpstan-param Map<K, V>|iterable<array{0: K, 1: V}> $iterable
+     *
+     * @phpstan-return static<K, V>
+     */
+    public static function fromIterable(iterable $iterable)
+    {
+        if ($iterable instanceof static) {
+            $map = new static([]);
+            $map->keys = $iterable->keys;
+            $map->values = $iterable->values;
+
+            return $map;
+        }
+
+        if ($iterable instanceof self) {
+            return new static($iterable->getItems());
+        }
+
+        if ($iterable instanceof ArrayList) {
+            return new static($iterable->toArray());
+        }
+
+        return new static($iterable instanceof Traversable ? iterator_to_array($iterable, false) : $iterable);
+    }
+
+    /**
+     * Zips keys and values and returns 2-dimensional array of key-value pairs.
+     * Result should be same as array with which this exact map can be constructed
+     * via standard constructor.
+     *
+     * Complexity: o(n)
+     *
+     * @phpstan-return array<int, array{0: K, 1: V}>
+     */
+    public function getItems(): array
+    {
+        /** @phpstan-var array<int, array{0: K, 1: V}> */
+        $zipped = array_map(null, $this->keys, $this->values);
+
+        return $zipped;
     }
 
     /**
@@ -675,48 +629,9 @@ class Map implements Countable, IteratorAggregate
      */
     public function withoutNulls()
     {
-         return $this->filter(static function ($item, $_): bool {
-             return $item !== null;
-         });
-    }
-
-    /**
-     * Creates a Map containing pairs for given keys. Missing keys in
-     * original Map are silently skipped (no error is thrown)
-     *
-     * As a by product, returned Map keys are ordered by given $keys
-     *
-     * Complexity: o(n)
-     *
-     * @phpstan-param iterable<K> $keys
-     *
-     * @phpstan-return static<K, V>
-     */
-    public function getByKeys(iterable $keys)
-    {
-         $hashes = ArrayList::fromIterable($keys)
-         ->map(function ($key) {
-             return hashKey($key);
-         })
-         ->filter(function ($keyHash) {
-             return array_key_exists($keyHash, $this->keys);
-         });
-
-         $hashesArray = $hashes->toArray();
-         $newKeys = array_combine($hashesArray, $hashes->map(function ($keyHash) {
-             return $this->keys[$keyHash];
-         })->toArray());
-         $newValues = array_combine($hashesArray, $hashes->map(function ($keyHash) {
-             return $this->values[$keyHash];
-         })->toArray());
-         assert(is_array($newKeys));
-         assert(is_array($newValues));
-
-         $map = static::fromEmpty();
-         $map->keys = $newKeys;
-         $map->values = $newValues;
-
-         return $map;
+        return $this->filter(static function ($item, $_): bool {
+            return $item !== null;
+        });
     }
 
     /**
@@ -732,26 +647,26 @@ class Map implements Countable, IteratorAggregate
     public function withoutKeys(iterable $keys)
     {
 
-         $hashes = ArrayList::fromIterable(array_keys($this->keys))
-         ->minus(LazyList::fromIterable($keys)->map(function ($key) {
-             return hashKey($key);
-         }));
+        $hashes = ArrayList::fromIterable(array_keys($this->keys))
+            ->minus(LazyList::fromIterable($keys)->map(function ($key) {
+                return hashKey($key);
+            }));
 
-         $hashesArray = $hashes->toArray();
-         $newKeys = array_combine($hashesArray, $hashes->map(function ($keyHash) {
-             return $this->keys[$keyHash];
-         })->toArray());
-         $newValues = array_combine($hashesArray, $hashes->map(function ($keyHash) {
-             return $this->values[$keyHash];
-         })->toArray());
-         assert(is_array($newKeys));
-         assert(is_array($newValues));
+        $hashesArray = $hashes->toArray();
+        $newKeys = array_combine($hashesArray, $hashes->map(function ($keyHash) {
+            return $this->keys[$keyHash];
+        })->toArray());
+        $newValues = array_combine($hashesArray, $hashes->map(function ($keyHash) {
+            return $this->values[$keyHash];
+        })->toArray());
+        assert(is_array($newKeys));
+        assert(is_array($newValues));
 
-         $map = static::fromEmpty();
-         $map->keys = $newKeys;
-         $map->values = $newValues;
+        $map = static::fromEmpty();
+        $map->keys = $newKeys;
+        $map->values = $newValues;
 
-         return $map;
+        return $map;
     }
 
     /**
@@ -766,9 +681,9 @@ class Map implements Countable, IteratorAggregate
      */
     public function withoutKey($key)
     {
-         $keyHash = hashKey($key);
+        $keyHash = hashKey($key);
         if (!array_key_exists($keyHash, $this->keys)) {
-              return $this;
+            return $this;
         }
 
         $keys = $this->keys;
@@ -796,7 +711,58 @@ class Map implements Countable, IteratorAggregate
      */
     public function sortKeys(?callable $comparator = null)
     {
-         return $this->getByKeys($this->keys()->sort($comparator));
+        return $this->getByKeys($this->keys()->sort($comparator));
+    }
+
+    /**
+     * Creates a Map containing pairs for given keys. Missing keys in
+     * original Map are silently skipped (no error is thrown)
+     *
+     * As a by product, returned Map keys are ordered by given $keys
+     *
+     * Complexity: o(n)
+     *
+     * @phpstan-param iterable<K> $keys
+     *
+     * @phpstan-return static<K, V>
+     */
+    public function getByKeys(iterable $keys)
+    {
+        $hashes = ArrayList::fromIterable($keys)
+            ->map(function ($key) {
+                return hashKey($key);
+            })
+            ->filter(function ($keyHash) {
+                return array_key_exists($keyHash, $this->keys);
+            });
+
+        $hashesArray = $hashes->toArray();
+        $newKeys = array_combine($hashesArray, $hashes->map(function ($keyHash) {
+            return $this->keys[$keyHash];
+        })->toArray());
+        $newValues = array_combine($hashesArray, $hashes->map(function ($keyHash) {
+            return $this->values[$keyHash];
+        })->toArray());
+        assert(is_array($newKeys));
+        assert(is_array($newValues));
+
+        $map = static::fromEmpty();
+        $map->keys = $newKeys;
+        $map->values = $newValues;
+
+        return $map;
+    }
+
+    /**
+     * Gets all keys from the Map and wraps it into ArrayList
+     *
+     * Complexity: o(n)
+     *
+     * @phpstan-return ArrayList<K>
+     */
+    public function keys(): ArrayList
+    {
+        return ArrayList::fromIterable(array_values($this->keys));
     }
 
     /**
@@ -815,12 +781,24 @@ class Map implements Countable, IteratorAggregate
      */
     public function sortValues(?callable $comparator = null)
     {
-         $comparator = $comparator ?? comparator();
-         return static::fromIterable(
-             $this->pairs()->sort(function (array $a, array $b) use ($comparator) {
+        $comparator = $comparator ?? comparator();
+        return static::fromIterable(
+            $this->pairs()->sort(function (array $a, array $b) use ($comparator) {
                 return $comparator($a[1], $b[1]);
-             })
-         );
+            })
+        );
+    }
+
+    /**
+     * Creates List containing key-value array pairs as items.
+     *
+     * Complexity: o(n)
+     *
+     * @phpstan-return ArrayList<array{0: K, 1: V}>
+     */
+    public function pairs(): ArrayList
+    {
+        return ArrayList::fromIterable($this->getItems());
     }
 
     /**
@@ -839,9 +817,9 @@ class Map implements Countable, IteratorAggregate
      */
     public function reduce(callable $reducer, $initialReduction)
     {
-         return array_reduce(array_keys($this->keys), function ($reduction, $keyHash) use ($reducer) {
-             return $reducer($reduction, $this->values[$keyHash], $this->keys[$keyHash]);
-         }, $initialReduction);
+        return array_reduce(array_keys($this->keys), function ($reduction, $keyHash) use ($reducer) {
+            return $reducer($reduction, $this->values[$keyHash], $this->keys[$keyHash]);
+        }, $initialReduction);
     }
 
     /**
@@ -860,18 +838,18 @@ class Map implements Countable, IteratorAggregate
      */
     public function chunk(int $size): ArrayList
     {
-         return LazyList::fromIterable(array_chunk($this->keys, $size, true))
-         ->zip(array_chunk($this->values, $size, true))
-         ->map(function (array $zipped) {
-             [$keysChunk, $valuesChunk] = $zipped;
+        return LazyList::fromIterable(array_chunk($this->keys, $size, true))
+            ->zip(array_chunk($this->values, $size, true))
+            ->map(function (array $zipped) {
+                [$keysChunk, $valuesChunk] = $zipped;
 
-             $map = static::fromEmpty();
-             $map->keys = $keysChunk;
-             $map->values = $valuesChunk;
+                $map = static::fromEmpty();
+                $map->keys = $keysChunk;
+                $map->values = $valuesChunk;
 
-             return $map;
-         })
-         ->toList();
+                return $map;
+            })
+            ->toList();
     }
 
     /**
@@ -881,8 +859,30 @@ class Map implements Countable, IteratorAggregate
      */
     public function __toString(): string
     {
-         return '{' . $this->map(function ($value, $key): string {
-             return "$key: $value";
-         })->join(', ') . '}';
+        return '{' . $this->map(function ($value, $key): string {
+            return "$key: $value";
+        })->join(', ') . '}';
+    }
+
+    /**
+     * Constructs a list containing all elements after applying callback
+     * on each value-key pair from Map
+     *
+     * Complexity: o(n)
+     *
+     * @see mapValues - for mapping just values and keeping Map as result
+     * @see mapKeys - for mapping just keys and keeping Map as result
+     *
+     * @phpstan-template B
+     * @phpstan-param callable(V, K): B $mapper
+     *
+     * @phpstan-return ArrayList<B>
+     */
+    public function map(callable $mapper): ArrayList
+    {
+        /** @phpstan-var array<int, array<K, V>> $mapped */
+        $mapped = array_map($mapper, $this->values, $this->keys);
+
+        return ArrayList::fromIterable($mapped);
     }
 }

@@ -210,6 +210,14 @@ class MapTest extends TestCase
         $this->assertEquals(new Map([[$two, 6], [$three, 5], [$seven, 8]]), $result);
     }
 
+    private function createObject(int $val): stdClass
+    {
+        $o = new stdClass();
+        $o->prop = $val;
+
+        return $o;
+    }
+
     public function testSortValues(): void
     {
         $map = new Map([['a', 8], ['b', 2], ['c', 3]]);
@@ -484,6 +492,25 @@ class MapTest extends TestCase
         }
     }
 
+    /**
+     * @param int $deepness
+     * @param int $identification
+     *
+     * @return array<string, mixed>
+     */
+    private function createRecursiveArray(int $deepness, int $identification): array
+    {
+        $array = [
+            'someKey' => 'someValue',
+            'identification' => $identification,
+            'changedIdentification' => $identification * $deepness,
+        ];
+        if ($deepness > 0) {
+            $array['subValues'] = $this->createRecursiveArray($deepness - 1, $identification);
+        }
+        return $array;
+    }
+
     public function testContains(): void
     {
         $e = new stdClass();
@@ -617,33 +644,6 @@ class MapTest extends TestCase
             ['a', 1],
             ['b', 2],
         ]);
-        $this->assertEquals('{a: 1, b: 2}', (string) $m);
-    }
-
-    /**
-     * @param int $deepness
-     * @param int $identification
-     *
-     * @return array<string, mixed>
-     */
-    private function createRecursiveArray(int $deepness, int $identification): array
-    {
-        $array = [
-            'someKey' => 'someValue',
-            'identification' => $identification,
-            'changedIdentification' => $identification * $deepness,
-        ];
-        if ($deepness > 0) {
-            $array['subValues'] = $this->createRecursiveArray($deepness - 1, $identification);
-        }
-        return $array;
-    }
-
-    private function createObject(int $val): stdClass
-    {
-        $o = new stdClass();
-        $o->prop = $val;
-
-        return $o;
+        $this->assertEquals('{a: 1, b: 2}', (string)$m);
     }
 }

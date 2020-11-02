@@ -21,7 +21,8 @@ class EnumListTest extends TestCase
 }
 
 // @codingStandardsIgnoreStart
-class DummyEnum extends Enum {
-	public const HI = 'hi';
+class DummyEnum extends Enum
+{
+    public const HI = 'hi';
 }
 // @codingStandardsIgnoreEnd

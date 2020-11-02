@@ -262,7 +262,6 @@ class ArrayListTest extends TestCase
         }));
     }
 
-
     public function testUnique(): void
     {
         $arrays = new ArrayList([[1, 2], [1, 2, 3], [1, 2]]);
@@ -675,17 +674,17 @@ class ArrayListTest extends TestCase
     {
         $a = ArrayList::fromIterable(range(1, 3));
 
-        $this->assertEquals('[1, 2, 3]', (string) $a);
+        $this->assertEquals('[1, 2, 3]', (string)$a);
     }
 
     public function testToStringObjects(): void
     {
         $a = ArrayList::fromIterable([
-            (object) ['a' => 1],
-            (object) ['b' => 2],
+            (object)['a' => 1],
+            (object)['b' => 2],
         ]);
 
-        $this->assertRegExp('~^\[\(stdClass\) [0-9a-f]+?, \(stdClass\) [0-9a-f]+?\]$~', (string) $a);
+        $this->assertRegExp('~^\[\(stdClass\) [0-9a-f]+?, \(stdClass\) [0-9a-f]+?\]$~', (string)$a);
     }
 
     public function testToStringArrays(): void
@@ -696,6 +695,6 @@ class ArrayListTest extends TestCase
             range(1, 3),
         ]);
 
-        $this->assertEquals('[[a => 1], [b => 2], [0 => 1, 1 => 2, 2 => 3]]', (string) $a);
+        $this->assertEquals('[[a => 1], [b => 2], [0 => 1, 1 => 2, 2 => 3]]', (string)$a);
     }
 }

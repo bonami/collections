@@ -57,6 +57,23 @@ class OptionTest extends TestCase
         );
     }
 
+    /**
+     * @phpstan-template A
+     * @phpstan-template B
+     * @param A $a
+     * @param B $b
+     *
+     * @return void
+     */
+    private function equals($a, $b): void
+    {
+        if ($a instanceof Option && $b instanceof Option) {
+            self::assertTrue($a->equals($b));
+        } else {
+            self::assertEquals($a, $b);
+        }
+    }
+
     public function testMap(): void
     {
         $mapper = function (string $s): string {
@@ -368,22 +385,5 @@ class OptionTest extends TestCase
 
         testApplicativeInterchange($assertEquals, $pure, 666, $pure($plus2));
         testApplicativeInterchange($assertEquals, $pure, 666, $none);
-    }
-
-    /**
-     * @phpstan-template A
-     * @phpstan-template B
-     * @param A $a
-     * @param B $b
-     *
-     * @return void
-     */
-    private function equals($a, $b): void
-    {
-        if ($a instanceof Option && $b instanceof Option) {
-            self::assertTrue($a->equals($b));
-        } else {
-            self::assertEquals($a, $b);
-        }
     }
 }
