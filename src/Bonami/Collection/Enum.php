@@ -16,10 +16,13 @@ abstract class Enum implements IHashable
 
     /** @phpstan-var array<string, Map<int|string, static>> */
     private static $instances = [];
+
     /** @phpstan-var array<string, array<int|string, static>> */
     private static $instanceIndex;
+
     /** @phpstan-var array<string, array<int|string, string>> */
     private static $constNameIndex;
+
     /** @phpstan-var int|string */
     private $value;
 

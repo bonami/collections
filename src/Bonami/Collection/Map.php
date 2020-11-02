@@ -34,6 +34,7 @@ class Map implements Countable, IteratorAggregate
 
     /** @phpstan-var array<int|string, K> */
     protected $keys;
+
     /** @phpstan-var array<int|string, V> */
     protected $values;
 

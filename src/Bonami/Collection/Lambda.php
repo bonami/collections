@@ -14,8 +14,10 @@ final class Lambda
 
     /** @var callable */
     protected $callable;
+
     /** @var array<mixed> */
     protected $applied;
+
     /** @var int|null */
     protected $numberOfArgs;
 
