@@ -2,7 +2,7 @@
 
 Found a bug or something's broken? Easy raise an issue or even better fix it and send pull request. Any contributions are welcome.
 
- - Coding standard for the project is [Bonami PHP Coding Standards](https://github.com/bonami/coding-standards)
+ - Coding standard is PSR 1, PSR 2 and PSR 12. There are some other useful rules from Slevomat coding standards. They are enforced with phpcs. See `ruleset.xml`
  - The project aims to follow most [object calisthenics](https://www.slideshare.net/guilhermeblanco/object-calisthenics-applied-to-php)
  - Any contribution must provide tests for newly introduced conditions
  - Any un-confirmed issue needs a failing test case before being accepted
