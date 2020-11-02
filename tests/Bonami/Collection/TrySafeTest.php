@@ -101,7 +101,6 @@ class TrySafeTest extends TestCase
         self::assertTrue(TrySafe::success("world")->flatMap($mapperThatThrows)->isFailure());
     }
 
-
     public function testRecover(): void
     {
         $failure = new Exception();
@@ -155,7 +154,6 @@ class TrySafeTest extends TestCase
         self::assertCount(1, $handleFailureSpy->getCalls());
         self::assertSame([[$exception]], $handleFailureSpy->getCalls());
     }
-
 
     public function testIterator(): void
     {

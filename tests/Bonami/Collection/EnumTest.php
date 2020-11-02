@@ -55,9 +55,10 @@ class EnumTest extends TestCase
 }
 
 // @codingStandardsIgnoreStart
-class TestEnum extends Enum {
-	public const A = 'A';
-	public const B = 'B';
-	public const C = 'C';
+class TestEnum extends Enum
+{
+    public const A = 'A';
+    public const B = 'B';
+    public const C = 'C';
 }
 // @codingStandardsIgnoreEnd

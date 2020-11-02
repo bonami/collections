@@ -617,7 +617,7 @@ class MapTest extends TestCase
             ['a', 1],
             ['b', 2],
         ]);
-        $this->assertEquals('{a: 1, b: 2}', (string) $m);
+        $this->assertEquals('{a: 1, b: 2}', (string)$m);
     }
 
     /**

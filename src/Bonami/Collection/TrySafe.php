@@ -24,7 +24,7 @@ abstract class TrySafe implements IHashable, IteratorAggregate
      */
     final public static function of($value): self
     {
-         return self::success($value);
+        return self::success($value);
     }
 
     /**
@@ -34,9 +34,9 @@ abstract class TrySafe implements IHashable, IteratorAggregate
     final public static function fromCallable(callable $callable): self
     {
         try {
-              return self::success($callable());
+            return self::success($callable());
         } catch (Throwable $failure) {
-              return self::failure($failure);
+            return self::failure($failure);
         }
     }
 
@@ -46,15 +46,15 @@ abstract class TrySafe implements IHashable, IteratorAggregate
      */
     final public static function success($value): self
     {
-         /**
-          * @phpstan-extends TrySafe<T>
-          */
-         return new class ($value) extends TrySafe {
+        /**
+         * @phpstan-extends TrySafe<T>
+         */
+        return new class ($value) extends TrySafe {
 
-             /** @phpstan-var T */
-             private $value;
+            /** @phpstan-var T */
+            private $value;
 
-             /** @phpstan-param T $value */
+            /** @phpstan-param T $value */
             protected function __construct($value)
             {
                 $this->value = $value;
@@ -65,9 +65,9 @@ abstract class TrySafe implements IHashable, IteratorAggregate
                 return true;
             }
 
-         /**
-          * @inheritDoc
-          */
+            /**
+             * @inheritDoc
+             */
             public function map(callable $mapper): TrySafe
             {
                 return self::fromCallable(function () use ($mapper) {
@@ -75,9 +75,9 @@ abstract class TrySafe implements IHashable, IteratorAggregate
                 });
             }
 
-         /**
-          * @inheritDoc
-          */
+            /**
+             * @inheritDoc
+             */
             public function ap(TrySafe $trySafe): TrySafe
             {
                 assert(is_callable($this->value));
@@ -86,9 +86,9 @@ abstract class TrySafe implements IHashable, IteratorAggregate
                 });
             }
 
-         /**
-          * @inheritDoc
-          */
+            /**
+             * @inheritDoc
+             */
             public function flatMap(callable $mapper): TrySafe
             {
                 try {
@@ -101,9 +101,9 @@ abstract class TrySafe implements IHashable, IteratorAggregate
                 return $trySafe;
             }
 
-         /**
-          * @inheritDoc
-          */
+            /**
+             * @inheritDoc
+             */
             public function recover(callable $callable): TrySafe
             {
                 return $this;
@@ -117,16 +117,16 @@ abstract class TrySafe implements IHashable, IteratorAggregate
                 return $this->value;
             }
 
-             /**
-              * @phpstan-param T $else
-              * @phpstan-return T
-              */
+            /**
+             * @phpstan-param T $else
+             * @phpstan-return T
+             */
             public function getOrElse($else)
             {
                 return $this->value;
             }
 
-         /** @inheritDoc */
+            /** @inheritDoc */
             public function getFailureUnsafe(): Throwable
             {
                 throw new ValueIsNotPresentException("Can not get failure for Success");
@@ -142,17 +142,17 @@ abstract class TrySafe implements IHashable, IteratorAggregate
                 return $handleSuccess($this->value);
             }
 
-         /**
-          * @phpstan-return Traversable<int, T>
-          */
+            /**
+             * @phpstan-return Traversable<int, T>
+             */
             public function getIterator(): Traversable
             {
                 return new ArrayIterator([$this->value]);
             }
 
-         /**
-          * @phpstan-return int|string
-          */
+            /**
+             * @phpstan-return int|string
+             */
             public function hashCode()
             {
                 $valueHash = $this->value instanceof IHashable
@@ -160,7 +160,7 @@ abstract class TrySafe implements IHashable, IteratorAggregate
                     : hashKey($this->value);
                 return __CLASS__ . "::success({$valueHash})";
             }
-         };
+        };
     }
 
     /**
@@ -169,13 +169,13 @@ abstract class TrySafe implements IHashable, IteratorAggregate
      */
     final public static function failure(Throwable $failure): TrySafe
     {
-         /**
-          * @phpstan-extends TrySafe<T>
-          */
-         return new class ($failure) extends TrySafe {
+        /**
+         * @phpstan-extends TrySafe<T>
+         */
+        return new class ($failure) extends TrySafe {
 
-             /** @phpstan-var Throwable */
-             private $failure;
+            /** @phpstan-var Throwable */
+            private $failure;
 
             protected function __construct(Throwable $failure)
             {
@@ -209,21 +209,21 @@ abstract class TrySafe implements IHashable, IteratorAggregate
                 });
             }
 
-         /**
-          * Consider calling getOrElse instead
-          * @throws ValueIsNotPresentException
-          *
-          * @phpstan-return T
-          */
+            /**
+             * Consider calling getOrElse instead
+             * @throws ValueIsNotPresentException
+             *
+             * @phpstan-return T
+             */
             public function getUnsafe()
             {
                 throw new ValueIsNotPresentException("Can not get value for Failure");
             }
 
-             /**
-              * @phpstan-param T $else
-              * @phpstan-return T
-              */
+            /**
+             * @phpstan-param T $else
+             * @phpstan-return T
+             */
             public function getOrElse($else)
             {
                 return $else;
@@ -244,15 +244,15 @@ abstract class TrySafe implements IHashable, IteratorAggregate
                 return $handleFailure($this->failure);
             }
 
-         /**
-          * @phpstan-return Traversable<int, T>
-          */
+            /**
+             * @phpstan-return Traversable<int, T>
+             */
             public function getIterator(): Traversable
             {
                 return new EmptyIterator();
             }
 
-         /** @phpstan-return int|string */
+            /** @phpstan-return int|string */
             public function hashCode()
             {
                 $failureHash = $this->failure instanceof IHashable
@@ -260,7 +260,7 @@ abstract class TrySafe implements IHashable, IteratorAggregate
                     : hashKey($this->failure);
                 return __CLASS__ . "::failure({$failureHash})";
             }
-         };
+        };
     }
 
     /**
@@ -295,7 +295,7 @@ abstract class TrySafe implements IHashable, IteratorAggregate
      */
     final public function reduce(callable $reducer, $initialReduction)
     {
-         return LazyList::fromIterable($this)->reduce($reducer, $initialReduction);
+        return LazyList::fromIterable($this)->reduce($reducer, $initialReduction);
     }
 
     /**
@@ -304,8 +304,8 @@ abstract class TrySafe implements IHashable, IteratorAggregate
      */
     final public function equals($value): bool
     {
-         return $value instanceof self
-         && $value->hashCode() === $this->hashCode();
+        return $value instanceof self
+            && $value->hashCode() === $this->hashCode();
     }
 
     /**
@@ -319,7 +319,7 @@ abstract class TrySafe implements IHashable, IteratorAggregate
 
     final public function isFailure(): bool
     {
-         return !$this->isSuccess();
+        return !$this->isSuccess();
     }
 
     /**
