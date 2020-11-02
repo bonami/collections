@@ -273,7 +273,7 @@ class TrySafeTest extends TestCase
         return TrySafe::failure($this->createHashableException());
     }
 
-    private function createHashableException(): Exception
+    private function createHashableException(): Throwable
     {
         return new class extends Exception implements IHashable {
             public function hashCode()
