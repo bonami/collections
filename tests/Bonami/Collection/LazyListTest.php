@@ -343,7 +343,7 @@ class LazyListTest extends TestCase
     {
         $lazyList = new LazyList(new ArrayIterator(range(1, 10)));
         $filtered = $lazyList->filter(static function (int $item) {
-            return $item % 2 == 0;
+            return $item % 2 === 0;
         });
 
         $this->assertEquals(range(2, 10, 2), iterator_to_array($filtered));
@@ -353,7 +353,7 @@ class LazyListTest extends TestCase
     {
         $lazyList = new LazyList(new ArrayIterator(range(1, 10)));
         $found = $lazyList->find(static function (int $item) {
-            return $item % 2 == 0;
+            return $item % 2 === 0;
         });
 
         $this->assertInstanceOf(Option::class, $found);
@@ -410,7 +410,7 @@ class LazyListTest extends TestCase
             return $item < 11;
         }));
         $this->assertTrue($lazyList->all(static function (int $item) {
-            return $item % 2 == 0;
+            return $item % 2 === 0;
         }));
         $this->assertFalse($lazyList->all(static function (int $item) {
             return $item < 10;
