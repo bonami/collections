@@ -278,7 +278,7 @@ class TrySafeTest extends TestCase
         return new class extends Exception implements IHashable {
             public function hashCode()
             {
-                return __CLASS__;
+                return self::class;
             }
         };
     }

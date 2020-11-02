@@ -201,7 +201,7 @@ abstract class Option implements IHashable, IteratorAggregate
                 $valueHash = $this->value instanceof IHashable
                     ? $this->value->hashCode()
                     : hashKey($this->value);
-                return __CLASS__ . "::some({$valueHash})";
+                return self::class . "::some({$valueHash})";
             }
 
             /**

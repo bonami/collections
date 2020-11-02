@@ -158,7 +158,7 @@ abstract class TrySafe implements IHashable, IteratorAggregate
                 $valueHash = $this->value instanceof IHashable
                     ? $this->value->hashCode()
                     : hashKey($this->value);
-                return __CLASS__ . "::success({$valueHash})";
+                return self::class . "::success({$valueHash})";
             }
         };
     }
@@ -258,7 +258,7 @@ abstract class TrySafe implements IHashable, IteratorAggregate
                 $failureHash = $this->failure instanceof IHashable
                     ? $this->failure->hashCode()
                     : hashKey($this->failure);
-                return __CLASS__ . "::failure({$failureHash})";
+                return self::class . "::failure({$failureHash})";
             }
         };
     }
