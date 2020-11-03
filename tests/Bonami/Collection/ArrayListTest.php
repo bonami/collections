@@ -15,84 +15,84 @@ class ArrayListTest extends TestCase
 
     public function testFromEmpty(): void
     {
-        $this->assertEquals(new ArrayList([]), ArrayList::fromEmpty());
+        self::assertEquals(new ArrayList([]), ArrayList::fromEmpty());
     }
 
     public function testFromItems(): void
     {
-        $this->assertEquals(new ArrayList([1]), ArrayList::of(1));
-        $this->assertEquals(new ArrayList([1, 2]), ArrayList::of(1, 2));
+        self::assertEquals(new ArrayList([1]), ArrayList::of(1));
+        self::assertEquals(new ArrayList([1, 2]), ArrayList::of(1, 2));
     }
 
     public function testFill(): void
     {
-        $this->assertEquals(new ArrayList(['aa', 'aa', 'aa']), ArrayList::fill('aa', 3));
+        self::assertEquals(new ArrayList(['aa', 'aa', 'aa']), ArrayList::fill('aa', 3));
     }
 
     public function testRange(): void
     {
-        $this->assertEquals(new ArrayList([1, 3, 5]), ArrayList::range(1, 5, 2));
+        self::assertEquals(new ArrayList([1, 3, 5]), ArrayList::range(1, 5, 2));
     }
 
     public function testRangeSteppingOverMax(): void
     {
-        $this->assertEquals(new ArrayList([1, 3, 5]), ArrayList::range(1, 6, 2));
+        self::assertEquals(new ArrayList([1, 3, 5]), ArrayList::range(1, 6, 2));
     }
 
     public function testExplode(): void
     {
-        $this->assertEquals(new ArrayList(['a', 'b', 'c']), ArrayList::explode(',', 'a,b,c'));
-        $this->assertEquals(new ArrayList(['a', 'b', 'c']), ArrayList::explode('', 'abc'));
-        $this->assertEquals(new ArrayList(['š', 'č', 'ř']), ArrayList::explode('', 'ščř'));
+        self::assertEquals(new ArrayList(['a', 'b', 'c']), ArrayList::explode(',', 'a,b,c'));
+        self::assertEquals(new ArrayList(['a', 'b', 'c']), ArrayList::explode('', 'abc'));
+        self::assertEquals(new ArrayList(['š', 'č', 'ř']), ArrayList::explode('', 'ščř'));
     }
 
     public function testFromIterable(): void
     {
-        $this->assertEquals(new ArrayList([1, 2, 3]), ArrayList::fromIterable([1, 2, 3]));
-        $this->assertEquals(new ArrayList([1, 2, 3]), ArrayList::fromIterable(new ArrayList([1, 2, 3])));
-        $this->assertEquals(new ArrayList([1, 2, 3]), ArrayList::fromIterable(new ArrayIterator([1, 2, 3])));
+        self::assertEquals(new ArrayList([1, 2, 3]), ArrayList::fromIterable([1, 2, 3]));
+        self::assertEquals(new ArrayList([1, 2, 3]), ArrayList::fromIterable(new ArrayList([1, 2, 3])));
+        self::assertEquals(new ArrayList([1, 2, 3]), ArrayList::fromIterable(new ArrayIterator([1, 2, 3])));
     }
 
     public function testIsIterable(): void
     {
-        $this->assertIsIterable(ArrayList::of(1, 2));
+        self::assertIsIterable(ArrayList::of(1, 2));
     }
 
     public function testCountable(): void
     {
-        $this->assertCount(2, ArrayList::of(1, 2));
+        self::assertCount(2, ArrayList::of(1, 2));
     }
 
     public function testIsEmpty(): void
     {
-        $this->assertTrue(ArrayList::fromEmpty()->isEmpty());
-        $this->assertFalse(ArrayList::of(1, 2)->isEmpty());
+        self::assertTrue(ArrayList::fromEmpty()->isEmpty());
+        self::assertFalse(ArrayList::of(1, 2)->isEmpty());
     }
 
     public function testIsNotEmpty(): void
     {
-        $this->assertFalse(ArrayList::fromEmpty()->isNotEmpty());
-        $this->assertTrue(ArrayList::of(1, 2)->isNotEmpty());
+        self::assertFalse(ArrayList::fromEmpty()->isNotEmpty());
+        self::assertTrue(ArrayList::of(1, 2)->isNotEmpty());
     }
 
     public function testGet(): void
     {
         $a = ArrayList::of(666);
-        $this->assertTrue($a->get(0)->equals(Option::some(666)));
-        $this->assertTrue($a->get(1)->equals(Option::none()));
+        self::assertTrue($a->get(0)->equals(Option::some(666)));
+        self::assertTrue($a->get(1)->equals(Option::none()));
     }
 
     public function testGetOrElse(): void
     {
         $a = ArrayList::of(666);
-        $this->assertSame(666, $a->getOrElse(0, 42));
-        $this->assertSame(42, $a->getOrElse(1, 42));
+        self::assertSame(666, $a->getOrElse(0, 42));
+        self::assertSame(42, $a->getOrElse(1, 42));
     }
 
     public function testGetUnsafe(): void
     {
         $a = ArrayList::of(666);
-        $this->assertSame(666, $a->getUnsafe(0));
+        self::assertSame(666, $a->getUnsafe(0));
 
         $this->expectException(OutOfBoundsException::class);
         $a->getUnsafe(1);
@@ -103,7 +103,7 @@ class ArrayListTest extends TestCase
         $mapped = ArrayList::of(3, 2, 1, 0)->map(static function ($i, $key) {
             return $i + $key;
         });
-        $this->assertEquals(ArrayList::of(3, 3, 3, 3), $mapped);
+        self::assertEquals(ArrayList::of(3, 3, 3, 3), $mapped);
     }
 
     public function testAp(): void
@@ -131,7 +131,7 @@ class ArrayListTest extends TestCase
             [2, 'b'],
         ];
 
-        $this->assertEquals($expected, $mapped->toArray());
+        self::assertEquals($expected, $mapped->toArray());
     }
 
     public function testApNone(): void
@@ -148,7 +148,7 @@ class ArrayListTest extends TestCase
             ->ap(ArrayList::of(1, 2))
             ->ap(ArrayList::fromEmpty());
 
-        $this->assertEquals([], $mapped->toArray());
+        self::assertEquals([], $mapped->toArray());
     }
 
     public function testLift(): void
@@ -159,7 +159,7 @@ class ArrayListTest extends TestCase
 
         $mapped = $lifted(ArrayList::of(1, 2), ArrayList::of('a', 'b'));
 
-        $this->assertEquals(['1a', '2a', '1b', '2b'], $mapped->toArray());
+        self::assertEquals(['1a', '2a', '1b', '2b'], $mapped->toArray());
     }
 
     public function testTraverse(): void
@@ -169,15 +169,15 @@ class ArrayListTest extends TestCase
             return $i % 2 === 0 ? ArrayList::of($i) : ArrayList::fromEmpty();
         };
 
-        $this->assertEquals(
+        self::assertEquals(
             ArrayList::of(ArrayList::of(4, 2)),
             ArrayList::traverse([4, 2], $fillAForOdd)
         );
-        $this->assertEquals(
+        self::assertEquals(
             ArrayList::fromEmpty(),
             ArrayList::traverse([1, 2], $fillAForOdd)
         );
-        $this->assertEquals(
+        self::assertEquals(
             ArrayList::of(ArrayList::fromEmpty()),
             ArrayList::traverse([], $fillAForOdd)
         );
@@ -185,7 +185,7 @@ class ArrayListTest extends TestCase
 
     public function testSequenceWithMultipleValues(): void
     {
-        $this->assertEquals(
+        self::assertEquals(
             ArrayList::of(
                 ArrayList::of(1, 'a'),
                 ArrayList::of(2, 'a'),
@@ -198,7 +198,7 @@ class ArrayListTest extends TestCase
 
     public function testFlatMap(): void
     {
-        $this->assertEquals(
+        self::assertEquals(
             ArrayList::of([0], [1]),
             ArrayList::of(0, 1)->flatMap(static function (int $i): array {
                 return [[$i]];
@@ -208,7 +208,7 @@ class ArrayListTest extends TestCase
 
     public function testFlatten(): void
     {
-        $this->assertEquals(
+        self::assertEquals(
             ArrayList::of([0], [1], [2], [3]),
             ArrayList::of([[0], [1]], [[2], [3]])->flatten()
         );
@@ -226,7 +226,7 @@ class ArrayListTest extends TestCase
     {
         $a = ArrayList::of(1, 3, 1, 5);
 
-        $this->assertEquals(
+        self::assertEquals(
             ArrayList::of(2, 6, 10),
             $a->uniqueMap(static function ($item): int {
                 return $item * 2;
@@ -240,9 +240,9 @@ class ArrayListTest extends TestCase
         $unique = $a->uniqueBy(static function ($v) {
             return $v['a'];
         });
-        $this->assertEquals(2, $unique->count());
-        $this->assertEquals(6, $unique->head()->getUnsafe()['c']);
-        $this->assertEquals(4, $unique->last()->getUnsafe()['c']);
+        self::assertEquals(2, $unique->count());
+        self::assertEquals(6, $unique->head()->getUnsafe()['c']);
+        self::assertEquals(4, $unique->last()->getUnsafe()['c']);
     }
 
     public function testUniqueByObjects(): void
@@ -259,7 +259,7 @@ class ArrayListTest extends TestCase
             (object)['a' => $two, 'b' => $one],
         ]);
 
-        $this->assertEquals($expected, $objects->uniqueBy(static function (stdClass $object) {
+        self::assertEquals($expected, $objects->uniqueBy(static function (stdClass $object) {
             return $object->a;
         }));
     }
@@ -267,12 +267,12 @@ class ArrayListTest extends TestCase
     public function testUnique(): void
     {
         $arrays = new ArrayList([[1, 2], [1, 2, 3], [1, 2]]);
-        $this->assertEquals(new ArrayList([[1, 2], [1, 2, 3]]), $arrays->unique());
+        self::assertEquals(new ArrayList([[1, 2], [1, 2, 3]]), $arrays->unique());
     }
 
     public function testUnion(): void
     {
-        $this->assertEquals(
+        self::assertEquals(
             ArrayList::of(1, 2, 3),
             ArrayList::of(1, 2)->union(ArrayList::of(2, 3))
         );
@@ -280,7 +280,7 @@ class ArrayListTest extends TestCase
 
     public function testFilter(): void
     {
-        $this->assertEquals(
+        self::assertEquals(
             ArrayList::of(1, 3),
             ArrayList::of(1, 2, 3)->filter(static function ($i): bool {
                 return $i % 2 !== 0;
@@ -290,7 +290,7 @@ class ArrayListTest extends TestCase
 
     public function testFind(): void
     {
-        $this->assertEquals(
+        self::assertEquals(
             Option::some(2),
             ArrayList::of(1, 2)->find(static function ($value): bool {
                 return $value === 2;
@@ -300,7 +300,7 @@ class ArrayListTest extends TestCase
 
     public function testFindNotMatch(): void
     {
-        $this->assertEquals(
+        self::assertEquals(
             Option::none(),
             ArrayList::of(1, 2)->find(static function ($value): bool {
                 return $value === 3;
@@ -310,7 +310,7 @@ class ArrayListTest extends TestCase
 
     public function testFindEmpty(): void
     {
-        $this->assertEquals(
+        self::assertEquals(
             Option::none(),
             ArrayList::fromEmpty()->find(tautology())
         );
@@ -318,7 +318,7 @@ class ArrayListTest extends TestCase
 
     public function testFindKey(): void
     {
-        $this->assertEquals(
+        self::assertEquals(
             Option::some(1),
             ArrayList::of(1, 2)->findKey(static function ($value) {
                 return $value === 2;
@@ -328,7 +328,7 @@ class ArrayListTest extends TestCase
 
     public function testFindKeyNotMatch(): void
     {
-        $this->assertEquals(
+        self::assertEquals(
             Option::none(),
             ArrayList::of(1, 2)->findKey(static function ($value) {
                 return $value === 3;
@@ -338,7 +338,7 @@ class ArrayListTest extends TestCase
 
     public function testFindKeyEmpty(): void
     {
-        $this->assertEquals(
+        self::assertEquals(
             Option::none(),
             ArrayList::of()->findKey(tautology())
         );
@@ -347,7 +347,7 @@ class ArrayListTest extends TestCase
     public function testExists(): void
     {
         $integers = ArrayList::of(1, 2, 3);
-        $this->assertTrue($integers->exists(static function ($value): bool {
+        self::assertTrue($integers->exists(static function ($value): bool {
             return $value === 2;
         }));
     }
@@ -355,39 +355,39 @@ class ArrayListTest extends TestCase
     public function testNotExists(): void
     {
         $integers = ArrayList::of(1, 2, 3);
-        $this->assertFalse($integers->exists(static function ($value): bool {
+        self::assertFalse($integers->exists(static function ($value): bool {
             return $value === 4;
         }));
     }
 
     public function testNotExistsEmpty(): void
     {
-        $this->assertFalse(ArrayList::fromEmpty()->exists(tautology()));
+        self::assertFalse(ArrayList::fromEmpty()->exists(tautology()));
     }
 
     public function testContains(): void
     {
-        $this->assertTrue(ArrayList::of(1)->contains('1', false));
-        $this->assertFalse(ArrayList::of(1)->contains('1', true));
-        $this->assertTrue(ArrayList::of(1)->contains(1, true));
+        self::assertTrue(ArrayList::of(1)->contains('1', false));
+        self::assertFalse(ArrayList::of(1)->contains('1', true));
+        self::assertTrue(ArrayList::of(1)->contains(1, true));
 
         $o1 = (object)['a' => 1];
         $o2 = (object)['a' => 1];
-        $this->assertTrue(ArrayList::of($o1)->contains($o2, false));
-        $this->assertFalse(ArrayList::of($o1)->contains($o2, true));
-        $this->assertTrue(ArrayList::of($o1)->contains($o1, true));
+        self::assertTrue(ArrayList::of($o1)->contains($o2, false));
+        self::assertFalse(ArrayList::of($o1)->contains($o2, true));
+        self::assertTrue(ArrayList::of($o1)->contains($o1, true));
     }
 
     public function testAllMatchCondition(): void
     {
-        $this->assertTrue(ArrayList::of(true, true)->all(identity()));
-        $this->assertFalse(ArrayList::of(true, false)->all(identity()));
-        $this->assertTrue(ArrayList::fromEmpty()->all(identity()));
+        self::assertTrue(ArrayList::of(true, true)->all(identity()));
+        self::assertFalse(ArrayList::of(true, false)->all(identity()));
+        self::assertTrue(ArrayList::fromEmpty()->all(identity()));
     }
 
     public function testSort(): void
     {
-        $this->assertEquals(
+        self::assertEquals(
             ArrayList::of('a', 'b', 'c'),
             ArrayList::of('b', 'a', 'c')->sort(comparator())
         );
@@ -395,11 +395,11 @@ class ArrayListTest extends TestCase
 
     public function testSortDefaultComparator(): void
     {
-        $this->assertEquals(
+        self::assertEquals(
             ArrayList::of('a', 'b', 'c'),
             ArrayList::of('b', 'a', 'c')->sort()
         );
-        $this->assertEquals(
+        self::assertEquals(
             ArrayList::of(2, 3, 5),
             ArrayList::of(3, 2, 5)->sort()
         );
@@ -407,7 +407,7 @@ class ArrayListTest extends TestCase
 
     public function testIndex(): void
     {
-        $this->assertEquals(
+        self::assertEquals(
             new Map([
                 [10, 1],
                 [20, 2],
@@ -420,7 +420,7 @@ class ArrayListTest extends TestCase
 
     public function testToArray(): void
     {
-        $this->assertEquals([1, 2], ArrayList::of(1, 2)->toArray());
+        self::assertEquals([1, 2], ArrayList::of(1, 2)->toArray());
     }
 
     public function testReduce(): void
@@ -429,26 +429,26 @@ class ArrayListTest extends TestCase
         $sum = $list->reduce(static function ($reduction, $value) {
             return $reduction + $value;
         }, 0);
-        $this->assertEquals(6, $sum);
+        self::assertEquals(6, $sum);
     }
 
     public function testMin(): void
     {
-        $this->assertEquals(Option::some(1), ArrayList::of(3, 1, 2)->min(comparator()));
-        $this->assertEquals(Option::some(3), ArrayList::of(3, 3, 3)->min(comparator()));
-        $this->assertEquals(Option::none(), ArrayList::fromEmpty()->min(comparator()));
+        self::assertEquals(Option::some(1), ArrayList::of(3, 1, 2)->min(comparator()));
+        self::assertEquals(Option::some(3), ArrayList::of(3, 3, 3)->min(comparator()));
+        self::assertEquals(Option::none(), ArrayList::fromEmpty()->min(comparator()));
     }
 
     public function testMinWithNoCallback(): void
     {
-        $this->assertEquals(Option::some(1), ArrayList::of(3, 1, 2)->min());
+        self::assertEquals(Option::some(1), ArrayList::of(3, 1, 2)->min());
     }
 
     public function testMax(): void
     {
-        $this->assertEquals(Option::some(3), ArrayList::of(2, 1, 3)->max(comparator()));
-        $this->assertEquals(Option::some(3), ArrayList::of(3, 3, 3)->max(comparator()));
-        $this->assertEquals(Option::none(), ArrayList::of()->max(comparator()));
+        self::assertEquals(Option::some(3), ArrayList::of(2, 1, 3)->max(comparator()));
+        self::assertEquals(Option::some(3), ArrayList::of(3, 3, 3)->max(comparator()));
+        self::assertEquals(Option::none(), ArrayList::of()->max(comparator()));
     }
 
     public function testEach(): void
@@ -459,52 +459,52 @@ class ArrayListTest extends TestCase
         $a->each(static function (int $i) use (&$acc): void {
             $acc += $i;
         });
-        $this->assertEquals(3, $acc);
+        self::assertEquals(3, $acc);
     }
 
     public function testMaxWithNoCallback(): void
     {
-        $this->assertEquals(Option::some(3), ArrayList::of(2, 1, 3)->max());
+        self::assertEquals(Option::some(3), ArrayList::of(2, 1, 3)->max());
     }
 
     public function testHead(): void
     {
         $integers = ArrayList::of(6, 7, 8);
-        $this->assertEquals(6, $integers->head()->getUnsafe());
+        self::assertEquals(6, $integers->head()->getUnsafe());
     }
 
     public function testHeadEmpty(): void
     {
-        $this->assertSame(Option::none(), ArrayList::fromEmpty()->head());
+        self::assertSame(Option::none(), ArrayList::fromEmpty()->head());
     }
 
     public function testTake(): void
     {
         $integers = ArrayList::of(6, 7, 8);
-        $this->assertEquals(ArrayList::of(6, 7), $integers->take(2));
+        self::assertEquals(ArrayList::of(6, 7), $integers->take(2));
     }
 
     public function testTakeFewerElements(): void
     {
         $integers = ArrayList::of(6);
-        $this->assertEquals(ArrayList::of(6), $integers->take(2));
+        self::assertEquals(ArrayList::of(6), $integers->take(2));
     }
 
     public function testSlice(): void
     {
-        $this->assertEquals(ArrayList::of(1), ArrayList::fill(1, 2)->slice(0, 1));
-        $this->assertEquals(ArrayList::fromEmpty(), ArrayList::fromEmpty()->slice(0, 1));
+        self::assertEquals(ArrayList::of(1), ArrayList::fill(1, 2)->slice(0, 1));
+        self::assertEquals(ArrayList::fromEmpty(), ArrayList::fromEmpty()->slice(0, 1));
     }
 
     public function testLast(): void
     {
-        $this->assertSame(Option::none(), ArrayList::fromEmpty()->last());
-        $this->assertEquals(2, ArrayList::of(1, 2)->last()->getUnsafe());
+        self::assertSame(Option::none(), ArrayList::fromEmpty()->last());
+        self::assertEquals(2, ArrayList::of(1, 2)->last()->getUnsafe());
     }
 
     public function testWithoutNulls(): void
     {
-        $this->assertEquals(
+        self::assertEquals(
             ArrayList::of(1),
             ArrayList::of(null, 1, null)->withoutNulls()
         );
@@ -514,8 +514,8 @@ class ArrayListTest extends TestCase
     {
         $list1 = ArrayList::of(1, 2, 3, 4);
         $list2 = ArrayList::of(3, 4, 5);
-        $this->assertEquals(ArrayList::of(1, 2), $list1->minus($list2));
-        $this->assertEquals(ArrayList::of(5), $list2->minus($list1));
+        self::assertEquals(ArrayList::of(1, 2), $list1->minus($list2));
+        self::assertEquals(ArrayList::of(5), $list2->minus($list1));
     }
 
     public function testMinusSameReferences(): void
@@ -526,14 +526,14 @@ class ArrayListTest extends TestCase
         $d = (object)['foo' => 'd'];
         $list1 = ArrayList::of($a, $b, $c);
         $list2 = ArrayList::of($c, $d);
-        $this->assertEquals(ArrayList::of($a, $b), $list1->minus([$c, $d]));
-        $this->assertEquals(ArrayList::of($d), $list2->minus([$b, $c]));
+        self::assertEquals(ArrayList::of($a, $b), $list1->minus([$c, $d]));
+        self::assertEquals(ArrayList::of($d), $list2->minus([$b, $c]));
     }
 
     public function testMinusDifferentReferencesStrict(): void
     {
         $list1 = ArrayList::of((object)['foo' => 'a'], (object)['foo' => 'b']);
-        $this->assertEquals(
+        self::assertEquals(
             ArrayList::of((object)['foo' => 'a'], (object)['foo' => 'b']),
             $list1->minus([(object)['foo' => 'b']])
         );
@@ -542,7 +542,7 @@ class ArrayListTest extends TestCase
     public function testMinusDifferentReferencesNonStrict(): void
     {
         $list1 = ArrayList::of((object)['foo' => 'a'], (object)['foo' => 'b']);
-        $this->assertEquals(
+        self::assertEquals(
             ArrayList::of((object)['foo' => 'a']),
             $list1->minus([(object)['foo' => 'b']], false)
         );
@@ -551,23 +551,23 @@ class ArrayListTest extends TestCase
     public function testMinusOne(): void
     {
         $a = ArrayList::of(1, 2);
-        $this->assertEquals(ArrayList::of(1), $a->minusOne(2));
-        $this->assertEquals(ArrayList::of(1, 2), $a->minusOne(3));
+        self::assertEquals(ArrayList::of(1), $a->minusOne(2));
+        self::assertEquals(ArrayList::of(1, 2), $a->minusOne(3));
     }
 
     public function testConcat(): void
     {
         $list1 = ArrayList::of(1, 2);
         $list2 = ArrayList::of(2, 3);
-        $this->assertEquals(ArrayList::of(1, 2, 2, 3), $list1->concat($list2));
-        $this->assertEquals(ArrayList::of(2, 3, 1, 2), $list2->concat($list1));
+        self::assertEquals(ArrayList::of(1, 2, 2, 3), $list1->concat($list2));
+        self::assertEquals(ArrayList::of(2, 3, 1, 2), $list2->concat($list1));
     }
 
     public function testIntersect(): void
     {
         $list1 = ArrayList::of(1, 2);
         $list2 = ArrayList::of(2, 3);
-        $this->assertEquals(ArrayList::of(2), $list1->intersect($list2));
+        self::assertEquals(ArrayList::of(2), $list1->intersect($list2));
     }
 
     public function testIntersectObjects(): void
@@ -578,7 +578,7 @@ class ArrayListTest extends TestCase
 
         $list1 = ArrayList::of($o1, $o2);
         $list2 = ArrayList::of($o2, $o3);
-        $this->assertEquals(ArrayList::of($o2), $list1->intersect($list2));
+        self::assertEquals(ArrayList::of($o2), $list1->intersect($list2));
     }
 
     public function testGroupBy(): void
@@ -591,7 +591,7 @@ class ArrayListTest extends TestCase
             return $o->b;
         });
 
-        $this->assertEquals(Map::fromIterable([
+        self::assertEquals(Map::fromIterable([
             [1, ArrayList::of($o1, $o2)],
             [2, ArrayList::of($o3)],
         ]), $grouped);
@@ -601,7 +601,7 @@ class ArrayListTest extends TestCase
     {
         $a = ArrayList::range(1, 10);
 
-        $this->assertEquals(ArrayList::of(
+        self::assertEquals(ArrayList::of(
             ArrayList::of(1, 2, 3),
             ArrayList::of(4, 5, 6),
             ArrayList::of(7, 8, 9),
@@ -613,7 +613,7 @@ class ArrayListTest extends TestCase
     {
         $a = new ArrayList(range(1, 3));
         $b = new ArrayList(range(11, 13));
-        $this->assertEquals(new Map([[1, 11], [2, 12], [3, 13]]), $a->combine($b));
+        self::assertEquals(new Map([[1, 11], [2, 12], [3, 13]]), $a->combine($b));
     }
 
     public function testZip(): void
@@ -621,7 +621,7 @@ class ArrayListTest extends TestCase
         $strings = ArrayList::of('This', 'Is', 'Not', 'Test', 'Of', 'Emergency', 'Broadcast', 'System');
         $integers = ArrayList::range(0, 14, 2);
 
-        $this->assertEquals(ArrayList::of(
+        self::assertEquals(ArrayList::of(
             [0, 'This'],
             [2, 'Is'],
             [4, 'Not'],
@@ -639,18 +639,18 @@ class ArrayListTest extends TestCase
         $map = $ints->zipMap(static function (int $i): string {
             return chr(ord('a') + $i);
         });
-        $this->assertEquals(Map::fromIterable([[0, 'a'], [1, 'b'], [2, 'c']]), $map);
+        self::assertEquals(Map::fromIterable([[0, 'a'], [1, 'b'], [2, 'c']]), $map);
     }
 
     public function testJoin(): void
     {
-        $this->assertEquals('1, 2, 3', ArrayList::of(1, 2, 3)->join(', '));
+        self::assertEquals('1, 2, 3', ArrayList::of(1, 2, 3)->join(', '));
     }
 
     public function testJsonSerialize(): void
     {
         $list = new ArrayList(range(0, 10, 2));
-        $this->assertEquals('[0,2,4,6,8,10]', json_encode($list));
+        self::assertEquals('[0,2,4,6,8,10]', json_encode($list));
     }
 
     public function testNestedJsonSerialize(): void
@@ -658,25 +658,25 @@ class ArrayListTest extends TestCase
         $nestedList = (new ArrayList(range(0, 2)))->map(static function () {
             return ArrayList::of(0, 1);
         });
-        $this->assertEquals('[[0,1],[0,1],[0,1]]', json_encode($nestedList));
+        self::assertEquals('[[0,1],[0,1],[0,1]]', json_encode($nestedList));
     }
 
     public function testReverse(): void
     {
-        $this->assertEquals(ArrayList::of(2, 1), ArrayList::of(1, 2)->reverse());
+        self::assertEquals(ArrayList::of(2, 1), ArrayList::of(1, 2)->reverse());
     }
 
     public function testToMap(): void
     {
         $pairs = ArrayList::of([1, 'a'], [2, 'b']);
-        $this->assertEquals(Map::fromIterable([[1, 'a'], [2, 'b']]), $pairs->toMap());
+        self::assertEquals(Map::fromIterable([[1, 'a'], [2, 'b']]), $pairs->toMap());
     }
 
     public function testToString(): void
     {
         $a = ArrayList::fromIterable(range(1, 3));
 
-        $this->assertEquals('[1, 2, 3]', (string)$a);
+        self::assertEquals('[1, 2, 3]', (string)$a);
     }
 
     public function testToStringObjects(): void
@@ -686,7 +686,7 @@ class ArrayListTest extends TestCase
             (object)['b' => 2],
         ]);
 
-        $this->assertRegExp('~^\[\(stdClass\) [0-9a-f]+?, \(stdClass\) [0-9a-f]+?\]$~', (string)$a);
+        self::assertMatchesRegularExpression('~^\[\(stdClass\) [0-9a-f]+?, \(stdClass\) [0-9a-f]+?\]$~', (string)$a);
     }
 
     public function testToStringArrays(): void
@@ -697,6 +697,6 @@ class ArrayListTest extends TestCase
             range(1, 3),
         ]);
 
-        $this->assertEquals('[[a => 1], [b => 2], [0 => 1, 1 => 2, 2 => 3]]', (string)$a);
+        self::assertEquals('[[a => 1], [b => 2], [0 => 1, 1 => 2, 2 => 3]]', (string)$a);
     }
 }

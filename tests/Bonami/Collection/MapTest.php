@@ -20,7 +20,7 @@ class MapTest extends TestCase
             ['b', 2],
         ]);
 
-        $this->assertEquals(new Map([['a', 1], ['b', 2]]), Map::fromIterable($iterator));
+        self::assertEquals(new Map([['a', 1], ['b', 2]]), Map::fromIterable($iterator));
     }
 
     public function testFromIterableMap(): void
@@ -30,7 +30,7 @@ class MapTest extends TestCase
             ['b', 2],
         ]);
 
-        $this->assertEquals(new Map([['a', 1], ['b', 2]]), Map::fromIterable($iterator));
+        self::assertEquals(new Map([['a', 1], ['b', 2]]), Map::fromIterable($iterator));
     }
 
     public function testGetOrElse(): void
@@ -39,8 +39,8 @@ class MapTest extends TestCase
             [1, "a"],
             [2, "b"],
         ]);
-        $this->assertEquals("a", $map->getOrElse(1, "default"));
-        $this->assertEquals("default", $map->getOrElse(3, "default"));
+        self::assertEquals("a", $map->getOrElse(1, "default"));
+        self::assertEquals("default", $map->getOrElse(3, "default"));
     }
 
     public function testCountable(): void
@@ -49,19 +49,19 @@ class MapTest extends TestCase
             [1, "a"],
             [2, "b"],
         ]);
-        $this->assertCount(2, $map);
+        self::assertCount(2, $map);
     }
 
     public function testIsEmpty(): void
     {
-        $this->assertEquals(true, Map::fromEmpty()->isEmpty());
-        $this->assertEquals(false, Map::fromOnly(1, "a")->isEmpty());
+        self::assertEquals(true, Map::fromEmpty()->isEmpty());
+        self::assertEquals(false, Map::fromOnly(1, "a")->isEmpty());
     }
 
     public function testIsNotEmpty(): void
     {
-        $this->assertEquals(false, Map::fromEmpty()->isNotEmpty());
-        $this->assertEquals(true, Map::fromOnly(1, "a")->isNotEmpty());
+        self::assertEquals(false, Map::fromEmpty()->isNotEmpty());
+        self::assertEquals(true, Map::fromOnly(1, "a")->isNotEmpty());
     }
 
     public function testMap(): void
@@ -73,7 +73,7 @@ class MapTest extends TestCase
         $mapped = $map->map(static function ($value, $key) {
             return "$value:$key";
         });
-        $this->assertEquals(ArrayList::fromIterable(["a:1", "b:2"]), $mapped);
+        self::assertEquals(ArrayList::fromIterable(["a:1", "b:2"]), $mapped);
     }
 
     public function testMapKeys(): void
@@ -86,7 +86,7 @@ class MapTest extends TestCase
         $mapped = $map->mapKeys(static function ($key) {
             return $key + 1;
         });
-        $this->assertEquals(new Map([
+        self::assertEquals(new Map([
             [2, "a"],
             [3, "b"],
         ]), $mapped);
@@ -102,7 +102,7 @@ class MapTest extends TestCase
         $mapped = $map->mapValues(static function ($value, $key) {
             return str_repeat($value, $key);
         });
-        $this->assertEquals(new Map([
+        self::assertEquals(new Map([
             [1, "a"],
             [2, "bb"],
         ]), $mapped);
@@ -119,7 +119,7 @@ class MapTest extends TestCase
         $filtered = $map->filter(static function ($value, $key) {
             return $key % 2 === 0 || $value === "c";
         });
-        $this->assertEquals(new Map([
+        self::assertEquals(new Map([
             [2, "b"],
             [3, "c"],
             [4, "d"],
@@ -128,8 +128,8 @@ class MapTest extends TestCase
 
     public function testFind(): void
     {
-        $this->assertSame(Option::none(), Map::fromEmpty()->find(tautology()));
-        $this->assertEquals(
+        self::assertSame(Option::none(), Map::fromEmpty()->find(tautology()));
+        self::assertEquals(
             'b',
             Map::fromIterable([[1, 'a'], [2, 'b']])->find(static function ($value, $key): bool {
                 return $key === 2 && $value !== 'a';
@@ -139,8 +139,8 @@ class MapTest extends TestCase
 
     public function testTake(): void
     {
-        $this->assertEquals(Map::fromEmpty(), Map::fromEmpty()->take(1));
-        $this->assertEquals(
+        self::assertEquals(Map::fromEmpty(), Map::fromEmpty()->take(1));
+        self::assertEquals(
             Map::fromIterable([['a', 1], ['b', 2]]),
             Map::fromIterable([['a', 1], ['b', 2], ['c', 3]])->take(2)
         );
@@ -153,14 +153,14 @@ class MapTest extends TestCase
             [2, null],
         ]);
 
-        $this->assertEquals(new Map([[1, "a"]]), $map->withoutNulls());
+        self::assertEquals(new Map([[1, "a"]]), $map->withoutNulls());
     }
 
     public function testGetByBooleanKey(): void
     {
         $m = Map::fromIterable([[true, 0], [false, 1]]);
-        $this->assertSame(1, $m->getUnsafe(false));
-        $this->assertSame(0, $m->getUnsafe(true));
+        self::assertSame(1, $m->getUnsafe(false));
+        self::assertSame(0, $m->getUnsafe(true));
     }
 
     public function testKeys(): void
@@ -171,7 +171,7 @@ class MapTest extends TestCase
             [(object)[1985, 1, 30], "Elaine Cassidy"],
         ]);
 
-        $this->assertEquals(
+        self::assertEquals(
             ArrayList::fromIterable([(object)[1985, 1, 29], (object)[1984, 7, 11], (object)[1985, 1, 30]]),
             $map->keys()
         );
@@ -185,7 +185,7 @@ class MapTest extends TestCase
             [3, "Elaine Cassidy"],
         ]);
 
-        $this->assertEquals(
+        self::assertEquals(
             ArrayList::fromIterable(["Isabel Lucas", "Rachael Taylor", "Elaine Cassidy"]),
             $map->values()
         );
@@ -196,7 +196,7 @@ class MapTest extends TestCase
         $map = new Map([[3, 5], [2, 6], [7, 8]]);
         $result = $map->sortKeys(comparator());
 
-        $this->assertEquals(new Map([[2, 6], [3, 5], [7, 8]]), $result);
+        self::assertEquals(new Map([[2, 6], [3, 5], [7, 8]]), $result);
     }
 
     public function testSortKeysObjectKeys(): void
@@ -209,7 +209,7 @@ class MapTest extends TestCase
             return $key1->prop <=> $key2->prop;
         });
 
-        $this->assertEquals(new Map([[$two, 6], [$three, 5], [$seven, 8]]), $result);
+        self::assertEquals(new Map([[$two, 6], [$three, 5], [$seven, 8]]), $result);
     }
 
     public function testSortValues(): void
@@ -217,37 +217,37 @@ class MapTest extends TestCase
         $map = new Map([['a', 8], ['b', 2], ['c', 3]]);
         $result = $map->sortValues();
 
-        $this->assertEquals(new Map([['a', 8], ['c', 3], ['b', 2]]), $result);
+        self::assertEquals(new Map([['a', 8], ['c', 3], ['b', 2]]), $result);
     }
 
     public function testWithoutKeys(): void
     {
         $map = new Map([[1, 2], [3, 4], [5, 6]]);
-        $this->assertEquals(new Map([[1, 2]]), $map->withoutKeys(new ArrayList([3, 5, 6])));
+        self::assertEquals(new Map([[1, 2]]), $map->withoutKeys(new ArrayList([3, 5, 6])));
     }
 
     public function testWithoutKey(): void
     {
         $map = new Map([[1, 2], [3, 4], [5, 6]]);
-        $this->assertEquals(new Map([[1, 2], [5, 6]]), $map->withoutKey(3));
+        self::assertEquals(new Map([[1, 2], [5, 6]]), $map->withoutKey(3));
     }
 
     public function testWithoutKeysSomeOutOfBounds(): void
     {
         $map = new Map([[1, 2], [3, 4], [5, 6]]);
-        $this->assertEquals(new Map([[1, 2]]), $map->withoutKeys(new ArrayList([3, 5, 10000])));
+        self::assertEquals(new Map([[1, 2]]), $map->withoutKeys(new ArrayList([3, 5, 10000])));
     }
 
     public function testGetByKeyList(): void
     {
         $map = new Map([[1, 2], [3, 4], [5, 6]]);
-        $this->assertEquals(new Map([[3, 4], [5, 6]]), $map->getByKeys(new ArrayList([3, 5])));
+        self::assertEquals(new Map([[3, 4], [5, 6]]), $map->getByKeys(new ArrayList([3, 5])));
     }
 
     public function testGetByKeyListSomeOutOfBounds(): void
     {
         $map = new Map([[1, 2], [3, 4], [5, 6]]);
-        $this->assertEquals(new Map([[3, 4], [5, 6]]), $map->getByKeys(new ArrayList([3, 5, 7])));
+        self::assertEquals(new Map([[3, 4], [5, 6]]), $map->getByKeys(new ArrayList([3, 5, 7])));
     }
 
     public function testReduce(): void
@@ -263,15 +263,15 @@ class MapTest extends TestCase
             5,
         ]);
 
-        $this->assertEquals(87, $map->reduce(static function (int $total, int $value) {
+        self::assertEquals(87, $map->reduce(static function (int $total, int $value) {
             return $total + $value;
         }, 0));
 
-        $this->assertEquals(115, $map->reduce(static function (int $total, int $value, int $key) {
+        self::assertEquals(115, $map->reduce(static function (int $total, int $value, int $key) {
             return $total + $value + $key;
         }, 0));
 
-        $this->assertEquals(28, $map->reduce(static function (int $total, int $value, int $key) {
+        self::assertEquals(28, $map->reduce(static function (int $total, int $value, int $key) {
             return $total + $key;
         }, 0));
     }
@@ -282,29 +282,29 @@ class MapTest extends TestCase
         $filtered = $map->filterKeys(static function ($key) {
             return $key > 2;
         });
-        $this->assertEquals(new Map([[3, 4], [5, 6]]), $filtered);
+        self::assertEquals(new Map([[3, 4], [5, 6]]), $filtered);
     }
 
     public function testGetItems(): void
     {
         $array = [[4, 6], [5, 6], [12, 12]];
         $m = new Map($array);
-        $this->assertEquals($array, $m->getItems());
+        self::assertEquals($array, $m->getItems());
     }
 
     public function testAssociativeArrayScalars(): void
     {
         $bools = [true => 't', false => 'f'];
-        $this->assertEquals($bools, Map::fromAssociativeArray($bools)->toAssociativeArray());
+        self::assertEquals($bools, Map::fromAssociativeArray($bools)->toAssociativeArray());
 
         $ints = [1 => 'a', 2 => 'b'];
-        $this->assertEquals($ints, Map::fromAssociativeArray($ints)->toAssociativeArray());
+        self::assertEquals($ints, Map::fromAssociativeArray($ints)->toAssociativeArray());
 
         $floats = [1.1 => 'a', 2.1 => 'b'];
-        $this->assertEquals($floats, Map::fromAssociativeArray($floats)->toAssociativeArray());
+        self::assertEquals($floats, Map::fromAssociativeArray($floats)->toAssociativeArray());
 
         $strings = ['A' => 'a', 'B' => 'b'];
-        $this->assertEquals($strings, Map::fromAssociativeArray($strings)->toAssociativeArray());
+        self::assertEquals($strings, Map::fromAssociativeArray($strings)->toAssociativeArray());
     }
 
     public function testAssociativeArrayObjectKeys(): void
@@ -326,7 +326,7 @@ class MapTest extends TestCase
             [$b, 2],
             [$a, 3],
         ]);
-        $this->assertEquals(['b' => 2, 'a' => 3], $map->toAssociativeArray());
+        self::assertEquals(['b' => 2, 'a' => 3], $map->toAssociativeArray());
     }
 
     public function testFlattenValues(): void
@@ -335,7 +335,7 @@ class MapTest extends TestCase
             [1, ['a', 'b']],
             [2, ['c', 'd']],
         ]);
-        $this->assertEquals(ArrayList::fromIterable(['a', 'b', 'c', 'd']), $m->values()->flatten());
+        self::assertEquals(ArrayList::fromIterable(['a', 'b', 'c', 'd']), $m->values()->flatten());
     }
 
     public function testConcat(): void
@@ -346,20 +346,20 @@ class MapTest extends TestCase
         $m2 = new Map($a2);
         $merged = $m1->concat($m2);
 
-        $this->assertEquals([[1, 4], [3, 6], [12, 13]], $m1->getItems(), 'Method should be immutable');
-        $this->assertEquals([[4, 6], [5, 7], [12, 12]], $m2->getItems(), 'Method should be immutable');
-        $this->assertEquals(5, $merged->count());
-        $this->assertEquals(4, $merged->getUnsafe(1));
-        $this->assertEquals(6, $merged->getUnsafe(3));
-        $this->assertEquals(7, $merged->getUnsafe(5), 'Method should accept later value of input pairs');
-        $this->assertEquals(6, $merged->getUnsafe(4));
-        $this->assertEquals(12, $merged->getUnsafe(12), 'Method should accept later value of input pairs');
-        $this->assertEquals([[1, 4], [3, 6], [12, 12], [4, 6], [5, 7]], $merged->getItems());
+        self::assertEquals([[1, 4], [3, 6], [12, 13]], $m1->getItems(), 'Method should be immutable');
+        self::assertEquals([[4, 6], [5, 7], [12, 12]], $m2->getItems(), 'Method should be immutable');
+        self::assertEquals(5, $merged->count());
+        self::assertEquals(4, $merged->getUnsafe(1));
+        self::assertEquals(6, $merged->getUnsafe(3));
+        self::assertEquals(7, $merged->getUnsafe(5), 'Method should accept later value of input pairs');
+        self::assertEquals(6, $merged->getUnsafe(4));
+        self::assertEquals(12, $merged->getUnsafe(12), 'Method should accept later value of input pairs');
+        self::assertEquals([[1, 4], [3, 6], [12, 12], [4, 6], [5, 7]], $merged->getItems());
         try {
             $merged->getUnsafe(7);
-            $this->assertTrue(false);
+            self::assertTrue(false);
         } catch (InvalidArgumentException $e) {
-            $this->assertTrue(true);
+            self::assertTrue(true);
         }
     }
 
@@ -375,11 +375,11 @@ class MapTest extends TestCase
         $oneToFour = $objects->getByKeys(range(1, 4));
         $elevenToFourteen = $objects->getByKeys(range(11, 14));
 
-        $this->assertEquals(
+        self::assertEquals(
             $oneToFour->getItems(),
             $oneToTen->minus($fiveToFourteen)->getItems()
         ); // 1-10 minus 5-14 = 1-4
-        $this->assertEquals(
+        self::assertEquals(
             $elevenToFourteen->getItems(),
             $fiveToFourteen->minus($oneToTen)->getItems()
         ); // 5-14 minus 1-10 = 11-14
@@ -392,7 +392,7 @@ class MapTest extends TestCase
             ['b', 2],
             ['c', 3],
         ]);
-        $this->assertEquals(
+        self::assertEquals(
             ArrayList::fromIterable([
                 ['a', 1],
                 ['b', 2],
@@ -412,7 +412,7 @@ class MapTest extends TestCase
      */
     public function testChunk(Map $sourceMap, array $expectList): void
     {
-        $this->assertEquals(ArrayList::fromIterable($expectList), $sourceMap->chunk(2));
+        self::assertEquals(ArrayList::fromIterable($expectList), $sourceMap->chunk(2));
     }
 
     /** @phpstan-return array<string, array<string, mixed>> */
@@ -479,8 +479,8 @@ class MapTest extends TestCase
         }
         $map = new Map($mapDefinition);
         foreach ($mapDefinition as $i => $pairDefinition) {
-            $this->assertEquals($pairDefinition[1], $i);
-            $this->assertEquals($pairDefinition[1], $map->getUnsafe($pairDefinition[0]));
+            self::assertEquals($pairDefinition[1], $i);
+            self::assertEquals($pairDefinition[1], $map->getUnsafe($pairDefinition[0]));
         }
     }
 
@@ -499,17 +499,17 @@ class MapTest extends TestCase
             [7, false],
             [8, null],
         ]);
-        $this->assertTrue($map->contains('a'));
-        $this->assertFalse($map->contains('b'));
-        $this->assertTrue($map->contains('c'));
-        $this->assertTrue($map->contains('d'));
-        $this->assertTrue($map->contains($e));
-        $this->assertFalse($map->contains(new stdClass()));
-        $this->assertTrue($map->contains('g'));
-        $this->assertTrue($map->contains('h'));
-        $this->assertTrue($map->contains(0));
-        $this->assertTrue($map->contains(false));
-        $this->assertTrue($map->contains(null));
+        self::assertTrue($map->contains('a'));
+        self::assertFalse($map->contains('b'));
+        self::assertTrue($map->contains('c'));
+        self::assertTrue($map->contains('d'));
+        self::assertTrue($map->contains($e));
+        self::assertFalse($map->contains(new stdClass()));
+        self::assertTrue($map->contains('g'));
+        self::assertTrue($map->contains('h'));
+        self::assertTrue($map->contains(0));
+        self::assertTrue($map->contains(false));
+        self::assertTrue($map->contains(null));
     }
 
     public function testHas(): void
@@ -527,19 +527,19 @@ class MapTest extends TestCase
             [7, false],
             [8, null],
         ]);
-        $this->assertTrue($map->has(1));
-        $this->assertFalse($map->has(2));
-        $this->assertTrue($map->has(3));
-        $this->assertTrue($map->has(4));
-        $this->assertTrue($map->has($five));
-        $this->assertFalse($map->has(new stdClass()));
-        $this->assertFalse($map->has(5));
-        $this->assertTrue($map->has(6));
-        $this->assertTrue($map->has(7));
-        $this->assertTrue($map->has(8));
-        $this->assertTrue($map->has(0));
-        $this->assertTrue($map->has(false));
-        $this->assertTrue($map->has(null));
+        self::assertTrue($map->has(1));
+        self::assertFalse($map->has(2));
+        self::assertTrue($map->has(3));
+        self::assertTrue($map->has(4));
+        self::assertTrue($map->has($five));
+        self::assertFalse($map->has(new stdClass()));
+        self::assertFalse($map->has(5));
+        self::assertTrue($map->has(6));
+        self::assertTrue($map->has(7));
+        self::assertTrue($map->has(8));
+        self::assertTrue($map->has(0));
+        self::assertTrue($map->has(false));
+        self::assertTrue($map->has(null));
     }
 
     public function testExistsSimple(): void
@@ -549,10 +549,10 @@ class MapTest extends TestCase
             [2, 'B'],
             [3, 'C'],
         ]);
-        $this->assertTrue($map->exists(static function ($value) {
+        self::assertTrue($map->exists(static function ($value) {
             return $value === 'C';
         }));
-        $this->assertFalse($map->exists(static function ($value) {
+        self::assertFalse($map->exists(static function ($value) {
             return $value === 'D';
         }));
     }
@@ -565,10 +565,10 @@ class MapTest extends TestCase
             [3, 3],
             [4, 4],
         ]);
-        $this->assertTrue($map->exists(static function ($value, $key) {
+        self::assertTrue($map->exists(static function ($value, $key) {
             return $value === $key;
         }));
-        $this->assertFalse($map->exists(static function ($value, $key) {
+        self::assertFalse($map->exists(static function ($value, $key) {
             return $value !== $key;
         }));
     }
@@ -578,8 +578,8 @@ class MapTest extends TestCase
         $keySameAsValue = static function ($value, $key) {
             return $value === $key;
         };
-        $this->assertTrue(Map::fromIterable([[1, 1], [2, 2]])->all($keySameAsValue));
-        $this->assertFalse(Map::fromIterable([[1, 2], [2, 2]])->all($keySameAsValue));
+        self::assertTrue(Map::fromIterable([[1, 1], [2, 2]])->all($keySameAsValue));
+        self::assertFalse(Map::fromIterable([[1, 2], [2, 2]])->all($keySameAsValue));
     }
 
     public function testExistsInEmptyValues(): void
@@ -591,22 +591,22 @@ class MapTest extends TestCase
             [4, 0],
             [5, ''],
         ]);
-        $this->assertTrue((bool)$map->exists(static function ($value) {
+        self::assertTrue((bool)$map->exists(static function ($value) {
             return $value === 'A';
         }));
-        $this->assertTrue((bool)$map->exists(static function ($value) {
+        self::assertTrue((bool)$map->exists(static function ($value) {
             return $value === null;
         }));
-        $this->assertTrue((bool)$map->exists(static function ($value) {
+        self::assertTrue((bool)$map->exists(static function ($value) {
             return $value === false;
         }));
-        $this->assertTrue((bool)$map->exists(static function ($value) {
+        self::assertTrue((bool)$map->exists(static function ($value) {
             return $value === 0;
         }));
-        $this->assertTrue((bool)$map->exists(static function ($value) {
+        self::assertTrue((bool)$map->exists(static function ($value) {
             return $value === '';
         }));
-        $this->assertFalse((bool)$map->exists(static function ($value) {
+        self::assertFalse((bool)$map->exists(static function ($value) {
             return $value === 'X';
         }));
     }
@@ -617,7 +617,7 @@ class MapTest extends TestCase
             ['a', 1],
             ['b', 2],
         ]);
-        $this->assertEquals('{a: 1, b: 2}', (string)$m);
+        self::assertEquals('{a: 1, b: 2}', (string)$m);
     }
 
     /**

@@ -13,7 +13,7 @@ class EnumListTest extends TestCase
     {
         $item = DummyEnum::create(DummyEnum::HI);
 
-        $this->assertEquals(
+        self::assertEquals(
             new EnumList([$item]),
             EnumList::of($item)
         );

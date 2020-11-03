@@ -21,7 +21,7 @@ class EnumTest extends TestCase
 
     public function testItShouldCreateInstanceByString(): void
     {
-        $this->assertEquals(TestEnum::create(TestEnum::A), TestEnum::create('A'));
+        self::assertEquals(TestEnum::create(TestEnum::A), TestEnum::create('A'));
     }
 
     public function testItShouldFailWhenValueOutOfDefinedValues(): void
@@ -34,22 +34,22 @@ class EnumTest extends TestCase
 
     public function testItShouldGetNameOfConstantFromInstance(): void
     {
-        $this->assertEquals('A', TestEnum::create(TestEnum::A)->getConstName());
+        self::assertEquals('A', TestEnum::create(TestEnum::A)->getConstName());
     }
 
     public function testExists(): void
     {
-        $this->assertTrue(TestEnum::exists('A'));
-        $this->assertFalse(TestEnum::exists('D'));
+        self::assertTrue(TestEnum::exists('A'));
+        self::assertFalse(TestEnum::exists('D'));
     }
 
     public function testGetListComplement(): void
     {
-        $this->assertEquals(
+        self::assertEquals(
             EnumList::fromIterable([TestEnum::create(TestEnum::B), TestEnum::create(TestEnum::C)]),
             TestEnum::getListComplement(TestEnum::create(TestEnum::A))
         );
-        $this->assertEquals(
+        self::assertEquals(
             EnumList::fromIterable([TestEnum::create(TestEnum::B)]),
             TestEnum::getListComplement(TestEnum::create(TestEnum::A), TestEnum::create(TestEnum::C))
         );
