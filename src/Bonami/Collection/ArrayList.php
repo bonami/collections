@@ -705,6 +705,8 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      *
      * Complexity: o(n)
      *
+     * @see sum - for trivial summing
+     *
      * @phpstan-param Monoid<T> $monoid
      *
      * @phpstan-return T
@@ -714,6 +716,24 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
         return array_reduce($this->items, static function ($carry, $next) use ($monoid) {
             return $monoid->concat($carry, $next);
         }, $monoid->getEmpty());
+    }
+
+    /**
+     * Converts items to numbers and then sums them up.
+     *
+     * Complexity: o(n)
+     *
+     * @see mfold - for folding diferent types of items (E.g. classes representing BigNumbers and so on)
+     *
+     * @phpstan-param callable(T): (int|float) $itemToNumber
+     *
+     * @phpstan-return int|float
+     */
+    public function sum(callable $itemToNumber)
+    {
+        return array_reduce($this->items, static function ($carry, $next) use ($itemToNumber) {
+            return $carry + $itemToNumber($next);
+        }, 0);
     }
 
     /**

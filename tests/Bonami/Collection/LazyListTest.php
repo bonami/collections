@@ -11,6 +11,7 @@ use Generator;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
+use stdClass;
 
 class LazyListTest extends TestCase
 {
@@ -232,6 +233,15 @@ class LazyListTest extends TestCase
     {
         $list = LazyList::of(1, 2, 3);
         $sum = $list->mfold(new IntSumMonoid());
+        self::assertEquals(6, $sum);
+    }
+
+    public function testSum(): void
+    {
+        $list = LazyList::of((object)['a' => 1], (object)['a' => 2], (object)['a' => 3]);
+        $sum = $list->sum(static function (stdClass $o): int {
+            return $o->a;
+        });
         self::assertEquals(6, $sum);
     }
 

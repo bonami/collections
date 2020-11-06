@@ -214,6 +214,8 @@ class LazyList implements IteratorAggregate
      *
      * Complexity: o(n)
      *
+     * @see sum - for trivial summing
+     *
      * @phpstan-param Monoid<T> $monoid
      *
      * @phpstan-return T
@@ -223,6 +225,26 @@ class LazyList implements IteratorAggregate
         $reduction = $monoid->getEmpty();
         foreach ($this->items as $item) {
             $reduction = $monoid->concat($reduction, $item);
+        }
+        return $reduction;
+    }
+
+    /**
+     * Converts items to numbers and then sums them up.
+     *
+     * Complexity: o(n)
+     *
+     * @see mfold - for folding diferent types of items (E.g. classes representing BigNumbers and so on)
+     *
+     * @phpstan-param callable(T): (int|float) $itemToNumber
+     *
+     * @phpstan-return int|float
+     */
+    public function sum(callable $itemToNumber)
+    {
+        $reduction = 0;
+        foreach ($this->items as $item) {
+            $reduction += $itemToNumber($item);
         }
         return $reduction;
     }
