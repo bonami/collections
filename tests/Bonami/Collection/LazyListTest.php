@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Bonami\Collection;
 
 use ArrayIterator;
+use Bonami\Collection\Monoid\IntSumMonoid;
 use EmptyIterator;
 use Generator;
 use InvalidArgumentException;
@@ -224,6 +225,13 @@ class LazyListTest extends TestCase
         $sum = $lazyList->reduce(static function ($sum, $item) {
             return $sum + $item;
         }, 0);
+        self::assertEquals(6, $sum);
+    }
+
+    public function testMfold(): void
+    {
+        $list = LazyList::of(1, 2, 3);
+        $sum = $list->mfold(new IntSumMonoid());
         self::assertEquals(6, $sum);
     }
 
