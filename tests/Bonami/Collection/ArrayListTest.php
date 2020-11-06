@@ -6,6 +6,7 @@ namespace Bonami\Collection;
 
 use ArrayIterator;
 use Bonami\Collection\Exception\OutOfBoundsException;
+use Bonami\Collection\Monoid\IntSumMonoid;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use stdClass;
@@ -429,6 +430,13 @@ class ArrayListTest extends TestCase
         $sum = $list->reduce(static function ($reduction, $value) {
             return $reduction + $value;
         }, 0);
+        self::assertEquals(6, $sum);
+    }
+
+    public function testMfold(): void
+    {
+        $list = ArrayList::of(1, 2, 3);
+        $sum = $list->mfold(new IntSumMonoid());
         self::assertEquals(6, $sum);
     }
 

@@ -7,6 +7,7 @@ namespace Bonami\Collection;
 use ArrayIterator;
 use Bonami\Collection\Exception\NotImplementedException;
 use Bonami\Collection\Exception\OutOfBoundsException;
+use Bonami\Collection\Monoid\Monoid;
 use Countable;
 use IteratorAggregate;
 use JsonSerializable;
@@ -697,6 +698,22 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
         return array_reduce(array_keys($this->items), function ($carry, $key) use ($reducer) {
             return $reducer($carry, $this->items[$key], $key);
         }, $initialReduction);
+    }
+
+    /**
+     * Reduce (folds) List to single value using Monoid
+     *
+     * Complexity: o(n)
+     *
+     * @phpstan-param Monoid<T> $monoid
+     *
+     * @phpstan-return T
+     */
+    public function mfold(Monoid $monoid)
+    {
+        return array_reduce($this->items, static function ($carry, $next) use ($monoid) {
+            return $monoid->concat($carry, $next);
+        }, $monoid->getEmpty());
     }
 
     /**

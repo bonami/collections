@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Bonami\Collection;
 
 use ArrayIterator;
+use Bonami\Collection\Monoid\Monoid;
 use Generator;
 use InvalidArgumentException;
 use Iterator;
@@ -204,6 +205,24 @@ class LazyList implements IteratorAggregate
         $reduction = $initialReduction;
         foreach ($this->items as $key => $item) {
               $reduction = $reducer($reduction, $item, $key);
+        }
+        return $reduction;
+    }
+
+    /**
+     * Reduce (folds) List to single value using Monoid
+     *
+     * Complexity: o(n)
+     *
+     * @phpstan-param Monoid<T> $monoid
+     *
+     * @phpstan-return T
+     */
+    public function mfold(Monoid $monoid)
+    {
+        $reduction = $monoid->getEmpty();
+        foreach ($this->items as $item) {
+            $reduction = $monoid->concat($reduction, $item);
         }
         return $reduction;
     }
