@@ -201,7 +201,7 @@ class LazyList implements IteratorAggregate
      */
     public function reduce(callable $reducer, $initialReduction)
     {
-         $reduction = $initialReduction;
+        $reduction = $initialReduction;
         foreach ($this->items as $key => $item) {
               $reduction = $reducer($reduction, $item, $key);
         }
