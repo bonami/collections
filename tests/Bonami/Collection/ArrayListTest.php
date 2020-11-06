@@ -440,6 +440,15 @@ class ArrayListTest extends TestCase
         self::assertEquals(6, $sum);
     }
 
+    public function testSum(): void
+    {
+        $list = ArrayList::of((object)['a' => 1], (object)['a' => 2], (object)['a' => 3]);
+        $sum = $list->sum(static function (stdClass $o): int {
+            return $o->a;
+        });
+        self::assertEquals(6, $sum);
+    }
+
     public function testMin(): void
     {
         self::assertEquals(Option::some(1), ArrayList::of(3, 1, 2)->min(comparator()));
