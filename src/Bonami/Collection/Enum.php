@@ -27,7 +27,7 @@ abstract class Enum implements IHashable
     private $value;
 
     /** @phpstan-param int|string $value */
-    protected function __construct($value)
+    final private function __construct($value)
     {
         $this->value = $value;
     }

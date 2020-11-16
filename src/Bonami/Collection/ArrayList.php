@@ -47,7 +47,7 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
     protected $items;
 
     /** @phpstan-param array<int, T> $items */
-    public function __construct(array $items)
+    final public function __construct(array $items)
     {
         $this->items = $items;
     }

@@ -24,7 +24,7 @@ class LazyList implements IteratorAggregate
     private $items;
 
     /** @phpstan-param iterable<int, T> $iterable */
-    public function __construct(iterable $iterable)
+    final public function __construct(iterable $iterable)
     {
          $this->items = $iterable;
     }

@@ -1,22 +1,6 @@
 parameters:
 	ignoreErrors:
 		-
-			message: "#^Unsafe usage of new static\\(\\)#"
-			path: src/Bonami/Collection/LazyList
-
-		-
-			message: "#^Unsafe usage of new static\\(\\)#"
-			path: src/Bonami/Collection/Map.php
-
-		-
-			message: "#^Unsafe usage of new static\\(\\)#"
-			path: src/Bonami/Collection/Enum.php
-
-		-
-			message: "#^Unsafe usage of new static\\(\\)#"
-			path: src/Bonami/Collection/ArrayList.php
-
-		-
 			message: "#^Method Bonami\\\\Collection\\\\Enum::instanceList\\(\\) should return Bonami\\\\Collection\\\\EnumList<static\\(Bonami\\\\Collection\\\\Enum\\)> but returns Bonami\\\\Collection\\\\ArrayList<Bonami\\\\Collection\\\\Enum>\\.$#"
 			count: 1
 			path: src/Bonami/Collection/Enum.php
