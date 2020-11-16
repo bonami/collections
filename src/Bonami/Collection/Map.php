@@ -167,10 +167,12 @@ class Map implements Countable, IteratorAggregate
      *
      * @see get for getting value the safe way when no default value is suitable
      *
-     * @phpstan-param K $key
-     * @phpstan-param V $defaultValue
+     * @phpstan-template E
      *
-     * @phpstan-return V
+     * @phpstan-param K $key
+     * @phpstan-param E $defaultValue
+     *
+     * @phpstan-return V|E
      */
     public function getOrElse($key, $defaultValue)
     {

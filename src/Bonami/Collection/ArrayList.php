@@ -262,10 +262,12 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      * @see get - for getting Option instead of unboxing it directly
      * @see getUnsafe - when you are 100 % sure, that key is set
      *
-     * @phpstan-param int $key
-     * @phpstan-param T $else
+     * @phpstan-template E
      *
-     * @phpstan-return T
+     * @phpstan-param int $key
+     * @phpstan-param E $else
+     *
+     * @phpstan-return T|E
      */
     public function getOrElse(int $key, $else)
     {

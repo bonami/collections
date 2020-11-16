@@ -78,7 +78,7 @@ abstract class Option implements IHashable, IteratorAggregate
              *
              * @phpstan-param E $else
              *
-             * @phpstan-return E
+             * @phpstan-return T|E
              */
             public function getOrElse($else)
             {
@@ -184,7 +184,7 @@ abstract class Option implements IHashable, IteratorAggregate
              *
              * @phpstan-param E $else
              *
-             * @phpstan-return T
+             * @phpstan-return T|E
              */
             public function getOrElse($else)
             {
@@ -372,9 +372,11 @@ abstract class Option implements IHashable, IteratorAggregate
     abstract public function getUnsafe();
 
     /**
-     * @phpstan-param T $else
+     * @phpstan-template E
      *
-     * @phpstan-return T
+     * @phpstan-param E $else
+     *
+     * @phpstan-return T|E
      */
     abstract public function getOrElse($else);
 
