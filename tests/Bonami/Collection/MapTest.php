@@ -471,19 +471,6 @@ class MapTest extends TestCase
         ];
     }
 
-    public function testGetValueWithRecursiveArrayAsKey(): void
-    {
-        $mapDefinition = [];
-        for ($i = 0; $i < 100; $i++) {
-            $mapDefinition[$i] = [$this->createRecursiveArray(random_int(0, 10), $i), $i];
-        }
-        $map = new Map($mapDefinition);
-        foreach ($mapDefinition as $i => $pairDefinition) {
-            self::assertEquals($pairDefinition[1], $i);
-            self::assertEquals($pairDefinition[1], $map->getUnsafe($pairDefinition[0]));
-        }
-    }
-
     public function testContains(): void
     {
         $e = new stdClass();
@@ -618,25 +605,6 @@ class MapTest extends TestCase
             ['b', 2],
         ]);
         self::assertEquals('{a: 1, b: 2}', (string)$m);
-    }
-
-    /**
-     * @phpstan-param int $deepness
-     * @phpstan-param int $identification
-     *
-     * @phpstan-return array<string, mixed>
-     */
-    private function createRecursiveArray(int $deepness, int $identification): array
-    {
-        $array = [
-            'someKey' => 'someValue',
-            'identification' => $identification,
-            'changedIdentification' => $identification * $deepness,
-        ];
-        if ($deepness > 0) {
-            $array['subValues'] = $this->createRecursiveArray($deepness - 1, $identification);
-        }
-        return $array;
     }
 
     private function createObject(int $val): stdClass
