@@ -6,12 +6,13 @@ namespace Bonami\Collection;
 
 use Bonami\Collection\Exception\InvalidEnumValueException;
 use Bonami\Collection\Hash\IHashable;
+use JsonSerializable;
 use ReflectionClass;
 
 use function array_combine;
 use function is_object;
 
-abstract class Enum implements IHashable
+abstract class Enum implements IHashable, JsonSerializable
 {
 
     /** @phpstan-var array<string, Map<int|string, static>> */
@@ -145,5 +146,11 @@ abstract class Enum implements IHashable
     public function hashCode()
     {
         return $this->getValue();
+    }
+
+    /** @return mixed */
+    public function jsonSerialize()
+    {
+        return (string)$this->value;
     }
 }

@@ -54,6 +54,13 @@ class EnumTest extends TestCase
             TestEnum::getListComplement(TestEnum::create(TestEnum::A), TestEnum::create(TestEnum::C))
         );
     }
+
+    public function testJsonSerializable(): void
+    {
+        $serialized = json_encode(['foo' => TestEnum::create(TestEnum::A)]);
+        assert(is_string($serialized));
+        self::assertJson('{"foo": "A"}', $serialized);
+    }
 }
 
 // @codingStandardsIgnoreStart
