@@ -34,7 +34,7 @@ class LazyList implements IteratorAggregate
      * @phpstan-param int $high
      * @phpstan-param int $step
      *
-     * @phpstan-return static<int>
+     * @phpstan-return self<int>
      */
     public static function range(int $low, int $high = PHP_INT_MAX, int $step = 1): self
     {
@@ -45,16 +45,16 @@ class LazyList implements IteratorAggregate
             }
          };
 
-        return new static($range($low, $high, $step));
+        return new self($range($low, $high, $step));
     }
 
     /**
      * @phpstan-param T $item
      * @phpstan-param int|null $size - When no size is passed, infinite items are filled (lazily)
      *
-     * @phpstan-return self<T>
+     * @phpstan-return static<T>
      */
-    public static function fill($item, ?int $size = null): self
+    public static function fill($item, ?int $size = null)
     {
          $fill = static function ($item, ?int $size = null): Generator {
              $generated = 0;
@@ -69,53 +69,53 @@ class LazyList implements IteratorAggregate
         return new static($fill($item, $size));
     }
 
-    /** @phpstan-return self<T> */
-    public static function fromEmpty(): self
+    /** @phpstan-return static<T> */
+    public static function fromEmpty()
     {
          /** @phpstan-var array<mixed> $empty */
          $empty = [];
 
-         return new self($empty);
+         return new static($empty);
     }
 
     /**
      * @phpstan-param array<int, T> ...$items
      *
-     * @phpstan-return self<T>
+     * @phpstan-return static<T>
      */
-    public static function fromArray(array ...$items): self
+    public static function fromArray(array ...$items)
     {
-         return self::fromEmpty()->concat(...$items);
+         return static::fromEmpty()->concat(...$items);
     }
 
     /**
      * @phpstan-param Traversable<T> $items
      *
-     * @phpstan-return self<T>
+     * @phpstan-return static<T>
      */
-    public static function fromTraversable(Traversable $items): self
+    public static function fromTraversable(Traversable $items)
     {
-         return new self($items);
+         return new static($items);
     }
 
     /**
      * @phpstan-param iterable<T> $iterable
      *
-     * @phpstan-return self<T>
+     * @phpstan-return static<T>
      */
-    public static function fromIterable(iterable $iterable): self
+    public static function fromIterable(iterable $iterable)
     {
-         return new self($iterable);
+         return new static($iterable);
     }
 
     /**
      * @phpstan-param T ...$items
      *
-     * @phpstan-return self<T>
+     * @phpstan-return static<T>
      */
-    public static function of(...$items): self
+    public static function of(...$items)
     {
-         return new self($items);
+         return new static($items);
     }
 
     /**
