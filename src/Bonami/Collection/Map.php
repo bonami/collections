@@ -390,9 +390,12 @@ class Map implements Countable, IteratorAggregate
      *   - n is number of items of original collection
      *   - m is number of items of given collection
      *
-     * @phpstan-param Map<K, V> $mergeMap
+     * @phpstan-template K2
+     * @phpstan-template V2
      *
-     * @phpstan-return static<K, V>
+     * @phpstan-param Map<K2, V2> $mergeMap
+     *
+     * @phpstan-return static<K|K2, V|V2>
      */
     public function concat(Map $mergeMap)
     {

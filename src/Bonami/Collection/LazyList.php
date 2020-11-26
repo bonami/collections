@@ -507,9 +507,11 @@ class LazyList implements IteratorAggregate
     }
 
     /**
-     * @phpstan-param iterable<T> ...$iterables
+     * @phpstan-template T2
      *
-     * @phpstan-return static<T>
+     * @phpstan-param iterable<T2> ...$iterables
+     *
+     * @phpstan-return static<T|T2>
      */
     public function concat(iterable ...$iterables)
     {

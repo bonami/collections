@@ -956,9 +956,11 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      *
      * Complexity: o(n)
      *
-     * @phpstan-param iterable<T> $itemsToAdd
+     * @phpstan-template T2
      *
-     * @phpstan-return static<T>
+     * @phpstan-param iterable<T2> $itemsToAdd
+     *
+     * @phpstan-return static<T|T2>
      */
     public function concat(iterable $itemsToAdd)
     {
