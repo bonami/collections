@@ -140,6 +140,32 @@ class OptionTest extends TestCase
         );
     }
 
+    public function testExists(): void
+    {
+        $some = Option::some("Hello world");
+
+        $falsyPredicate = static function (): bool {
+            return false;
+        };
+
+        $this->equals(
+            true,
+            $some->exists(tautology())
+        );
+        $this->equals(
+            false,
+            Option::none()->exists(tautology())
+        );
+        $this->equals(
+            false,
+            $some->exists($falsyPredicate)
+        );
+        $this->equals(
+            false,
+            Option::none()->exists($falsyPredicate)
+        );
+    }
+
     public function testGetUnsafe(): void
     {
         $val = "Hello world";
