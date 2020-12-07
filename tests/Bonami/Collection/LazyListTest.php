@@ -6,8 +6,6 @@ namespace Bonami\Collection;
 
 use ArrayIterator;
 use Bonami\Collection\Monoid\IntSumMonoid;
-use EmptyIterator;
-use Generator;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
@@ -328,7 +326,9 @@ class LazyListTest extends TestCase
 
     public function testHeadOnEmptyLazyList(): void
     {
-        $lazyList = new LazyList(new EmptyIterator());
+        /** @var iterable<int, int> $emptyIterable */
+        $emptyIterable = [];
+        $lazyList = new LazyList($emptyIterable);
         $head = $lazyList->head();
         self::assertInstanceOf(Option::class, $head);
         self::assertFalse($head->isDefined());
@@ -345,7 +345,9 @@ class LazyListTest extends TestCase
 
     public function testLastOnEmptyLazyList(): void
     {
-        $lazyList = new LazyList(new EmptyIterator());
+        /** @var iterable<int, int> $emptyIterable */
+        $emptyIterable = [];
+        $lazyList = new LazyList($emptyIterable);
         $last = $lazyList->last();
         self::assertInstanceOf(Option::class, $last);
         self::assertFalse($last->isDefined());
