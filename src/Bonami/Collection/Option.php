@@ -56,6 +56,10 @@ abstract class Option implements IHashable, IteratorAggregate
                 return $this;
             }
 
+            public function each(callable $sideEffect): void
+            {
+            }
+
             public function filter(callable $predicate): Option
             {
                 return $this;
@@ -165,6 +169,11 @@ abstract class Option implements IHashable, IteratorAggregate
                 $option = $mapper($this->value);
                 assert($option instanceof Option);
                 return $option;
+            }
+
+            public function each(callable $sideEffect): void
+            {
+                $sideEffect($this->value);
             }
 
             public function filter(callable $predicate): Option
@@ -378,6 +387,9 @@ abstract class Option implements IHashable, IteratorAggregate
     {
         return LazyList::fromIterable($this)->reduce($reducer, $initialReduction);
     }
+
+    /** @phpstan-param callable(T): void $sideEffect */
+    abstract public function each(callable $sideEffect): void;
 
     /**
      * Consider calling getOrElse instead

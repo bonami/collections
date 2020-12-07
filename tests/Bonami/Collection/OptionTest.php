@@ -223,6 +223,20 @@ class OptionTest extends TestCase
         );
     }
 
+    public function testEach(): void
+    {
+        $accumulator = 0;
+        $accumulate = static function (int $i) use (&$accumulator): void {
+            $accumulator += $i;
+        };
+
+        Option::none()->each($accumulate);
+        self::assertEquals(0, $accumulator);
+
+        Option::some(5)->each($accumulate);
+        self::assertEquals(5, $accumulator);
+    }
+
     public function testAp(): void
     {
         $plus = static function (int $x, int $y): int {
