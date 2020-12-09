@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Bonami\Collection\Monoid;
 
+use Bonami\Collection\Option;
 use PHPUnit\Framework\TestCase;
 
 class MonoidTest extends TestCase
@@ -21,9 +22,9 @@ class MonoidTest extends TestCase
      */
     public function testFromMonoids($a, $b, Monoid $monoid, $result): void
     {
-        self::assertSame($a, $monoid->concat($a, $monoid->getEmpty()));
-        self::assertSame($a, $monoid->concat($monoid->getEmpty(), $a));
-        self::assertSame($result, $monoid->concat($a, $b));
+        self::assertEquals($a, $monoid->concat($a, $monoid->getEmpty()));
+        self::assertEquals($a, $monoid->concat($monoid->getEmpty(), $a));
+        self::assertEquals($result, $monoid->concat($a, $b));
     }
 
     /** @phpstan-return iterable<array{0: mixed, 1: mixed, 2: Monoid<mixed>, 3: mixed}> */
@@ -34,5 +35,7 @@ class MonoidTest extends TestCase
         yield [1.1, 2.1, new DoubleSumMonoid(), 3.2];
         yield [1.1, 2.1, new DoubleProductMonoid(), 2.31];
         yield ["foo", "bar", new StringMonoid(), "foobar"];
+        yield [Option::none(), Option::some(1), new OptionMonoid(new IntSumMonoid()), Option::none()];
+        yield [Option::some(1), Option::some(2), new OptionMonoid(new IntSumMonoid()), Option::some(3)];
     }
 }
