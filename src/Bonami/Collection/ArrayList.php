@@ -493,7 +493,7 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      * As a side effect, it deduplicates all items, which was duplicit in
      * original List.
      *
-     * It is a combination of chained merge and unique operations.
+     * It is a combination of chained concat and unique operations.
      *
      * Complexity: o(n + m) - where n is size of original List and m is a size of merged list.
      *
