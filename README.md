@@ -9,6 +9,7 @@
 - [Features](#features)
     - [Structures](#structures)
     - [Type classes](#type-classes)
+    - [Type safety](#type-safety)
     - [Currying](#currying)
     - [Option](#option)
     - [TrySafe](#trysafe)
@@ -22,6 +23,8 @@
 Why yet another collections library for PHP? Native PHP arrays or SPL structures like SplFixedArray or SplObjectStorage(and other) are mutable and has very strange interfaces and behaviors. They often represent more data structures at once (eg. SplObjectStorage represents both Set and Map) and theirs interfaces are designed for classic imperative approach.
 
 We tried to design interfaces of our structures to be focused on declarative approach leveraging functional programing. For more safety, we designed structures to be immutable (we have some mutables as well, because sometime it is necessary for performance reasons)
+
+All the code is designed to be type safe with [phpstan generics](#type-safety).
 
 ## Show me the code!
 
@@ -135,6 +138,12 @@ $top10 = frequencyAnalysis($text)
     - `::of` (pure) and `->ap` (apply) with applicative laws
     - `->flatMap` (bind) with monadic laws
     - on top of that they support many friendly functional methods (like `exists`, `all`, `find` etc.) 
+
+### Type safety
+
+We are using [phpstan](https://phpstan.org/) annotations for better type safety, utilizing generics. For even better type
+resolving, we created optional dependency [phpstan-collections](https://github.com/bonami/phpstan-collections), which we strongly
+suggest installing if you use phpstan. It fixes some type resolving, especially for late static binding.
 
 ### Currying
 
