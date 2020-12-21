@@ -25,7 +25,8 @@
     "phpstan/phpstan": "^0.12",
     "phpunit/phpunit": "^9.4.2",
     "slevomat/coding-standard": "^6.4.1",
-    "squizlabs/php_codesniffer": "^3.5.0"
+    "squizlabs/php_codesniffer": "^3.5.0",
+    "bonami/phpstan-collections": "^0.3"
   },
   "config": {
     "bin-dir": "bin"
