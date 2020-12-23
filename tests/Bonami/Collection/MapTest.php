@@ -76,6 +76,18 @@ class MapTest extends TestCase
         self::assertEquals(ArrayList::fromIterable(["a:1", "b:2"]), $mapped);
     }
 
+    public function testFlatMap(): void
+    {
+        $map = new Map([
+            [1, "a"],
+            [2, "b"],
+        ]);
+        $mapped = $map->flatMap(static function (string $value, int $key): Option {
+            return $key % 2 === 0 ? Option::some("$value:$key") : Option::none();
+        });
+        self::assertEquals(ArrayList::fromIterable(["b:2"]), $mapped);
+    }
+
     public function testMapKeys(): void
     {
         $map = new Map([

@@ -878,6 +878,9 @@ class Map implements Countable, IteratorAggregate
      * Constructs a list containing all elements after applying callback
      * on each value-key pair from Map
      *
+     * This operation does not follow functor laws, because it returns
+     * List instead of Map
+     *
      * Complexity: o(n)
      *
      * @see mapValues - for mapping just values and keeping Map as result
@@ -895,5 +898,28 @@ class Map implements Countable, IteratorAggregate
         $mapped = array_map($mapper, $this->values, $this->keys);
 
         return ArrayList::fromIterable($mapped);
+    }
+
+    /**
+     * Constructs a list containing all elements after applying callback
+     * on each value-key pair from Map and then flattening it.
+     *
+     * This operation does not follow monad laws, because it returns
+     * List instead of Map
+     *
+     * Complexity: o(n)
+     *
+     * @phpstan-template B
+     *
+     * @phpstan-param callable(V, K): iterable<B> $mapper
+     *
+     * @phpstan-return ArrayList<B>
+     */
+    public function flatMap(callable $mapper): ArrayList
+    {
+        /** @phpstan-var ArrayList<B> */
+        $flattened = $this->map($mapper)->flatten();
+
+        return $flattened;
     }
 }
