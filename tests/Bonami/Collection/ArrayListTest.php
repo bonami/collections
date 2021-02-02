@@ -237,13 +237,13 @@ class ArrayListTest extends TestCase
 
     public function testUniqueBy(): void
     {
-        $a = new ArrayList([['a' => 1, 'b' => 2], ['a' => 3, 'c' => 4], ['a' => 1, 'c' => 6]]);
+        $a = new ArrayList([['a' => 1, 'b' => 2], ['a' => 3, 'b' => 4], ['a' => 1, 'b' => 6]]);
         $unique = $a->uniqueBy(static function ($v) {
             return $v['a'];
         });
         self::assertEquals(2, $unique->count());
-        self::assertEquals(6, $unique->head()->getUnsafe()['c']);
-        self::assertEquals(4, $unique->last()->getUnsafe()['c']);
+        self::assertEquals(6, $unique->head()->getUnsafe()['b']);
+        self::assertEquals(4, $unique->last()->getUnsafe()['b']);
     }
 
     public function testUniqueByObjects(): void
