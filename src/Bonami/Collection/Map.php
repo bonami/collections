@@ -339,7 +339,7 @@ class Map implements Countable, IteratorAggregate
      *
      * @phpstan-param callable(V, K): B $mapper
      *
-     * @phpstan-return self<V, B>
+     * @phpstan-return self<K, B>
      */
     public function mapValues(callable $mapper): self
     {
