@@ -103,6 +103,12 @@ abstract class TrySafe implements IHashable, IteratorAggregate
                 return $this;
             }
 
+            /** @inheritDoc */
+            public function recoverWith(callable $callable): TrySafe
+            {
+                return $this;
+            }
+
             /** @phpstan-return T */
             public function getUnsafe()
             {
@@ -197,6 +203,17 @@ abstract class TrySafe implements IHashable, IteratorAggregate
                 return self::fromCallable(function () use ($callable) {
                     return $callable($this->failure);
                 });
+            }
+
+            public function recoverWith(callable $callable): TrySafe
+            {
+                /** @var callable(self<T>): self<T> $id */
+                $id = static function ($x) {
+                    return $x;
+                };
+                return self::fromCallable(function () use ($callable) {
+                    return $callable($this->failure);
+                })->flatMap($id);
             }
 
             /**
@@ -310,6 +327,13 @@ abstract class TrySafe implements IHashable, IteratorAggregate
      * @phpstan-return self<T>
      */
     abstract public function recover(callable $callable): self;
+
+    /**
+     * @phpstan-param callable(Throwable): TrySafe<T> $callable
+     *
+     * @phpstan-return self<T>
+     */
+    abstract public function recoverWith(callable $callable): self;
 
     abstract public function isSuccess(): bool;
 
