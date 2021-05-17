@@ -121,6 +121,42 @@ class TrySafeTest extends TestCase
         self::assertSame($exceptionThatRecoveryThrows, $recoveryEndedWithFailure->getFailureUnsafe());
     }
 
+    public function testRecoverWith(): void
+    {
+        $success = TrySafe::success(42);
+        $failure = TrySafe::failure(new Exception());
+
+        $recover = static function (Throwable $ex): TrySafe {
+            return TrySafe::success(666);
+        };
+        $exceptionThatRecoveryThrows = new Exception();
+        $throw = static function (Throwable $ex) use ($exceptionThatRecoveryThrows) {
+            throw $exceptionThatRecoveryThrows;
+        };
+        $exceptionThatRecoveryWraps = new Exception();
+        $wrap = static function (Throwable $failure) use ($exceptionThatRecoveryWraps) {
+            return TrySafe::failure($exceptionThatRecoveryWraps);
+        };
+
+        self::assertSame(42, $success->recoverWith($recover)->getUnsafe());
+        self::assertTrue($success->recoverWith($recover)->isSuccess());
+
+        self::assertSame(42, $success->recoverWith($throw)->getUnsafe());
+        self::assertTrue($success->recoverWith($throw)->isSuccess());
+
+        self::assertSame(42, $success->recoverWith($wrap)->getUnsafe());
+        self::assertTrue($success->recoverWith($wrap)->isSuccess());
+
+        self::assertTrue($failure->recoverWith($recover)->isSuccess());
+        self::assertSame(666, $failure->recoverWith($recover)->getUnsafe());
+
+        self::assertTrue($failure->recoverWith($throw)->isFailure());
+        self::assertSame($exceptionThatRecoveryThrows, $failure->recoverWith($throw)->getFailureUnsafe());
+
+        self::assertTrue($failure->recoverWith($wrap)->isFailure());
+        self::assertSame($exceptionThatRecoveryWraps, $failure->recoverWith($wrap)->getFailureUnsafe());
+    }
+
     public function testToOption(): void
     {
         $value = 666;
