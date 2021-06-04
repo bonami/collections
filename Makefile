@@ -6,7 +6,15 @@ deps:
 	docker run -it --rm -v ${PWD}:/app -w /app composer update --prefer-dist --verbose --no-interaction --optimize-autoloader
 
 test:
-	docker run -it --rm -v ${PWD}:/app -w /app composer run-script test
+	$(MAKE) phpunit
+	$(MAKE) phpstan
+	$(MAKE) fmt-check
+
+phpstan:
+	docker run -it --rm -v ${PWD}:/app -w /app composer run-script phpstan
+
+phpunit:
+	docker run -it --rm -v ${PWD}:/app -w /app composer run-script phpunit
 
 fmt-check:
 	docker run -it --rm -v ${PWD}:/app -w /app composer run-script phpcs
