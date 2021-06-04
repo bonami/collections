@@ -63,7 +63,7 @@ final class Lambda
      */
     public function map(callable $callable): Lambda
     {
-        return new static(compose($callable, $this->callable));
+        return new self(compose($callable, $this->callable));
     }
 
     /**
@@ -87,7 +87,7 @@ final class Lambda
         $numberOfArgsLeft = $this->numberOfArgs - count($newApplied);
 
         return $numberOfArgsLeft > 0
-            ? new static($this->callable, $this->numberOfArgs, $newApplied)
+            ? new self($this->callable, $this->numberOfArgs, $newApplied)
             : ($this->callable)(...$newApplied);
     }
 }
