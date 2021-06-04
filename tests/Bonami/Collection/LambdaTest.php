@@ -74,7 +74,7 @@ class LambdaTest extends TestCase
 
     public function testFromCallableWithNumberOfArgsThrowsOnInvalidNumberOfArgs(): void
     {
-        self::expectException(InvalidStateException::class);
+        $this->expectException(InvalidStateException::class);
         $curried = Lambda::of(static function (int $a, int $b): int {
             return $a + $b;
         });
