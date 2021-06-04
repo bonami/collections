@@ -432,11 +432,8 @@ abstract class TrySafe implements IHashable, IteratorAggregate
     }
 
     /**
-     * Takes any `iterable<self<A>>` and sequence it into `self<ArrayList<A>>`. If any `self` is "empty", the result is
-     * "short circuited".
-     *
-     * E. g. when called upon Option, when any instance is a None, then result is None.
-     * If all instances are Some, the result is Some<ArrayList<A>>
+     * Takes any `iterable<self<A>>` and sequence it into `self<ArrayList<A>>`. If any `self` is failure, the result is
+     * "short circuited" and result is first failure.
      *
      * @template A
      *
