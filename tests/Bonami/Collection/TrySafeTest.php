@@ -15,7 +15,6 @@ class TrySafeTest extends TestCase
     public function testCreate(): void
     {
         $trySafeFromScalar = TrySafe::of(666);
-        self::assertInstanceOf(TrySafe::class, $trySafeFromScalar);
         self::assertTrue($trySafeFromScalar->isSuccess());
 
         $trySafeFromException = TrySafe::of(new Exception("Exception can act as success value"));

@@ -319,7 +319,6 @@ class LazyListTest extends TestCase
     {
         $lazyList = new LazyList(new ArrayIterator(range(1, 10)));
         $head = $lazyList->head();
-        self::assertInstanceOf(Option::class, $head);
         self::assertTrue($head->isDefined());
         self::assertEquals(1, $head->getUnsafe());
     }
@@ -330,7 +329,6 @@ class LazyListTest extends TestCase
         $emptyIterable = [];
         $lazyList = new LazyList($emptyIterable);
         $head = $lazyList->head();
-        self::assertInstanceOf(Option::class, $head);
         self::assertFalse($head->isDefined());
     }
 
@@ -338,7 +336,6 @@ class LazyListTest extends TestCase
     {
         $lazyList = new LazyList(range(1, 10));
         $last = $lazyList->last();
-        self::assertInstanceOf(Option::class, $last);
         self::assertTrue($last->isDefined());
         self::assertEquals(10, $last->getUnsafe());
     }
@@ -349,7 +346,6 @@ class LazyListTest extends TestCase
         $emptyIterable = [];
         $lazyList = new LazyList($emptyIterable);
         $last = $lazyList->last();
-        self::assertInstanceOf(Option::class, $last);
         self::assertFalse($last->isDefined());
     }
 
@@ -370,7 +366,6 @@ class LazyListTest extends TestCase
             return $item % 2 === 0;
         });
 
-        self::assertInstanceOf(Option::class, $found);
         self::assertTrue($found->isDefined());
         self::assertEquals(2, $found->getUnsafe());
     }
@@ -382,7 +377,6 @@ class LazyListTest extends TestCase
             return $item === 666;
         });
 
-        self::assertInstanceOf(Option::class, $found);
         self::assertFalse($found->isDefined());
     }
 

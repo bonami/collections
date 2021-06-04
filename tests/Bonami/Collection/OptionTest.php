@@ -14,15 +14,12 @@ class OptionTest extends TestCase
     public function testCreate(): void
     {
         $none = Option::none();
-        self::assertInstanceOf(Option::class, $none);
         self::assertFalse($none->isDefined());
 
         $some = Option::some(666);
-        self::assertInstanceOf(Option::class, $some);
         self::assertTrue($some->isDefined());
 
         $fromNull = Option::of(null);
-        self::assertInstanceOf(Option::class, $fromNull);
         self::assertTrue($fromNull->isDefined());
     }
 
