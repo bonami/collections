@@ -123,16 +123,16 @@ class LazyList implements IteratorAggregate
      *
      * @phpstan-param callable(T, int): B $mapper
      *
-     * @phpstan-return self<mixed>
+     * @phpstan-return self<B>
      */
-    public function map(callable $mapper)
+    public function map(callable $mapper): self
     {
          $map = function (callable $callback): Generator {
             foreach ($this->items as $key => $item) {
                 yield $callback($item, $key);
             }
          };
-        return new static($map($mapper));
+        return new self($map($mapper));
     }
 
     /**
