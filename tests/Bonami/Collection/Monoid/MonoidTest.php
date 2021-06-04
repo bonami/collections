@@ -34,7 +34,7 @@ class MonoidTest extends TestCase
         yield [1, 2, new IntProductMonoid(), 2];
         yield [1.1, 2.1, new DoubleSumMonoid(), 3.2];
         yield [1.1, 2.1, new DoubleProductMonoid(), 2.31];
-        yield ["foo", "bar", new StringMonoid(), "foobar"];
+        yield ['foo', 'bar', new StringMonoid(), 'foobar'];
         yield [Option::none(), Option::some(1), new OptionMonoid(new IntSumMonoid()), Option::none()];
         yield [Option::some(1), Option::some(2), new OptionMonoid(new IntSumMonoid()), Option::some(3)];
     }

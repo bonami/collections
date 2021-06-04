@@ -552,9 +552,11 @@ class LazyList implements IteratorAggregate
                 yield $item;
             }
             if ($position >= $index) {
-                throw new InvalidArgumentException(
-                    "Tried to insert collection to position {$position}, but only {$index} items were found"
-                );
+                throw new InvalidArgumentException(sprintf(
+                    'Tried to insert collection to position %d, but only %d items were found',
+                    $position,
+                    $index
+                ));
             }
          };
         return new static($insertOnPosition($position, $iterable));

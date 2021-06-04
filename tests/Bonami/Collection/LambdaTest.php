@@ -25,41 +25,41 @@ class LambdaTest extends TestCase
     public function testCurryN(): void
     {
         $curried = Lambda::of(static function (string $greeting, string $name, int $times): string {
-            return str_repeat("{$greeting} {$name},", $times);
+            return str_repeat(sprintf('%s %s,', $greeting, $name), $times);
         });
 
         self::assertIsCallable($curried);
-        self::assertIsCallable($curried("Hello"));
-        self::assertIsCallable($curried("Hello")("World"));
-        self::assertEquals("Hello World,Hello World,", $curried("Hello")("World")(2));
+        self::assertIsCallable($curried('Hello'));
+        self::assertIsCallable($curried('Hello')('World'));
+        self::assertEquals('Hello World,Hello World,', $curried('Hello')('World')(2));
 
-        self::assertIsCallable($curried("Hello", "World"));
-        self::assertEquals("Hello World,Hello World,", $curried("Hello", "World")(2));
+        self::assertIsCallable($curried('Hello', 'World'));
+        self::assertEquals('Hello World,Hello World,', $curried('Hello', 'World')(2));
 
-        self::assertEquals("Hello World,Hello World,", $curried("Hello", "World", 2));
+        self::assertEquals('Hello World,Hello World,', $curried('Hello', 'World', 2));
     }
 
     public function testCurryVarArg(): void
     {
         $curried = Lambda::of(static function (string $greeting, int ...$ints): string {
-            return $greeting . join(',', $ints);
+            return $greeting . implode(',', $ints);
         });
 
         self::assertIsCallable($curried);
-        self::assertIsCallable($curried("Hello"));
-        self::assertEquals("Hello1,2,3", $curried("Hello")(1, 2, 3));
+        self::assertIsCallable($curried('Hello'));
+        self::assertEquals('Hello1,2,3', $curried('Hello')(1, 2, 3));
     }
 
     public function testMap(): void
     {
         $greeter = static function (string $name) {
-            return "Hello {$name}";
+            return sprintf('Hello %s', $name);
         };
         $countChars = static function (string $string): int {
             return strlen($string);
         };
 
-        self::assertEquals(11, Lambda::of($greeter)->map($countChars)("World"));
+        self::assertEquals(11, Lambda::of($greeter)->map($countChars)('World'));
     }
 
     public function testFromCallableWithNumberOfArgsDontWrapMultipleTimes(): void

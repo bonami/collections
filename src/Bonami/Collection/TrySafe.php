@@ -130,7 +130,7 @@ abstract class TrySafe implements IHashable, IteratorAggregate
             /** @inheritDoc */
             public function getFailureUnsafe(): Throwable
             {
-                throw new ValueIsNotPresentException("Can not get failure for Success");
+                throw new ValueIsNotPresentException('Can not get Failure from Success');
             }
 
             public function toOption(): Option
@@ -155,7 +155,7 @@ abstract class TrySafe implements IHashable, IteratorAggregate
                 $valueHash = $this->value instanceof IHashable
                     ? $this->value->hashCode()
                     : hashKey($this->value);
-                return self::class . "::success({$valueHash})";
+                return sprintf('%s::success(%s)', self::class, $valueHash);
             }
         };
     }
@@ -225,7 +225,7 @@ abstract class TrySafe implements IHashable, IteratorAggregate
              */
             public function getUnsafe()
             {
-                throw new ValueIsNotPresentException("Can not get value for Failure");
+                throw new ValueIsNotPresentException('Can not get value from Failure');
             }
 
             /**
@@ -267,7 +267,7 @@ abstract class TrySafe implements IHashable, IteratorAggregate
                 $failureHash = $this->failure instanceof IHashable
                     ? $this->failure->hashCode()
                     : hashKey($this->failure);
-                return self::class . "::failure({$failureHash})";
+                return sprintf('%s::failure(%s)', self::class, $failureHash);
             }
         };
     }

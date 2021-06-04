@@ -52,7 +52,7 @@ final class Lambda
             && ($callable->numberOfArgs - count($callable->applied) !== $numberOfArgs);
 
         if ($isNumberOfArgsInvalid) {
-            throw new InvalidStateException("Passed number of arguments seems to be invalid");
+            throw new InvalidStateException('Passed number of arguments seems to be invalid');
         }
 
         return $callable instanceof self ? $callable : new self($callable, $numberOfArgs);

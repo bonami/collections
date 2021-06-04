@@ -25,7 +25,7 @@ class OptionTest extends TestCase
 
     public function testCreateFromNullable(): void
     {
-        self::assertTrue(Option::fromNullable("Look, I exist")->isDefined());
+        self::assertTrue(Option::fromNullable('Look, I exist')->isDefined());
         self::assertFalse(Option::fromNullable(null)->isDefined());
     }
 
@@ -53,15 +53,15 @@ class OptionTest extends TestCase
     public function testMap(): void
     {
         $mapper = static function (string $s): string {
-            return "Hello {$s}";
+            return sprintf('Hello %s', $s);
         };
         $mapperToNull = static function (string $s) {
             return null;
         };
 
         $this->equals(
-            Option::some("Hello world"),
-            Option::some("world")->map($mapper)
+            Option::some('Hello world'),
+            Option::some('world')->map($mapper)
         );
         $this->equals(
             Option::none(),
@@ -70,7 +70,7 @@ class OptionTest extends TestCase
 
         $this->equals(
             Option::some(null),
-            Option::some("world")->map($mapperToNull)
+            Option::some('world')->map($mapperToNull)
         );
         $this->equals(
             Option::none(),
@@ -82,7 +82,7 @@ class OptionTest extends TestCase
     {
         /** @phpstan-var callable(string): Option<string> */
         $mapperToSome = static function (string $s): Option {
-            return Option::some("Hello {$s}");
+            return Option::some(sprintf('Hello %s', $s));
         };
         /** @phpstan-var callable(string): Option<string> */
         $mapperToNone = static function (string $s): Option {
@@ -90,8 +90,8 @@ class OptionTest extends TestCase
         };
 
         $this->equals(
-            Option::some("Hello world"),
-            Option::some("world")->flatMap($mapperToSome)
+            Option::some('Hello world'),
+            Option::some('world')->flatMap($mapperToSome)
         );
         $this->equals(
             Option::none(),
@@ -99,7 +99,7 @@ class OptionTest extends TestCase
         );
         $this->equals(
             Option::none(),
-            Option::some("world")->flatMap($mapperToNone)
+            Option::some('world')->flatMap($mapperToNone)
         );
         $this->equals(
             Option::none(),
@@ -109,7 +109,7 @@ class OptionTest extends TestCase
 
     public function testFilter(): void
     {
-        $some = Option::some("Hello world");
+        $some = Option::some('Hello world');
 
         $falsyPredicate = static function (): bool {
             return false;
@@ -135,7 +135,7 @@ class OptionTest extends TestCase
 
     public function testExists(): void
     {
-        $some = Option::some("Hello world");
+        $some = Option::some('Hello world');
 
         $falsyPredicate = static function (): bool {
             return false;
@@ -161,13 +161,13 @@ class OptionTest extends TestCase
 
     public function testGetUnsafe(): void
     {
-        $val = "Hello world";
+        $val = 'Hello world';
         $some = Option::some($val);
 
         self::assertEquals($val, $some->getUnsafe());
         try {
             Option::none()->getUnsafe();
-            self::fail("Calling get method or None must throw");
+            self::fail('Calling get method or None must throw');
         } catch (Throwable $e) {
             self::assertInstanceOf(ValueIsNotPresentException::class, $e);
         }
@@ -175,24 +175,24 @@ class OptionTest extends TestCase
 
     public function testGetOrElse(): void
     {
-        $val = "Hello world";
+        $val = 'Hello world';
         $some = Option::some($val);
 
-        $else = "Embrace the dark lord";
+        $else = 'Embrace the dark lord';
         self::assertEquals($val, $some->getOrElse($else));
         self::assertEquals($else, Option::none()->getOrElse($else));
     }
 
     public function testToTrySafe(): void
     {
-        $val = "Hello world";
+        $val = 'Hello world';
         self::assertEquals($val, Option::some($val)->toTrySafe()->getUnsafe());
         self::assertInstanceOf(ValueIsNotPresentException::class, Option::none()->toTrySafe()->getFailureUnsafe());
     }
 
     public function testIterator(): void
     {
-        $val = "Hello world";
+        $val = 'Hello world';
         $some = Option::some($val);
 
         self::assertEquals([$val], iterator_to_array($some->getIterator(), false));

@@ -79,7 +79,7 @@ abstract class Option implements IHashable, IteratorAggregate
              */
             public function getUnsafe()
             {
-                throw new ValueIsNotPresentException("Can not get value for None");
+                throw new ValueIsNotPresentException('Can not get value from None');
             }
 
             /**
@@ -221,7 +221,7 @@ abstract class Option implements IHashable, IteratorAggregate
                 $valueHash = $this->value instanceof IHashable
                     ? $this->value->hashCode()
                     : hashKey($this->value);
-                return self::class . "::some({$valueHash})";
+                return sprintf('%s::some(%s)', self::class, $valueHash);
             }
 
             /** @phpstan-return Traversable<int, T> */

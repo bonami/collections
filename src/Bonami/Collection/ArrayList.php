@@ -294,7 +294,7 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
             return $this->items[$key];
         }
 
-        throw new OutOfBoundsException("Key [$key] does not exist");
+        throw new OutOfBoundsException(sprintf('Key [%d] does not exist', $key));
     }
 
     /**
@@ -1156,7 +1156,7 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
                 $stringifiedArray = implode(
                     ', ',
                     array_map(function ($i, $k) {
-                        return "$k => {$this->itemToString($i)}";
+                        return sprintf('%s => %s', $k, $this->itemToString($i));
                     }, $item, array_keys($item))
                 );
                 return '[' . $stringifiedArray . ']';

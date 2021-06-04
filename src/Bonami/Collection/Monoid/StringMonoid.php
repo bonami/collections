@@ -15,6 +15,6 @@ class StringMonoid implements Monoid
 
     public function getEmpty(): string
     {
-        return "";
+        return '';
     }
 }
