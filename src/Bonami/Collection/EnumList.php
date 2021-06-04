@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Bonami\Collection;
 
 /**
- * @phpstan-template T of Enum
+ * @template T of Enum
  *
  * @phpstan-extends ArrayList<T>
  */

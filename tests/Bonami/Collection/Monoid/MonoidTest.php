@@ -13,7 +13,7 @@ class MonoidTest extends TestCase
     /**
      * @dataProvider provideFixtures
      *
-     * @phpstan-template A
+     * @template A
      *
      * @phpstan-param A $a
      * @phpstan-param A $b

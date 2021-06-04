@@ -7,8 +7,8 @@ namespace Bonami\Collection\Mutable;
 use function Bonami\Collection\hashKey;
 
 /**
- * @phpstan-template K
- * @phpstan-template V
+ * @template K
+ * @template V
  *
  * @phpstan-extends \Bonami\Collection\Map<K, V>
  */

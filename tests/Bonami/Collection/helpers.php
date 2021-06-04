@@ -17,7 +17,7 @@ function testEqualsReflexivity(callable $assertEquals, callable $equals, $a): vo
 }
 
 /**
- * @phpstan-template T
+ * @template T
  *
  * @phpstan-param callable(bool, bool): void $assertEquals
  * @phpstan-param callable(mixed, mixed): bool $equals
@@ -35,7 +35,7 @@ function testEqualsSymmetry(callable $assertEquals, callable $equals, $a, $b): v
 }
 
 /**
- * @phpstan-template T
+ * @template T
  *
  * @phpstan-param callable(bool, bool): void $assertEquals
  * @phpstan-param callable(mixed, mixed): bool $equals

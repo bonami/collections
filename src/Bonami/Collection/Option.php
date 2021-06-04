@@ -12,7 +12,7 @@ use IteratorAggregate;
 use Traversable;
 
 /**
- * @phpstan-template T
+ * @template T
  *
  * @phpstan-implements IteratorAggregate<int, T>
  */
@@ -83,7 +83,7 @@ abstract class Option implements IHashable, IteratorAggregate
             }
 
             /**
-             * @phpstan-template E
+             * @template E
              *
              * @phpstan-param E $else
              *
@@ -199,7 +199,7 @@ abstract class Option implements IHashable, IteratorAggregate
             }
 
             /**
-             * @phpstan-template E
+             * @template E
              *
              * @phpstan-param E $else
              *
@@ -248,7 +248,7 @@ abstract class Option implements IHashable, IteratorAggregate
     }
 
     /**
-     * @phpstan-template B
+     * @template B
      *
      * @phpstan-param callable(T): B $mapper
      *
@@ -299,7 +299,7 @@ abstract class Option implements IHashable, IteratorAggregate
      * E. g. when called upon Option, when any instance is a None, then result is None.
      * If all instances are Some, the result is Some<ArrayList<A>>
      *
-     * @phpstan-template A
+     * @template A
      *
      * @phpstan-param iterable<self<A>> $iterable
      *
@@ -320,8 +320,8 @@ abstract class Option implements IHashable, IteratorAggregate
      *
      * @see sequence - behaves same as traverse, execept it is called with identity
      *
-     * @phpstan-template A
-     * @phpstan-template B
+     * @template A
+     * @template B
      *
      * @phpstan-param iterable<A> $iterable
      * @phpstan-param callable(A): self<B> $mapperToApplicative
@@ -367,7 +367,7 @@ abstract class Option implements IHashable, IteratorAggregate
     abstract public function exists(callable $predicate): bool;
 
     /**
-     * @phpstan-template B
+     * @template B
      *
      * @phpstan-param callable(T): self<B> $mapper
      *
@@ -376,7 +376,7 @@ abstract class Option implements IHashable, IteratorAggregate
     abstract public function flatMap(callable $mapper): self;
 
     /**
-     * @phpstan-template R
+     * @template R
      *
      * @phpstan-param callable(R, T): R $reducer
      * @phpstan-param R $initialReduction
@@ -401,7 +401,7 @@ abstract class Option implements IHashable, IteratorAggregate
     abstract public function getUnsafe();
 
     /**
-     * @phpstan-template E
+     * @template E
      *
      * @phpstan-param E $else
      *
@@ -420,7 +420,7 @@ abstract class Option implements IHashable, IteratorAggregate
     abstract public function orElse(self $else): self;
 
     /**
-     * @phpstan-template B
+     * @template B
      *
      * @phpstan-param callable(): B $handleNone
      * @phpstan-param callable(T): B $handleSome

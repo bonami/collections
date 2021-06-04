@@ -36,7 +36,7 @@ use function sprintf;
 use function usort;
 
 /**
- * @phpstan-template T
+ * @template T
  *
  * @phpstan-implements IteratorAggregate<int, T>
  */
@@ -262,7 +262,7 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      * @see get - for getting Option instead of unboxing it directly
      * @see getUnsafe - when you are 100 % sure, that key is set
      *
-     * @phpstan-template E
+     * @template E
      *
      * @phpstan-param int $key
      * @phpstan-param E $else
@@ -303,7 +303,7 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      *
      * Complexity: o(n)
      *
-     * @phpstan-template B
+     * @template B
      *
      * @phpstan-param callable(T, int): B $mapper
      *
@@ -358,7 +358,7 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      * @see map
      * @see flatten
      *
-     * @phpstan-template B
+     * @template B
      *
      * @phpstan-param callable(T, int): iterable<B> $mapper
      *
@@ -408,7 +408,7 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      * @see uniqueBy
      * @see IHashable::hashCode
      *
-     * @phpstan-template B
+     * @template B
      *
      * @phpstan-param callable(T, int): B $mapper
      *
@@ -444,7 +444,7 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      * @see uniqueMap
      * @see IHashable::hashCode
      *
-     * @phpstan-template B
+     * @template B
      *
      * @phpstan-param callable(T, int): B $discriminator
      *
@@ -658,7 +658,7 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      *
      * Complexity: o(n)
      *
-     * @phpstan-template M
+     * @template M
      *
      * @phpstan-param callable(T, int): M $indexCallback
      *
@@ -688,7 +688,7 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      *
      * Complexity: o(n)
      *
-     * @phpstan-template R
+     * @template R
      *
      * @phpstan-param callable(R, T, int): R $reducer - ($carry: mixed, $item: mixed, $key: int) => mixed
      * @phpstan-param R $initialReduction - initial value used as seed for $carry
@@ -956,7 +956,7 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      *
      * Complexity: o(n)
      *
-     * @phpstan-template T2
+     * @template T2
      *
      * @phpstan-param iterable<T2> $itemsToAdd
      *
@@ -989,7 +989,7 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      *
      * Complexity: o(n)
      *
-     * @phpstan-template G
+     * @template G
      *
      * @phpstan-param callable(T, int): G $groupBy
      *
@@ -1036,7 +1036,7 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      *
      * Complexity: o(n)
      *
-     * @phpstan-template V
+     * @template V
      *
      * @phpstan-param iterable<V> $values
      *
@@ -1057,7 +1057,7 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      *
      * Complexity: o(n) where n is size of shortest collection
      *
-     * @phpstan-template B
+     * @template B
      *
      * @phpstan-param iterable<B> $iterable
      *
@@ -1073,7 +1073,7 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      *
      * Complexity: o(n)
      *
-     * @phpstan-template B
+     * @template B
      *
      * @phpstan-param callable(T, int): B $mapper
      *
@@ -1207,8 +1207,8 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      *
      * @see sequence - behaves same as traverse, execept it is called with identity
      *
-     * @phpstan-template A
-     * @phpstan-template B
+     * @template A
+     * @template B
      *
      * @phpstan-param iterable<A> $iterable
      * @phpstan-param callable(A): self<B> $mapperToApplicative
@@ -1244,7 +1244,7 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      * E. g. when called upon Option, when any instance is a None, then result is None.
      * If all instances are Some, the result is Some<ArrayList<A>>
      *
-     * @phpstan-template A
+     * @template A
      *
      * @phpstan-param iterable<self<A>> $iterable
      *
