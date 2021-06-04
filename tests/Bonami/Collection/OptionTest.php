@@ -404,8 +404,8 @@ class OptionTest extends TestCase
     }
 
     /**
-     * @phpstan-template A
-     * @phpstan-template B
+     * @template A
+     * @template B
      *
      * @phpstan-param A $a
      * @phpstan-param B $b

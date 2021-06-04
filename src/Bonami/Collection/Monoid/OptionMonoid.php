@@ -7,7 +7,7 @@ namespace Bonami\Collection\Monoid;
 use Bonami\Collection\Option;
 
 /**
- * @phpstan-template T
+ * @template T
  *
  * @phpstan-implements Monoid<Option<T>>
  */

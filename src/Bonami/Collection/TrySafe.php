@@ -13,7 +13,7 @@ use Throwable;
 use Traversable;
 
 /**
- * @phpstan-template T
+ * @template T
  *
  * @phpstan-implements IteratorAggregate<int, T>
  */
@@ -116,7 +116,7 @@ abstract class TrySafe implements IHashable, IteratorAggregate
             }
 
             /**
-             * @phpstan-template E
+             * @template E
              *
              * @phpstan-param E $else
              *
@@ -229,7 +229,7 @@ abstract class TrySafe implements IHashable, IteratorAggregate
             }
 
             /**
-             * @phpstan-template E
+             * @template E
              *
              * @phpstan-param E $else
              *
@@ -280,7 +280,7 @@ abstract class TrySafe implements IHashable, IteratorAggregate
     abstract public function ap(self $trySafe): self;
 
     /**
-     * @phpstan-template B
+     * @template B
      *
      * @phpstan-param callable(T): B $mapper
      *
@@ -289,7 +289,7 @@ abstract class TrySafe implements IHashable, IteratorAggregate
     abstract public function map(callable $mapper): self;
 
     /**
-     * @phpstan-template B
+     * @template B
      *
      * @phpstan-param callable(T): self<B> $mapper
      *
@@ -298,7 +298,7 @@ abstract class TrySafe implements IHashable, IteratorAggregate
     abstract public function flatMap(callable $mapper): self;
 
     /**
-     * @phpstan-template R
+     * @template R
      *
      * @phpstan-param callable(R, T): R $reducer
      * @phpstan-param R $initialReduction
@@ -352,7 +352,7 @@ abstract class TrySafe implements IHashable, IteratorAggregate
     abstract public function getUnsafe();
 
     /**
-     * @phpstan-template E
+     * @template E
      *
      * @phpstan-param E $else
      *
@@ -367,7 +367,7 @@ abstract class TrySafe implements IHashable, IteratorAggregate
     abstract public function toOption(): Option;
 
     /**
-     * @phpstan-template B
+     * @template B
      *
      * @phpstan-param callable(Throwable): B $handleFailure
      * @phpstan-param callable(T): B $handleSuccess
@@ -401,8 +401,8 @@ abstract class TrySafe implements IHashable, IteratorAggregate
      *
      * @see sequence - behaves same as traverse, execept it is called with identity
      *
-     * @phpstan-template A
-     * @phpstan-template B
+     * @template A
+     * @template B
      *
      * @phpstan-param iterable<A> $iterable
      * @phpstan-param callable(A): self<B> $mapperToApplicative
@@ -438,7 +438,7 @@ abstract class TrySafe implements IHashable, IteratorAggregate
      * E. g. when called upon Option, when any instance is a None, then result is None.
      * If all instances are Some, the result is Some<ArrayList<A>>
      *
-     * @phpstan-template A
+     * @template A
      *
      * @phpstan-param iterable<self<A>> $iterable
      *

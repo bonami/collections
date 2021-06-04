@@ -14,7 +14,7 @@ use RuntimeException;
 use Traversable;
 
 /**
- * @phpstan-template T
+ * @template T
  *
  * @phpstan-implements IteratorAggregate<int, T>
  */
@@ -119,7 +119,7 @@ class LazyList implements IteratorAggregate
     }
 
     /**
-     * @phpstan-template B
+     * @template B
      *
      * @phpstan-param callable(T, int): B $mapper
      *
@@ -156,7 +156,7 @@ class LazyList implements IteratorAggregate
     }
 
     /**
-     * @phpstan-template B
+     * @template B
      *
      * @phpstan-param callable(T, int): iterable<B> $mapper
      *
@@ -193,7 +193,7 @@ class LazyList implements IteratorAggregate
     /**
      * Computes reduction of the elements of the collection.
      *
-     * @phpstan-template R
+     * @template R
      *
      * @phpstan-param callable(R, T, int): R $reducer a binary operation for reduction
      * @phpstan-param R $initialReduction
@@ -252,7 +252,7 @@ class LazyList implements IteratorAggregate
     /**
      * Computes a prefix scan (reduction) of the elements of the collection.
      *
-     * @phpstan-template R
+     * @template R
      *
      * @phpstan-param callable(R, T, int): R $scanner a binary operation for scan (reduction)
      * @phpstan-param R $initialReduction
@@ -453,7 +453,7 @@ class LazyList implements IteratorAggregate
     }
 
     /**
-     * @phpstan-template B
+     * @template B
      *
      * @phpstan-param iterable<B> $iterable
      *
@@ -491,7 +491,7 @@ class LazyList implements IteratorAggregate
      *
      * Complexity: o(n)
      *
-     * @phpstan-template B
+     * @template B
      *
      * @phpstan-param callable(T, int): B $mapper
      *
@@ -507,7 +507,7 @@ class LazyList implements IteratorAggregate
     }
 
     /**
-     * @phpstan-template T2
+     * @template T2
      *
      * @phpstan-param iterable<T2> ...$iterables
      *
@@ -650,8 +650,8 @@ class LazyList implements IteratorAggregate
      *
      * @see sequence - behaves same as traverse, execept it is called with identity
      *
-     * @phpstan-template A
-     * @phpstan-template B
+     * @template A
+     * @template B
      *
      * @phpstan-param iterable<A> $iterable
      * @phpstan-param callable(A): self<B> $mapperToApplicative
@@ -687,7 +687,7 @@ class LazyList implements IteratorAggregate
      * E. g. when called upon Option, when any instance is a None, then result is None.
      * If all instances are Some, the result is Some<ArrayList<A>>
      *
-     * @phpstan-template A
+     * @template A
      *
      * @phpstan-param iterable<self<A>> $iterable
      *

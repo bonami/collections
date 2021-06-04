@@ -25,8 +25,8 @@ use function is_scalar;
 use function iterator_to_array;
 
 /**
- * @phpstan-template K
- * @phpstan-template V
+ * @template K
+ * @template V
  *
  * @phpstan-implements IteratorAggregate<K, V>
  */
@@ -167,7 +167,7 @@ class Map implements Countable, IteratorAggregate
      *
      * @see get for getting value the safe way when no default value is suitable
      *
-     * @phpstan-template E
+     * @template E
      *
      * @phpstan-param K $key
      * @phpstan-param E $defaultValue
@@ -288,7 +288,7 @@ class Map implements Countable, IteratorAggregate
      * @see map - for mapping both keys and values and returning ArrayList as result
      * @see mapValues - for mapping just values and keeping Map as result
      *
-     * @phpstan-template B
+     * @template B
      *
      * @phpstan-param callable(K, V): B $mapper
      *
@@ -332,7 +332,7 @@ class Map implements Countable, IteratorAggregate
      *
      * Complexity: o(n)
      *
-     * @phpstan-template B
+     * @template B
      *
      * @see map - for mapping both keys and values and returning ArrayList as result
      * @see mapKeys - for mapping just keys and keeping Map as result
@@ -390,8 +390,8 @@ class Map implements Countable, IteratorAggregate
      *   - n is number of items of original collection
      *   - m is number of items of given collection
      *
-     * @phpstan-template K2
-     * @phpstan-template V2
+     * @template K2
+     * @template V2
      *
      * @phpstan-param Map<K2, V2> $mergeMap
      *
@@ -815,7 +815,7 @@ class Map implements Countable, IteratorAggregate
      *
      * Complexity: o(n)
      *
-     * @phpstan-template R
+     * @template R
      *
      * @phpstan-param callable(R, V, K): R $reducer - takes up to 3 parametrs and returns next reduction step:
      *                          (?prevReduction, ?currentValue, ?currentKey) => nextReduction
@@ -883,7 +883,7 @@ class Map implements Countable, IteratorAggregate
      * @see mapValues - for mapping just values and keeping Map as result
      * @see mapKeys - for mapping just keys and keeping Map as result
      *
-     * @phpstan-template B
+     * @template B
      *
      * @phpstan-param callable(V, K): B $mapper
      *

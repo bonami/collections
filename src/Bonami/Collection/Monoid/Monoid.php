@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Bonami\Collection\Monoid;
 
-/** @phpstan-template A */
+/** @template A */
 interface Monoid
 {
 
