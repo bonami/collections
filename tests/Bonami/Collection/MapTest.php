@@ -578,22 +578,22 @@ class MapTest extends TestCase
             [4, 0],
             [5, ''],
         ]);
-        self::assertTrue((bool)$map->exists(static function ($value) {
+        self::assertTrue($map->exists(static function ($value) {
             return $value === 'A';
         }));
-        self::assertTrue((bool)$map->exists(static function ($value) {
+        self::assertTrue($map->exists(static function ($value) {
             return $value === null;
         }));
-        self::assertTrue((bool)$map->exists(static function ($value) {
+        self::assertTrue($map->exists(static function ($value) {
             return $value === false;
         }));
-        self::assertTrue((bool)$map->exists(static function ($value) {
+        self::assertTrue($map->exists(static function ($value) {
             return $value === 0;
         }));
-        self::assertTrue((bool)$map->exists(static function ($value) {
+        self::assertTrue($map->exists(static function ($value) {
             return $value === '';
         }));
-        self::assertFalse((bool)$map->exists(static function ($value) {
+        self::assertFalse($map->exists(static function ($value) {
             return $value === 'X';
         }));
     }
