@@ -58,7 +58,7 @@ class LazyList implements IteratorAggregate
     {
          $fill = static function ($item, ?int $size = null): Generator {
              $generated = 0;
-            while ($size === null ? true : $size > $generated) {
+            while ($size === null || $size > $generated) {
                 yield $item;
                 if ($size !== null) {
                     $generated++;
