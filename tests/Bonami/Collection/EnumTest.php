@@ -14,7 +14,7 @@ class EnumTest extends TestCase
     public function testItShouldThrowExceptionWhenCreateMethodArgumentIsObject(): void
     {
         $this->expectException(InvalidEnumValueException::class);
-        $this->expectExceptionMessage("Invalid value 'stdClass', one of scalar A, B, C expected");
+        $this->expectExceptionMessage('Invalid value "stdClass", one of scalar A, B, C expected');
 
         TestEnum::create(new stdClass());
     }
@@ -27,7 +27,7 @@ class EnumTest extends TestCase
     public function testItShouldFailWhenValueOutOfDefinedValues(): void
     {
         $this->expectException(InvalidEnumValueException::class);
-        $this->expectExceptionMessage("Invalid string value 'D', one of A, B, C expected");
+        $this->expectExceptionMessage('Invalid string value "D", one of A, B, C expected');
 
         TestEnum::create('D');
     }

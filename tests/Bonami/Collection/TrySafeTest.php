@@ -17,9 +17,8 @@ class TrySafeTest extends TestCase
         $trySafeFromScalar = TrySafe::of(666);
         self::assertTrue($trySafeFromScalar->isSuccess());
 
-        $trySafeFromException = TrySafe::of(new Exception("Exception can act as success value"));
-        self::assertInstanceOf(TrySafe::class, $trySafeFromException);
-        self::assertTrue($trySafeFromScalar->isSuccess());
+        $trySafeFromException = TrySafe::of(new Exception('Exception can act as success value as well'));
+        self::assertTrue($trySafeFromException->isSuccess());
     }
 
     public function testCreateFromCallable(): void
@@ -58,18 +57,18 @@ class TrySafeTest extends TestCase
     public function testMap(): void
     {
         $mapper = static function (string $s): string {
-            return "Hello {$s}";
+            return sprintf('Hello %s', $s);
         };
         $mapperThatThrows = static function () {
             throw new Exception();
         };
 
         $this->equals(
-            TrySafe::success("Hello world"),
-            TrySafe::success("world")->map($mapper)
+            TrySafe::success('Hello world'),
+            TrySafe::success('world')->map($mapper)
         );
 
-        self::assertTrue(TrySafe::success("Hello world")->map($mapperThatThrows)->isFailure());
+        self::assertTrue(TrySafe::success('Hello world')->map($mapperThatThrows)->isFailure());
         self::assertTrue($this->createFailure()->map($mapper)->isFailure());
         self::assertTrue($this->createFailure()->map($mapperThatThrows)->isFailure());
     }
@@ -78,7 +77,7 @@ class TrySafeTest extends TestCase
     {
         /** @phpstan-var callable(string): TrySafe<string> */
         $mapperToSuccess = static function (string $s): TrySafe {
-            return TrySafe::success("Hello {$s}");
+            return TrySafe::success(sprintf('Hello %s', $s));
         };
         /** @phpstan-var callable(string): TrySafe<string> */
         $mapperToFailure = function (string $s): TrySafe {
@@ -90,14 +89,14 @@ class TrySafeTest extends TestCase
         };
 
         $this->equals(
-            TrySafe::success("Hello world"),
-            TrySafe::success("world")->flatMap($mapperToSuccess)
+            TrySafe::success('Hello world'),
+            TrySafe::success('world')->flatMap($mapperToSuccess)
         );
 
         self::assertTrue($this->createFailure()->flatMap($mapperToSuccess)->isFailure());
-        self::assertTrue(TrySafe::success("world")->flatMap($mapperToFailure)->isFailure());
+        self::assertTrue(TrySafe::success('world')->flatMap($mapperToFailure)->isFailure());
         self::assertTrue($this->createFailure()->flatMap($mapperToFailure)->isFailure());
-        self::assertTrue(TrySafe::success("world")->flatMap($mapperThatThrows)->isFailure());
+        self::assertTrue(TrySafe::success('world')->flatMap($mapperThatThrows)->isFailure());
     }
 
     public function testRecover(): void
@@ -192,7 +191,7 @@ class TrySafeTest extends TestCase
 
     public function testIterator(): void
     {
-        $val = "Hello world";
+        $val = 'Hello world';
         $success = TrySafe::success($val);
         $failure = $this->createFailure();
 

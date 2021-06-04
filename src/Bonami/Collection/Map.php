@@ -145,7 +145,7 @@ class Map implements Countable, IteratorAggregate
                 $stringKey = 'object';
         }
 
-        throw new OutOfBoundsException("Key ({$stringKey}) does not exist");
+        throw new OutOfBoundsException(sprintf('Key (%d) does not exist', $stringKey));
     }
 
     /**
@@ -870,7 +870,7 @@ class Map implements Countable, IteratorAggregate
     public function __toString(): string
     {
         return '{' . $this->map(static function ($value, $key): string {
-            return "$key: $value";
+            return sprintf('%s: %s', $key, $value);
         })->join(', ') . '}';
     }
 

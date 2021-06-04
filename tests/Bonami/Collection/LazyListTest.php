@@ -39,10 +39,10 @@ class LazyListTest extends TestCase
 
     public function testInfinityFill(): void
     {
-        $filled = LazyList::fill("a")
+        $filled = LazyList::fill('a')
             ->take(10)
             ->toArray();
-        self::assertEquals(array_fill(0, 10, "a"), $filled);
+        self::assertEquals(array_fill(0, 10, 'a'), $filled);
     }
 
     public function testFromArray(): void
@@ -486,7 +486,7 @@ class LazyListTest extends TestCase
             $lazyList1->insertOnPosition(7, $lazyList2)->toArray();
         } catch (InvalidArgumentException $exception) {
             self::assertEquals(
-                "Tried to insert collection to position 7, but only 3 items were found",
+                'Tried to insert collection to position 7, but only 3 items were found',
                 $exception->getMessage()
             );
         }
@@ -508,7 +508,7 @@ class LazyListTest extends TestCase
     public function testJoin(): void
     {
         $lazyList = new LazyList([1, 2, 3]);
-        self::assertEquals('1, 2, 3', $lazyList->join(", "));
+        self::assertEquals('1, 2, 3', $lazyList->join(', '));
     }
 
     public function testLazyListLazinessChaining(): void

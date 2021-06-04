@@ -36,18 +36,18 @@ class MapTest extends TestCase
     public function testGetOrElse(): void
     {
         $map = new Map([
-            [1, "a"],
-            [2, "b"],
+            [1, 'a'],
+            [2, 'b'],
         ]);
-        self::assertEquals("a", $map->getOrElse(1, "default"));
-        self::assertEquals("default", $map->getOrElse(3, "default"));
+        self::assertEquals('a', $map->getOrElse(1, 'default'));
+        self::assertEquals('default', $map->getOrElse(3, 'default'));
     }
 
     public function testCountable(): void
     {
         $map = new Map([
-            [1, "a"],
-            [2, "b"],
+            [1, 'a'],
+            [2, 'b'],
         ]);
         self::assertCount(2, $map);
     }
@@ -55,74 +55,74 @@ class MapTest extends TestCase
     public function testIsEmpty(): void
     {
         self::assertEquals(true, Map::fromEmpty()->isEmpty());
-        self::assertEquals(false, Map::fromOnly(1, "a")->isEmpty());
+        self::assertEquals(false, Map::fromOnly(1, 'a')->isEmpty());
     }
 
     public function testIsNotEmpty(): void
     {
         self::assertEquals(false, Map::fromEmpty()->isNotEmpty());
-        self::assertEquals(true, Map::fromOnly(1, "a")->isNotEmpty());
+        self::assertEquals(true, Map::fromOnly(1, 'a')->isNotEmpty());
     }
 
     public function testMap(): void
     {
         $map = new Map([
-            [1, "a"],
-            [2, "b"],
+            [1, 'a'],
+            [2, 'b'],
         ]);
         $mapped = $map->map(static function ($value, $key) {
-            return "$value:$key";
+            return sprintf('%s:%s', $value, $key);
         });
-        self::assertEquals(ArrayList::fromIterable(["a:1", "b:2"]), $mapped);
+        self::assertEquals(ArrayList::fromIterable(['a:1', 'b:2']), $mapped);
     }
 
     public function testMapKeys(): void
     {
         $map = new Map([
-            [1, "a"],
-            [2, "b"],
+            [1, 'a'],
+            [2, 'b'],
         ]);
 
         $mapped = $map->mapKeys(static function ($key) {
             return $key + 1;
         });
         self::assertEquals(new Map([
-            [2, "a"],
-            [3, "b"],
+            [2, 'a'],
+            [3, 'b'],
         ]), $mapped);
     }
 
     public function testMapValues(): void
     {
         $map = new Map([
-            [1, "a"],
-            [2, "b"],
+            [1, 'a'],
+            [2, 'b'],
         ]);
 
         $mapped = $map->mapValues(static function ($value, $key) {
             return str_repeat($value, $key);
         });
         self::assertEquals(new Map([
-            [1, "a"],
-            [2, "bb"],
+            [1, 'a'],
+            [2, 'bb'],
         ]), $mapped);
     }
 
     public function testFilter(): void
     {
         $map = new Map([
-            [1, "a"],
-            [2, "b"],
-            [3, "c"],
-            [4, "d"],
+            [1, 'a'],
+            [2, 'b'],
+            [3, 'c'],
+            [4, 'd'],
         ]);
         $filtered = $map->filter(static function ($value, $key) {
-            return $key % 2 === 0 || $value === "c";
+            return $key % 2 === 0 || $value === 'c';
         });
         self::assertEquals(new Map([
-            [2, "b"],
-            [3, "c"],
-            [4, "d"],
+            [2, 'b'],
+            [3, 'c'],
+            [4, 'd'],
         ]), $filtered);
     }
 
@@ -149,11 +149,11 @@ class MapTest extends TestCase
     public function testWithoutNulls(): void
     {
         $map = new Map([
-            [1, "a"],
+            [1, 'a'],
             [2, null],
         ]);
 
-        self::assertEquals(new Map([[1, "a"]]), $map->withoutNulls());
+        self::assertEquals(new Map([[1, 'a']]), $map->withoutNulls());
     }
 
     public function testGetByBooleanKey(): void
@@ -166,9 +166,9 @@ class MapTest extends TestCase
     public function testKeys(): void
     {
         $map = new Map([
-            [(object)[1985, 1, 29], "Isabel Lucas"],
-            [(object)[1984, 7, 11], "Rachael Taylor"],
-            [(object)[1985, 1, 30], "Elaine Cassidy"],
+            [(object)[1985, 1, 29], 'Isabel Lucas'],
+            [(object)[1984, 7, 11], 'Rachael Taylor'],
+            [(object)[1985, 1, 30], 'Elaine Cassidy'],
         ]);
 
         self::assertEquals(
@@ -180,13 +180,13 @@ class MapTest extends TestCase
     public function testValues(): void
     {
         $map = new Map([
-            [1, "Isabel Lucas"],
-            [2, "Rachael Taylor"],
-            [3, "Elaine Cassidy"],
+            [1, 'Isabel Lucas'],
+            [2, 'Rachael Taylor'],
+            [3, 'Elaine Cassidy'],
         ]);
 
         self::assertEquals(
-            ArrayList::fromIterable(["Isabel Lucas", "Rachael Taylor", "Elaine Cassidy"]),
+            ArrayList::fromIterable(['Isabel Lucas', 'Rachael Taylor', 'Elaine Cassidy']),
             $map->values()
         );
     }

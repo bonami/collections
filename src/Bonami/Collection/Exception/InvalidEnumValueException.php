@@ -22,8 +22,8 @@ class InvalidEnumValueException extends InvalidArgumentException
         $expectedValues = $enumClass::instanceList()->join(', ');
 
         $message = $valueType === 'object'
-            ? sprintf("Invalid value '%s', one of scalar %s expected", get_class($value), $expectedValues)
-            : sprintf("Invalid %s value '%s', one of %s expected", $valueType, $value, $expectedValues);
+            ? sprintf('Invalid value "%s", one of scalar %s expected', get_class($value), $expectedValues)
+            : sprintf('Invalid %s value "%s", one of %s expected', $valueType, $value, $expectedValues);
 
         parent::__construct($message);
     }
