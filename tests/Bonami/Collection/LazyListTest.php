@@ -287,7 +287,7 @@ class LazyListTest extends TestCase
 
     public function testTakeFilteredInfiniteLazyList(): void
     {
-        $lazyList = LazyList::range(1, PHP_INT_MAX);
+        $lazyList = LazyList::range(1);
         $taken = $lazyList->filter(static function ($x) {
             return $x < 10;
         })->filter(static function ($x) {
@@ -427,8 +427,8 @@ class LazyListTest extends TestCase
 
     public function testZip(): void
     {
-        $lazyList1 = new LazyList(new ArrayIterator(range(1, 10, 1)));
-        $lazyList2 = new LazyList(new ArrayIterator(range(11, 20, 1)));
+        $lazyList1 = new LazyList(new ArrayIterator(range(1, 10)));
+        $lazyList2 = new LazyList(new ArrayIterator(range(11, 20)));
 
         self::assertEquals([
             [1, 11],
@@ -455,16 +455,16 @@ class LazyListTest extends TestCase
 
     public function testConcat(): void
     {
-        $lazyList1 = new LazyList(new ArrayIterator(range(1, 10, 1)));
-        $lazyList2 = new LazyList(new ArrayIterator(range(11, 20, 1)));
-        $lazyList3 = new LazyList(new ArrayIterator(range(21, 30, 1)));
+        $lazyList1 = new LazyList(new ArrayIterator(range(1, 10)));
+        $lazyList2 = new LazyList(new ArrayIterator(range(11, 20)));
+        $lazyList3 = new LazyList(new ArrayIterator(range(21, 30)));
 
         self::assertEquals(range(1, 30), $lazyList1->concat($lazyList2, $lazyList3)->toArray());
     }
 
     public function testAdd(): void
     {
-        $lazyList1 = new LazyList(new ArrayIterator(range(1, 10, 1)));
+        $lazyList1 = new LazyList(new ArrayIterator(range(1, 10)));
 
         self::assertEquals(range(1, 13), $lazyList1->add(11, 12, 13)->toArray());
     }
