@@ -70,8 +70,6 @@ final class Lambda
      * @phpstan-param mixed... $args
      *
      * @phpstan-return mixed
-     *
-     * @throws ReflectionException
      */
     public function __invoke(...$args)
     {
