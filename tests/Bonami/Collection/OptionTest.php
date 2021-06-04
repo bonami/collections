@@ -24,10 +24,6 @@ class OptionTest extends TestCase
         $fromNull = Option::of(null);
         self::assertInstanceOf(Option::class, $fromNull);
         self::assertTrue($fromNull->isDefined());
-
-        $fromNotNull = Option::some(666);
-        self::assertInstanceOf(Option::class, $fromNotNull);
-        self::assertTrue($fromNotNull->isDefined());
     }
 
     public function testCreateFromNullable(): void
