@@ -34,9 +34,9 @@ final class Lambda
         $this->applied = $applied;
     }
 
-    public static function of(callable $callable): Lambda
+    public static function of(callable $callable): self
     {
-        return $callable instanceof Lambda ? $callable : new Lambda($callable);
+        return $callable instanceof self ? $callable : new self($callable);
     }
 
     /**
@@ -45,9 +45,9 @@ final class Lambda
      *
      * Calling ReflectionMethod can have some performance impact.
      */
-    public static function fromCallableWithNumberOfArgs(callable $callable, int $numberOfArgs): Lambda
+    public static function fromCallableWithNumberOfArgs(callable $callable, int $numberOfArgs): self
     {
-        $isNumberOfArgsInvalid = $callable instanceof Lambda
+        $isNumberOfArgsInvalid = $callable instanceof self
             && $callable->numberOfArgs !== null
             && ($callable->numberOfArgs - count($callable->applied) !== $numberOfArgs);
 
@@ -55,7 +55,7 @@ final class Lambda
             throw new InvalidStateException("Passed number of arguments seems to be invalid");
         }
 
-        return $callable instanceof Lambda ? $callable : new Lambda($callable, $numberOfArgs);
+        return $callable instanceof self ? $callable : new self($callable, $numberOfArgs);
     }
 
     /**
