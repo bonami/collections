@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Bonami\Collection\Exception;
 
+use Bonami\Collection\Enum;
 use InvalidArgumentException;
 
 use function get_class;
@@ -13,8 +14,8 @@ class InvalidEnumValueException extends InvalidArgumentException
 {
 
     /**
-     * @phpstan-param mixed $value
-     * @phpstan-param class-string<\Bonami\Collection\Enum> $enumClass
+     * @param mixed $value
+     * @param class-string<Enum> $enumClass
      */
     public function __construct($value, string $enumClass)
     {
