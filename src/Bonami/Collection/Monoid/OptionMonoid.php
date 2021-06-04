@@ -29,7 +29,7 @@ class OptionMonoid implements Monoid
      *
      * @phpstan-return Option<T>
      */
-    public function concat($a, $b)
+    public function concat($a, $b): Option
     {
         return Option::lift(function ($a, $b) {
             return $this->monoid->concat($a, $b);
@@ -37,7 +37,7 @@ class OptionMonoid implements Monoid
     }
 
     /** @phpstan-return Option<T> */
-    public function getEmpty()
+    public function getEmpty(): Option
     {
         return Option::some($this->monoid->getEmpty());
     }

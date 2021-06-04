@@ -8,12 +8,12 @@ namespace Bonami\Collection\Monoid;
 class StringMonoid implements Monoid
 {
 
-    public function concat($a, $b)
+    public function concat($a, $b): string
     {
         return $a . $b;
     }
 
-    public function getEmpty()
+    public function getEmpty(): string
     {
         return "";
     }
