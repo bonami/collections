@@ -891,7 +891,7 @@ class Map implements Countable, IteratorAggregate
      */
     public function map(callable $mapper): ArrayList
     {
-        /** @phpstan-var array<int, array<K, V>> $mapped */
+        /** @phpstan-var array<int, B> $mapped */
         $mapped = array_map($mapper, $this->values, $this->keys);
 
         return ArrayList::fromIterable($mapped);
