@@ -160,7 +160,7 @@ class LazyList implements IteratorAggregate
      *
      * @phpstan-param callable(T, int): iterable<B> $mapper
      *
-     * @phpstan-return self<T>
+     * @phpstan-return self<B>
      */
     public function flatMap(callable $mapper): self
     {
