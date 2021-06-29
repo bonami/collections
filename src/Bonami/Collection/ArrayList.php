@@ -555,7 +555,7 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      *
      * @phpstan-param callable(T, int): bool $predicate
      *
-     * @phpstan-return Option<T>
+     * @phpstan-return Option<int>
      */
     public function findKey(callable $predicate): Option
     {
