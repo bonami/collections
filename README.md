@@ -128,7 +128,8 @@ $top10 = frequencyAnalysis($text)
 - [`\Bonami\Collection\Enum`](./docs/enum.md) - Not a collection, but has great synergy with rest of the library. Meant for defining closed enumerations. Provides interesting methods like getting complements list of values for given enum.  
 - `\Bonami\Collection\EnumList` - List of Enums, extending ArrayList
 - [`\Bonami\Collection\Option`](#option) - Immutable structure for representing, that you maybe have value and maybe not. It provides safe (functional) approach to handle null pointer errors.
-- [`\Bonami\Collection\TrySafe`](#trysafe) - Immutable structure for representing,  that you have value or error generated upon the way. It provides safe (functional) approach to handle errors without side effects.
+- [`\Bonami\Collection\TrySafe`](#trysafe) - Immutable structure for representing,  that you have value or exception generated upon the way. It provides safe (functional) approach to handle problematic code without side effects.
+- `\Bonami\Collection\Either` - An immutable structure for representing, that you either have value of one type or another type. Also known as sum type (in this case sum of two possible types). Main usage is similar to Option or TrySafe, becuase it is mainly used to represent successful result in `right` side of `Either` and failure in `left` side.
 - `\Bonami\Collection\Lambda` - Wrapper around callable providing currying. Currying is very useful for some functional patterns
 
 ### Type classes
