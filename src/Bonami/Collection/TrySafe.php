@@ -104,7 +104,19 @@ abstract class TrySafe implements IHashable, IteratorAggregate
             }
 
             /** @inheritDoc */
+            public function recoverIf(callable $predicate, callable $recovery): TrySafe
+            {
+                return $this;
+            }
+
+            /** @inheritDoc */
             public function recoverWith(callable $callable): TrySafe
+            {
+                return $this;
+            }
+
+            /** @inheritDoc */
+            public function recoverWithIf(callable $predicate, callable $recovery): TrySafe
             {
                 return $this;
             }
@@ -205,6 +217,16 @@ abstract class TrySafe implements IHashable, IteratorAggregate
                 });
             }
 
+            /** @inheritDoc */
+            public function recoverIf(callable $predicate, callable $recovery): TrySafe
+            {
+                if ($predicate($this->failure)) {
+                    return $this->recover($recovery);
+                }
+
+                return $this;
+            }
+
             public function recoverWith(callable $callable): TrySafe
             {
                 /** @var callable(self<T>): self<T> $id */
@@ -214,6 +236,16 @@ abstract class TrySafe implements IHashable, IteratorAggregate
                 return self::fromCallable(function () use ($callable) {
                     return $callable($this->failure);
                 })->flatMap($id);
+            }
+
+            /** @inheritDoc */
+            public function recoverWithIf(callable $predicate, callable $recovery): TrySafe
+            {
+                if ($predicate($this->failure)) {
+                    return $this->recoverWith($recovery);
+                }
+
+                return $this;
             }
 
             /**
@@ -329,11 +361,37 @@ abstract class TrySafe implements IHashable, IteratorAggregate
     abstract public function recover(callable $callable): self;
 
     /**
+     * Runs recovery only if predicate returns true. E.g. to check type of Throwable.
+     *
+     * Recovery must return directly the value or throw another exception
+     * (which is automatically wrapped into TrySafe)
+     *
+     * @phpstan-param callable(Throwable): bool $predicate
+     * @phpstan-param callable(Throwable): T $recovery
+     *
+     * @phpstan-return self<T>
+     */
+    abstract public function recoverIf(callable $predicate, callable $recovery): self;
+
+    /**
      * @phpstan-param callable(Throwable): TrySafe<T> $callable
      *
      * @phpstan-return self<T>
      */
     abstract public function recoverWith(callable $callable): self;
+
+    /**
+     * Runs recovery only if predicate returns true. E.g. to check type of Throwable
+     *
+     * Recovery must return TrySafe::success() if the recovery is successful or TrySafe::failure() if it fails.
+     * That allows chaining multiple calls with possible failure.
+     *
+     * @phpstan-param callable(Throwable): bool $predicate - checks if conditions are met to run recovery.
+     * @phpstan-param callable(Throwable): TrySafe<T> $recovery - a recovery you want to try run
+     *
+     * @phpstan-return self<T>
+     */
+    abstract public function recoverWithIf(callable $predicate, callable $recovery): self;
 
     abstract public function isSuccess(): bool;
 
