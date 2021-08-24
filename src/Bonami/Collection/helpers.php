@@ -34,6 +34,13 @@ function tautology(): callable
     };
 }
 
+function falsy(): callable
+{
+    return static function (): bool {
+        return false;
+    };
+}
+
 /**
  * Returns function that supplies $args as an arguments to passed function
  *
