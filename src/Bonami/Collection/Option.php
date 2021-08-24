@@ -392,6 +392,27 @@ abstract class Option implements IHashable, IteratorAggregate
     abstract public function each(callable $sideEffect): void;
 
     /**
+     * Executes $sideEffect if Option is some and ignores it for none. Then returns Option unchanged
+     * (the very same reference)
+     *
+     * Allows inserting side-effects in a chain of method calls
+     *
+     * Complexity: o(1)
+     *
+     * @phpstan-param callable(T): void $sideEffect
+     *
+     * @phpstan-return self<T>
+     */
+    public function tap(callable $sideEffect): self
+    {
+        foreach ($this as $item) {
+            $sideEffect($item);
+        }
+
+        return $this;
+    }
+
+    /**
      * Consider calling getOrElse instead
      *
      * @throws ValueIsNotPresentException

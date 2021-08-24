@@ -811,6 +811,26 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
     }
 
     /**
+     * Executes $sideEffect on each item of List and returns unchanged list.
+     *
+     * Allows inserting side-effects in a chain of method calls
+     *
+     * Complexity: o(n)
+     *
+     * @phpstan-param callable(T, int): void $sideEffect
+     *
+     * @phpstan-return static<T>
+     */
+    public function tap(callable $sideEffect)
+    {
+        foreach ($this->items as $key => $item) {
+            $sideEffect($item, $key);
+        }
+
+        return $this;
+    }
+
+    /**
      * Gets the very first value of List
      *
      * Complexity: o(1)

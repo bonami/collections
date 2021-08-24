@@ -356,6 +356,27 @@ abstract class TrySafe implements IHashable, IteratorAggregate
     }
 
     /**
+     * Executes $sideEffect if TrySafe is successful and ignores it otherwise. Then returns TrySafe unchanged
+     * (the very same reference)
+     *
+     * Allows inserting side-effects in a chain of method calls
+     *
+     * Complexity: o(1)
+     *
+     * @phpstan-param callable(T): void $sideEffect
+     *
+     * @phpstan-return self<T>
+     */
+    public function tap(callable $sideEffect): self
+    {
+        foreach ($this as $item) {
+            $sideEffect($item);
+        }
+
+        return $this;
+    }
+
+    /**
      * @template R
      *
      * @phpstan-param callable(R, T): R $reducer

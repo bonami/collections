@@ -497,6 +497,27 @@ abstract class Either implements IHashable, IteratorAggregate
     abstract public function each(callable $sideEffect): void;
 
     /**
+     * Executes $sideEffect if Either is right and ignores it for left. Then returns Either unchanged
+     * (the very same reference)
+     *
+     * Allows inserting side-effects in a chain of method calls
+     *
+     * Complexity: o(1)
+     *
+     * @phpstan-param callable(R): void $sideEffect
+     *
+     * @phpstan-return self<L, R>
+     */
+    public function tap(callable $sideEffect): self
+    {
+        foreach ($this as $item) {
+            $sideEffect($item);
+        }
+
+        return $this;
+    }
+
+    /**
      * Consider calling getOrElse instead
      *
      * @throws ValueIsNotPresentException
