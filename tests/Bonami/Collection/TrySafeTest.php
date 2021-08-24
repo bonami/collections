@@ -7,6 +7,7 @@ namespace Bonami\Collection;
 use Bonami\Collection\Hash\IHashable;
 use Exception;
 use PHPUnit\Framework\TestCase;
+use RuntimeException;
 use Throwable;
 
 class TrySafeTest extends TestCase
@@ -119,6 +120,38 @@ class TrySafeTest extends TestCase
         self::assertSame($exceptionThatRecoveryThrows, $recoveryEndedWithFailure->getFailureUnsafe());
     }
 
+    public function testRecoverIf(): void
+    {
+        $failure = new Exception();
+
+        self::assertTrue(TrySafe::failure($failure)
+            ->recoverIf(
+                tautology(),
+                static function (Throwable $failure): int {
+                    return 666;
+                }
+            )
+            ->isSuccess());
+
+        self::assertTrue(TrySafe::failure($failure)
+            ->recoverIf(
+                falsy(),
+                static function (Throwable $failure): int {
+                    return 666;
+                }
+            )
+            ->isFailure());
+
+        $exceptionThatRecoveryThrows = new Exception();
+        $recoveryEndedWithFailure = TrySafe::failure($failure)
+            ->recoverIf(tautology(), static function (Throwable $failure) use ($exceptionThatRecoveryThrows) {
+                throw $exceptionThatRecoveryThrows;
+            });
+
+        self::assertTrue($recoveryEndedWithFailure->isFailure());
+        self::assertSame($exceptionThatRecoveryThrows, $recoveryEndedWithFailure->getFailureUnsafe());
+    }
+
     public function testRecoverWith(): void
     {
         $success = TrySafe::success(42);
@@ -153,6 +186,55 @@ class TrySafeTest extends TestCase
 
         self::assertTrue($failure->recoverWith($wrap)->isFailure());
         self::assertSame($exceptionThatRecoveryWraps, $failure->recoverWith($wrap)->getFailureUnsafe());
+    }
+
+    public function testRecoverWithIf(): void
+    {
+        $originalException = new Exception();
+        $success = TrySafe::success(42);
+        $failure = TrySafe::failure($originalException);
+
+        $recover = static function (Throwable $ex): TrySafe {
+            return TrySafe::success(666);
+        };
+        $matchRuntimeException = static function (Throwable $throwable): bool {
+            return $throwable instanceof RuntimeException;
+        };
+        $matchAll = static function (Throwable $throwable): bool {
+            return true;
+        };
+        $exceptionThatRecoveryThrows = new Exception();
+        $throw = static function (Throwable $ex) use ($exceptionThatRecoveryThrows) {
+            throw $exceptionThatRecoveryThrows;
+        };
+        $exceptionThatRecoveryWraps = new Exception();
+        $wrap = static function (Throwable $failure) use ($exceptionThatRecoveryWraps) {
+            return TrySafe::failure($exceptionThatRecoveryWraps);
+        };
+
+        self::assertSame(42, $success->recoverWithIf($matchRuntimeException, $recover)->getUnsafe());
+        self::assertTrue($success->recoverWithIf($matchRuntimeException, $recover)->isSuccess());
+
+        self::assertSame(42, $success->recoverWithIf($matchRuntimeException, $throw)->getUnsafe());
+        self::assertTrue($success->recoverWithIf($matchRuntimeException, $throw)->isSuccess());
+
+        self::assertSame(42, $success->recoverWithIf($matchRuntimeException, $wrap)->getUnsafe());
+        self::assertTrue($success->recoverWithIf($matchRuntimeException, $wrap)->isSuccess());
+
+        self::assertTrue($failure->recoverWithIf($matchRuntimeException, $recover)->isFailure());
+        self::assertTrue($failure->recoverWithIf($matchAll, $recover)->isSuccess());
+        self::assertSame(666, $failure->recoverWithIf($matchAll, $recover)->getUnsafe());
+
+        self::assertTrue($failure->recoverWithIf($matchAll, $throw)->isFailure());
+        self::assertSame($exceptionThatRecoveryThrows, $failure->recoverWithIf($matchAll, $throw)->getFailureUnsafe());
+        self::assertSame(
+            $originalException,
+            $failure->recoverWithIf($matchRuntimeException, $throw)->getFailureUnsafe()
+        );
+
+        self::assertTrue($failure->recoverWithIf($matchRuntimeException, $wrap)->isFailure());
+        self::assertTrue($failure->recoverWithIf($matchAll, $wrap)->isFailure());
+        self::assertSame($exceptionThatRecoveryWraps, $failure->recoverWithIf($matchAll, $wrap)->getFailureUnsafe());
     }
 
     public function testToOption(): void

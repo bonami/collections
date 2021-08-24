@@ -357,6 +357,47 @@ TrySafe::fromCallable(fn() => $getTheUltimateAnswerOrThrow(true))
  
 _Disclaimer:_ As you probably noticed, we reflect possible exception in return type now, but on the other side, we've lost the information that wrapped success value is `float`.  This applies also to `Option`, `ArrayList` etc. Unfortunately there is no silver bullet solution, until PHP have the generics implemented (but hey, have look at [phpstan generics templates](https://medium.com/@ondrejmirtes/generics-in-php-using-phpdocs-14e7301953)). 
 
+#### TrySafe recovery
+
+We have already learned, that `TrySafe` can be used for chaining dependent operations that can fail (via `flatMap`). How about if we want to have some fallback / recovery in the middle of that chain?
+
+This is where `recover*` methods come in handy. Let's take a look at this example:
+
+```php
+/** @var callable(Throwable): TrySafe<Gps> */
+$recovery = fn (Throwable $ex): TrySafe => $backupApi->findGps($query);
+
+/** @var TrySafe<int> */
+$distance = $api
+    ->findGps($query)
+    ->recoverWith($findGpsFromBackupApi)
+    ->map(fn (Gps $gps) => $this->getDistance($home));
+```
+
+There are four `recover*` methods:
+- `recover` - Use it to recover with value directly
+- `recoverWith` - Use it to recover with value wrapped in `TrySafe`. That allows chaining multiple `failure` recoveries, likewise `flatMap` does for `success`.
+- `recoverIf` - Same as `recover`, except it recovers failure only if passed predicate evaluates to true. 
+- `recoverWithIf` - Same as `recoverWith`, except it recovers failure only if passed predicate evaluates to true. 
+
+```php
+/** @var callable(Throwable): TrySafe<Gps> */
+$recovery = fn (Throwable $ex): TrySafe => $backupApi->findGps($query);
+
+/** @var TrySafe<int> */
+$distance = $api
+    ->findGps($query)
+    ->recoverWithIf(
+        fn (Throwable $ex) => $ex instanceof ConnectionFailure, // recovers only if first api is down
+        $findGpsFromBackupApi,
+    )
+    ->recoverIf(
+        fn (Throwable $ex) => $ex instanceof MalformedQuery, // rather the recovery it keeps as more specific failure
+        fn (Throwable $ex) => throw new CannotGetGps("Query $query was malformed", 0, $ex),
+    )
+    ->map(fn (Gps $gps) => $this->getDistance($home));
+```
+
 ### Lift operator
 
 Lifting function into (applicative) context means transforming it so it can operate on values wrapped in that context.
