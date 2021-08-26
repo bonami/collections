@@ -340,6 +340,22 @@ abstract class TrySafe implements IHashable, IteratorAggregate
     abstract public function flatMap(callable $mapper): self;
 
     /**
+     * Executes $sideEffect if TrySafe is successful and ignores it otherwise
+     *
+     * Complexity: o(1)
+     *
+     * @phpstan-param callable(T): void $sideEffect
+     *
+     * @phpstan-return void
+     */
+    public function each(callable $sideEffect): void
+    {
+        foreach ($this as $item) {
+            $sideEffect($item);
+        }
+    }
+
+    /**
      * @template R
      *
      * @phpstan-param callable(R, T): R $reducer

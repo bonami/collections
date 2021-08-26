@@ -74,6 +74,23 @@ class TrySafeTest extends TestCase
         self::assertTrue($this->createFailure()->map($mapperThatThrows)->isFailure());
     }
 
+    public function testEach(): void
+    {
+        $success = TrySafe::success(1);
+        $failure = TrySafe::failure(new Exception());
+        $accumulated = 0;
+
+        $accumulate = static function (int $i) use (&$accumulated): void {
+            $accumulated += $i;
+        };
+
+        $failure->each($accumulate);
+        self::assertEquals(0, $accumulated);
+
+        $success->each($accumulate);
+        self::assertEquals(1, $accumulated);
+    }
+
     public function testFlatMap(): void
     {
         /** @phpstan-var callable(string): TrySafe<string> */
