@@ -257,6 +257,25 @@ class EitherTest extends TestCase
         self::assertEquals(42, $accumulated);
     }
 
+    public function testTapLeft(): void
+    {
+        $right = Either::right(42);
+        $left = Either::left(666);
+        $accumulated = 0;
+
+        $accumulate = static function (int $i) use (&$accumulated): void {
+            $accumulated += $i;
+        };
+
+        self::assertSame($left, $left->tapLeft($accumulate));
+        self::assertSame(666, $left->getLeftUnsafe());
+        self::assertEquals(666, $accumulated);
+
+        self::assertSame($right, $right->tapLeft($accumulate));
+        self::assertSame(42, $right->getRightUnsafe());
+        self::assertEquals(666, $accumulated);
+    }
+
     public function testAp(): void
     {
         $plus = static function (int $x, int $y): int {
