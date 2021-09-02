@@ -150,6 +150,11 @@ abstract class TrySafe implements IHashable, IteratorAggregate
                 return Option::some($this->value);
             }
 
+            public function toEither(): Either
+            {
+                return Either::right($this->value);
+            }
+
             public function resolve(callable $handleFailure, callable $handleSuccess)
             {
                 return $handleSuccess($this->value);
@@ -280,6 +285,11 @@ abstract class TrySafe implements IHashable, IteratorAggregate
             public function toOption(): Option
             {
                 return Option::none();
+            }
+
+            public function toEither(): Either
+            {
+                return Either::left($this->failure);
             }
 
             public function resolve(callable $handleFailure, callable $handleSuccess)
@@ -423,6 +433,11 @@ abstract class TrySafe implements IHashable, IteratorAggregate
 
     /** @phpstan-return Option<T> */
     abstract public function toOption(): Option;
+
+    /**
+     * @return Either<Throwable, T>
+     */
+    abstract public function toEither(): Either;
 
     /**
      * @template B

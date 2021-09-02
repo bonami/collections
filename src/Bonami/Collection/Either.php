@@ -533,8 +533,28 @@ abstract class Either implements IHashable, IteratorAggregate
      */
     abstract public function getOrElse($else);
 
-    /** @phpstan-return TrySafe<R> */
+    /**
+     * Converts Either to TrySafe.
+     *
+     * Left value is dropped and replaced with exception
+     * ValueIsNotPresentException wrapped in `TrySafe::failure`
+     *
+     * Right value is preserved and wrapped into `TrySafe::success`
+     *
+     * @phpstan-return TrySafe<R>
+     */
     abstract public function toTrySafe(): TrySafe;
+
+    /**
+     * Converts Either to Option.
+     *
+     * Right value is preserved and wrapped into `Option::some`
+     *
+     * Left value is dropped and replaced with `Option::none`
+     *
+     * @phpstan-return Option<R>
+     */
+    abstract public function toOption(): Option;
 
     /**
      * @param self<L, R> $else
@@ -549,14 +569,6 @@ abstract class Either implements IHashable, IteratorAggregate
      * @phpstan-return bool
      */
     abstract public function equals($other): bool;
-
-    /**
-     * Converts Either to Option. Useful for interoperability when you do not care
-     * about left (reason) at all.
-     *
-     * @return Option<R>
-     */
-    abstract public function toOption(): Option;
 
     /**
      * Switches left and right. This can be useful when you need to operate with
