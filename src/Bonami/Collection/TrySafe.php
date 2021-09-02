@@ -434,9 +434,7 @@ abstract class TrySafe implements IHashable, IteratorAggregate
     /** @phpstan-return Option<T> */
     abstract public function toOption(): Option;
 
-    /**
-     * @return Either<Throwable, T>
-     */
+    /** @return Either<Throwable, T> */
     abstract public function toEither(): Either;
 
     /**
