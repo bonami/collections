@@ -480,6 +480,26 @@ class Map implements Countable, IteratorAggregate
     }
 
     /**
+     * Executes $sideEffect on each value-key pair of Map and returns unchanged Map.
+     *
+     * Allows inserting side-effects in a chain of method calls
+     *
+     * Complexity: o(n)
+     *
+     * @phpstan-param callable(V, K): void $sideEffect
+     *
+     * @phpstan-return static<K, V>
+     */
+    public function tap(callable $sideEffect)
+    {
+        foreach ($this->values as $keyHash => $value) {
+            $sideEffect($value, $this->keys[$keyHash]);
+        }
+
+        return $this;
+    }
+
+    /**
      * Filters out Map by given predicate executed on keys
      *
      * Complexity: o(n)

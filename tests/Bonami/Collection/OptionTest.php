@@ -230,6 +230,23 @@ class OptionTest extends TestCase
         self::assertEquals(5, $accumulator);
     }
 
+    public function testTap(): void
+    {
+        $some = Option::some(1);
+        $none = Option::none();
+        $accumulated = 0;
+
+        $accumulate = static function (int $i) use (&$accumulated): void {
+            $accumulated += $i;
+        };
+
+        self::assertSame($none, $none->tap($accumulate));
+        self::assertEquals(0, $accumulated);
+
+        self::assertSame($some, $some->tap($accumulate));
+        self::assertEquals(1, $accumulated);
+    }
+
     public function testAp(): void
     {
         $plus = static function (int $x, int $y): int {

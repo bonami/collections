@@ -217,6 +217,33 @@ class LazyListTest extends TestCase
         self::assertEquals(55, $accumulator);
     }
 
+    public function testTap(): void
+    {
+        $lazyList = LazyList::range(1, 3);
+
+        $accumulated = 0;
+        $acumulate = static function (int $item) use (&$accumulated): void {
+            $accumulated += $item;
+        };
+
+        $concatenated = '';
+        $concat = static function (string $string) use (&$concatenated): void {
+            $concatenated .= $string;
+        };
+
+        $materialized = $lazyList
+            ->tap($acumulate)
+            ->map(static function (int $x): string {
+                return (string)$x;
+            })
+            ->tap($concat)
+            ->toArray();
+
+        self::assertSame(['1', '2', '3'], $materialized);
+        self::assertSame(6, $accumulated);
+        self::assertSame('123', $concatenated);
+    }
+
     public function testReduce(): void
     {
         $lazyList = new LazyList(range(1, 3));

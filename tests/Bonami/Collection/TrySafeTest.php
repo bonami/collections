@@ -74,6 +74,57 @@ class TrySafeTest extends TestCase
         self::assertTrue($this->createFailure()->map($mapperThatThrows)->isFailure());
     }
 
+    public function testEach(): void
+    {
+        $success = TrySafe::success(1);
+        $failure = TrySafe::failure(new Exception());
+        $accumulated = 0;
+
+        $accumulate = static function (int $i) use (&$accumulated): void {
+            $accumulated += $i;
+        };
+
+        $failure->each($accumulate);
+        self::assertEquals(0, $accumulated);
+
+        $success->each($accumulate);
+        self::assertEquals(1, $accumulated);
+    }
+
+    public function testTap(): void
+    {
+        $success = TrySafe::success(1);
+        $failure = TrySafe::failure(new Exception());
+        $accumulated = 0;
+
+        $accumulate = static function (int $i) use (&$accumulated): void {
+            $accumulated += $i;
+        };
+
+        self::assertSame($failure, $failure->tap($accumulate));
+        self::assertEquals(0, $accumulated);
+
+        self::assertSame($success, $success->tap($accumulate));
+        self::assertEquals(1, $accumulated);
+    }
+
+    public function testTapFailure(): void
+    {
+        $success = TrySafe::success(1);
+        $failure = TrySafe::failure(new Exception('msg'));
+
+        $extractedMessage = '';
+        $extractMessage = static function (Throwable $ex) use (&$extractedMessage): void {
+            $extractedMessage = $ex->getMessage();
+        };
+
+        self::assertSame($success, $success->tapFailure($extractMessage));
+        self::assertEquals('', $extractedMessage);
+
+        self::assertSame($failure, $failure->tapFailure($extractMessage));
+        self::assertEquals('msg', $extractedMessage);
+    }
+
     public function testFlatMap(): void
     {
         /** @phpstan-var callable(string): TrySafe<string> */

@@ -97,6 +97,11 @@ abstract class TrySafe implements IHashable, IteratorAggregate
                 return $trySafe;
             }
 
+            public function tapFailure(callable $sideEffect): TrySafe
+            {
+                return $this;
+            }
+
             /** @inheritDoc */
             public function recover(callable $callable): TrySafe
             {
@@ -212,6 +217,13 @@ abstract class TrySafe implements IHashable, IteratorAggregate
 
             public function flatMap(callable $mapper): TrySafe
             {
+                return $this;
+            }
+
+            public function tapFailure(callable $sideEffect): TrySafe
+            {
+                $sideEffect($this->failure);
+
                 return $this;
             }
 
@@ -338,6 +350,57 @@ abstract class TrySafe implements IHashable, IteratorAggregate
      * @phpstan-return self<B>
      */
     abstract public function flatMap(callable $mapper): self;
+
+    /**
+     * Executes $sideEffect if TrySafe is successful and ignores it otherwise
+     *
+     * Complexity: o(1)
+     *
+     * @phpstan-param callable(T): void $sideEffect
+     *
+     * @phpstan-return void
+     */
+    public function each(callable $sideEffect): void
+    {
+        foreach ($this as $item) {
+            $sideEffect($item);
+        }
+    }
+
+    /**
+     * Executes $sideEffect if TrySafe is successful and ignores it otherwise. Then returns TrySafe unchanged
+     * (the very same reference)
+     *
+     * Allows inserting side-effects in a chain of method calls
+     *
+     * Complexity: o(1)
+     *
+     * @phpstan-param callable(T): void $sideEffect
+     *
+     * @phpstan-return self<T>
+     */
+    public function tap(callable $sideEffect): self
+    {
+        foreach ($this as $item) {
+            $sideEffect($item);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Executes $sideEffect if TrySafe is failure and ignores it otherwise. Then returns TrySafe unchanged
+     * (the very same reference)
+     *
+     * Allows inserting side-effects in a chain of method calls
+     *
+     * Complexity: o(1)
+     *
+     * @phpstan-param callable(Throwable): void $sideEffect
+     *
+     * @phpstan-return self<T>
+     */
+    abstract public function tapFailure(callable $sideEffect): self;
 
     /**
      * @template R

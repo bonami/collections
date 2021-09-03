@@ -90,6 +90,13 @@ abstract class Either implements IHashable, IteratorAggregate
             {
             }
 
+            public function tapLeft(callable $sideEffect): Either
+            {
+                $sideEffect($this->left);
+
+                return $this;
+            }
+
             public function exists(callable $predicate): bool
             {
                 return false;
@@ -245,6 +252,11 @@ abstract class Either implements IHashable, IteratorAggregate
             public function each(callable $sideEffect): void
             {
                 $sideEffect($this->right);
+            }
+
+            public function tapLeft(callable $sideEffect): Either
+            {
+                return $this;
             }
 
             public function exists(callable $predicate): bool
@@ -495,6 +507,41 @@ abstract class Either implements IHashable, IteratorAggregate
 
     /** @phpstan-param callable(R): void $sideEffect */
     abstract public function each(callable $sideEffect): void;
+
+    /**
+     * Executes $sideEffect if Either is right and ignores it for left. Then returns Either unchanged
+     * (the very same reference)
+     *
+     * Allows inserting side-effects in a chain of method calls
+     *
+     * Complexity: o(1)
+     *
+     * @phpstan-param callable(R): void $sideEffect
+     *
+     * @phpstan-return self<L, R>
+     */
+    public function tap(callable $sideEffect): self
+    {
+        foreach ($this as $item) {
+            $sideEffect($item);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Executes $sideEffect if Either is left and ignores it for right. Then returns Either unchanged
+     * (the very same reference)
+     *
+     * Allows inserting side-effects in a chain of method calls
+     *
+     * Complexity: o(1)
+     *
+     * @phpstan-param callable(L): void $sideEffect
+     *
+     * @phpstan-return self<L, R>
+     */
+    abstract public function tapLeft(callable $sideEffect): self;
 
     /**
      * Consider calling getOrElse instead

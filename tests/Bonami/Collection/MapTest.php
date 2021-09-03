@@ -126,6 +126,28 @@ class MapTest extends TestCase
         ]), $filtered);
     }
 
+    public function testTap(): void
+    {
+        $map = new Map([
+            [1, 'a'],
+            [2, 'b'],
+        ]);
+
+        $accumulated = 0;
+        $accumulateKeys = static function (string $value, int $key) use (&$accumulated): void {
+            $accumulated += $key;
+        };
+
+        $concatenated = '';
+        $concatValues = static function (string $value, int $key) use (&$concatenated): void {
+            $concatenated .= $value;
+        };
+
+        self::assertSame($map, $map->tap($accumulateKeys)->tap($concatValues));
+        self::assertSame(3, $accumulated);
+        self::assertSame('ab', $concatenated);
+    }
+
     public function testFind(): void
     {
         self::assertSame(Option::none(), Map::fromEmpty()->find(tautology()));

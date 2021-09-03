@@ -479,6 +479,19 @@ class ArrayListTest extends TestCase
         self::assertEquals(3, $acc);
     }
 
+    public function testTap(): void
+    {
+        $a = ArrayList::of(1, 2);
+        $accumulated = 0;
+
+        $accumulate = static function (int $i) use (&$accumulated): void {
+            $accumulated += $i;
+        };
+
+        self::assertSame($a, $a->tap($accumulate));
+        self::assertSame(3, $accumulated);
+    }
+
     public function testMaxWithNoCallback(): void
     {
         self::assertEquals(Option::some(3), ArrayList::of(2, 1, 3)->max());

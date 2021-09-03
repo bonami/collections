@@ -191,6 +191,32 @@ class LazyList implements IteratorAggregate
     }
 
     /**
+     * Defers execution of $sideEffect on each item of LazyList without materializing. Returns a new LazyList with same
+     * contents (same unchanged items)
+     *
+     * Allows inserting side-effects in a chain of method calls.
+     *
+     * Also allows executing multiple side-effects on same LazyList
+     *
+     * Complexity: o(n)
+     *
+     * @phpstan-param callable(T, int): void $sideEffect
+     *
+     * @phpstan-return static<T>
+     */
+    public function tap(callable $sideEffect)
+    {
+        $tap = function () use ($sideEffect): Generator {
+            foreach ($this->items as $key => $item) {
+                $sideEffect($item, $key);
+                yield $key => $item;
+            }
+        };
+
+        return new self($tap());
+    }
+
+    /**
      * Computes reduction of the elements of the collection.
      *
      * @template R
