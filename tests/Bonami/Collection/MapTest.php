@@ -159,6 +159,17 @@ class MapTest extends TestCase
         );
     }
 
+    public function testFindKey(): void
+    {
+        self::assertSame(Option::none(), Map::fromEmpty()->findKey(tautology()));
+        self::assertEquals(
+            2,
+            Map::fromIterable([[1, 'a'], [2, 'b']])->findKey(static function ($key, $value): bool {
+                return $key === 2 && $value !== 'a';
+            })->getUnsafe()
+        );
+    }
+
     public function testTake(): void
     {
         self::assertEquals(Map::fromEmpty(), Map::fromEmpty()->take(1));

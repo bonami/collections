@@ -543,6 +543,25 @@ class Map implements Countable, IteratorAggregate
     }
 
     /**
+     * Finds first key in Map by given predicate where it returns true for value-key pair
+     *
+     * Complexity: o(n) - stops when predicate matches
+     *
+     * @phpstan-param callable(K, V): bool $predicate
+     *
+     * @phpstan-return Option<K>
+     */
+    public function findKey(callable $predicate): Option
+    {
+        foreach ($this->keys as $keyHash => $key) {
+            if ($predicate($key, $this->values[$keyHash])) {
+                return Option::some($key);
+            }
+        }
+        return Option::none();
+    }
+
+    /**
      * Takes specified number of items from start
      *
      * Complexity: o(n) - where n is `$size`
