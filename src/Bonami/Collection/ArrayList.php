@@ -1161,6 +1161,16 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
     }
 
     /**
+     * Converts list into lazy list
+     *
+     * @return LazyList<T>
+     */
+    public function lazy(): LazyList
+    {
+        return LazyList::fromIterable($this->items);
+    }
+
+    /**
      * A helper method for converting item to human readable string.
      *
      * @internal

@@ -702,6 +702,13 @@ class ArrayListTest extends TestCase
         self::assertEquals(Map::fromIterable([[1, 'a'], [2, 'b']]), $pairs->toMap());
     }
 
+    public function testLazy(): void
+    {
+        $lazyList = ArrayList::of('a')->lazy();
+        self::assertInstanceOf(LazyList::class, $lazyList);
+        self::assertEquals(['a'], $lazyList->toArray());
+    }
+
     public function testToString(): void
     {
         $a = ArrayList::fromIterable(range(1, 3));
