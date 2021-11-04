@@ -41,6 +41,11 @@ abstract class Option implements IHashable, IteratorAggregate
                 return false;
             }
 
+            public function isEmpty(): bool
+            {
+                return true;
+            }
+
             public function map(callable $mapper): Option
             {
                 return $this;
@@ -149,6 +154,11 @@ abstract class Option implements IHashable, IteratorAggregate
             public function isDefined(): bool
             {
                 return true;
+            }
+
+            public function isEmpty(): bool
+            {
+                return false;
             }
 
             public function ap(Option $option): Option
@@ -351,6 +361,8 @@ abstract class Option implements IHashable, IteratorAggregate
     }
 
     abstract public function isDefined(): bool;
+
+    abstract public function isEmpty(): bool;
 
     /**
      * @phpstan-param callable(T): bool $predicate

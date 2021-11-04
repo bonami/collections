@@ -15,12 +15,15 @@ class OptionTest extends TestCase
     {
         $none = Option::none();
         self::assertFalse($none->isDefined());
+        self::assertTrue($none->isEmpty());
 
         $some = Option::some(666);
         self::assertTrue($some->isDefined());
+        self::assertFalse($some->isEmpty());
 
         $fromNull = Option::of(null);
         self::assertTrue($fromNull->isDefined());
+        self::assertFalse($fromNull->isEmpty());
     }
 
     public function testCreateFromNullable(): void
@@ -31,7 +34,6 @@ class OptionTest extends TestCase
 
     public function testLift(): void
     {
-
         $none = Option::none();
         $xOpt = Option::some(1);
         $yOpt = Option::some(4);
