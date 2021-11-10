@@ -192,6 +192,13 @@ class OptionTest extends TestCase
         self::assertInstanceOf(ValueIsNotPresentException::class, Option::none()->toTrySafe()->getFailureUnsafe());
     }
 
+    public function testToEither(): void
+    {
+        $val = 'Hello world';
+        self::assertEquals($val, Option::some($val)->toEither(42)->getRightUnsafe());
+        self::assertEquals(42, Option::none()->toEither(42)->getLeftUnsafe());
+    }
+
     public function testIterator(): void
     {
         $val = 'Hello world';

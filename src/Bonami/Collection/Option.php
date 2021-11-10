@@ -110,6 +110,18 @@ abstract class Option implements IHashable, IteratorAggregate
                 return TrySafe::failure(new ValueIsNotPresentException());
             }
 
+            /**
+             * @template L
+             *
+             * @param L $left
+             *
+             * @return Either<L, T>
+             */
+            public function toEither($left): Either
+            {
+                return Either::left($left);
+            }
+
             /** @phpstan-return int|string */
             public function hashCode()
             {
@@ -234,6 +246,18 @@ abstract class Option implements IHashable, IteratorAggregate
             public function toTrySafe(): TrySafe
             {
                 return TrySafe::success($this->value);
+            }
+
+            /**
+             * @template L
+             *
+             * @param L $left
+             *
+             * @return Either<L, T>
+             */
+            public function toEither($left): Either
+            {
+                return Either::right($this->value);
             }
 
             /** @phpstan-return int|string */
@@ -469,6 +493,15 @@ abstract class Option implements IHashable, IteratorAggregate
 
     /** @phpstan-return TrySafe<T> */
     abstract public function toTrySafe(): TrySafe;
+
+    /**
+     * @template L
+     *
+     * @param L $left
+     *
+     * @phpstan-return Either<L, T>
+     */
+    abstract public function toEither($left): Either;
 
     /**
      * @phpstan-param self<T> $else
