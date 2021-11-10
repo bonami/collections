@@ -249,6 +249,23 @@ class OptionTest extends TestCase
         self::assertEquals(1, $accumulated);
     }
 
+    public function testTapNone(): void
+    {
+        $some = Option::some(1);
+        $none = Option::none();
+        $counter = 0;
+
+        $increment = static function () use (&$counter): void {
+            $counter++;
+        };
+
+        self::assertSame($some, $some->tapNone($increment));
+        self::assertEquals(0, $counter);
+
+        self::assertSame($none, $none->tapNone($increment));
+        self::assertEquals(1, $counter);
+    }
+
     public function testAp(): void
     {
         $plus = static function (int $x, int $y): int {

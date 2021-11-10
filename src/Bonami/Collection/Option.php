@@ -65,6 +65,12 @@ abstract class Option implements IHashable, IteratorAggregate
             {
             }
 
+            public function tapNone(callable $sideEffect): Option
+            {
+                $sideEffect();
+                return $this;
+            }
+
             public function filter(callable $predicate): Option
             {
                 return $this;
@@ -184,6 +190,11 @@ abstract class Option implements IHashable, IteratorAggregate
             public function each(callable $sideEffect): void
             {
                 $sideEffect($this->value);
+            }
+
+            public function tapNone(callable $sideEffect): Option
+            {
+                return $this;
             }
 
             public function filter(callable $predicate): Option
@@ -423,6 +434,20 @@ abstract class Option implements IHashable, IteratorAggregate
 
         return $this;
     }
+
+    /**
+     * Executes $sideEffect if Option is none and ignores it for some. Then returns Option unchanged
+     * (the very same reference)
+     *
+     * Allows inserting side-effects when you want to react on missing value (like logging)
+     *
+     * Complexity: o(1)
+     *
+     * @phpstan-param callable(): void $sideEffect
+     *
+     * @phpstan-return self<T>
+     */
+    abstract public function tapNone(callable $sideEffect): self;
 
     /**
      * Consider calling getOrElse instead
