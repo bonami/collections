@@ -69,9 +69,11 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      *
      * Complexity: o(n) - where n is number of passed items
      *
-     * @phpstan-param T ...$item - with any number of occurences
+     * @template V
      *
-     * @phpstan-return static<T>
+     * @phpstan-param V ...$item - with any number of occurences
+     *
+     * @phpstan-return static<V>
      */
     public static function of(...$item)
     {
@@ -83,10 +85,12 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      *
      * Complexity: o(n)
      *
-     * @phpstan-param T $item - an item to be filled
+     * @template V
+     *
+     * @phpstan-param V $item - an item to be filled
      * @phpstan-param int $size - size of desired ArrayList with filled $item as each element
      *
-     * @phpstan-return static<T>
+     * @phpstan-return static<V>
      */
     public static function fill($item, int $size)
     {
@@ -143,9 +147,11 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      *
      * Complexity: o(n) or o(1) - depending on type of iterable collection passed.
      *
-     * @phpstan-param iterable<int, T> $iterable
+     * @template V
      *
-     * @phpstan-return static<T>
+     * @phpstan-param iterable<int, V> $iterable
+     *
+     * @phpstan-return static<V>
      */
     public static function fromIterable(iterable $iterable)
     {
@@ -162,9 +168,11 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      *
      * @internal
      *
-     * @phpstan-param iterable<int, T> $iterable
+     * @template V
      *
-     * @phpstan-return array<T>
+     * @phpstan-param iterable<int, V> $iterable
+     *
+     * @phpstan-return array<V>
      */
     private static function convertIterableToArray(iterable $iterable): array
     {
