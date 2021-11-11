@@ -149,7 +149,7 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      */
     public static function fromIterable(iterable $iterable)
     {
-        return new static(static::convertIterableToArray($iterable));
+        return new static(self::convertIterableToArray($iterable));
     }
 
     /**
