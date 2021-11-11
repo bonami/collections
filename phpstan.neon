@@ -2,7 +2,6 @@ includes:
 	- phpstan.baseline.neon
 parameters:
 	ignoreErrors:
-	autoload_directories:
 	universalObjectCratesClasses:
 		- stdClass
 		- DOMElement
