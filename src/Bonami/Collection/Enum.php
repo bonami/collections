@@ -21,7 +21,7 @@ abstract class Enum implements IHashable, JsonSerializable
     /** @phpstan-var array<string, array<int|string, static>> */
     private static $instanceIndex;
 
-    /** @phpstan-var array<string, array<int|string, string>> */
+    /** @phpstan-var null|array<string, array<int|string, string>> */
     private static $constNameIndex;
 
     /** @phpstan-var int|string */
