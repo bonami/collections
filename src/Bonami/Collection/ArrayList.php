@@ -75,7 +75,7 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      */
     public static function of(...$item)
     {
-        return new static($item);
+        return new static(array_values($item));
     }
 
     /**

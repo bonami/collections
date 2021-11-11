@@ -115,7 +115,7 @@ class LazyList implements IteratorAggregate
      */
     public static function of(...$items)
     {
-         return new static($items);
+         return new static(array_values($items));
     }
 
     /**
@@ -557,7 +557,7 @@ class LazyList implements IteratorAggregate
      */
     public function add(...$items)
     {
-         return $this->concat(new self($items));
+         return $this->concat(new self(array_values($items)));
     }
 
     /**
