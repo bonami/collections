@@ -688,9 +688,6 @@ class LazyList implements IteratorAggregate
      */
     final public static function traverse(iterable $iterable, callable $mapperToApplicative): self
     {
-        $mapperToApplicative = $mapperToApplicative ?? static function ($a) {
-            return $a;
-        };
         return LazyList::fromIterable($iterable)
             ->reduce(
                 static function (self $reducedApplicative, $impureItem) use ($mapperToApplicative): self {
