@@ -192,18 +192,20 @@ abstract class Either implements IHashable, IteratorAggregate
     }
 
     /**
-     * @param R $right
+     * @template V
      *
-     * @return self<L, R>
+     * @param V $right
+     *
+     * @return self<L, V>
      */
     final public static function right($right): self
     {
         return new class ($right) extends Either {
 
-            /** @phpstan-var R */
+            /** @phpstan-var V */
             private $right;
 
-            /** @phpstan-param R $right */
+            /** @phpstan-param V $right */
             protected function __construct($right)
             {
                 $this->right = $right;
@@ -281,7 +283,7 @@ abstract class Either implements IHashable, IteratorAggregate
              *
              * @throws ValueIsNotPresentException
              *
-             * @phpstan-return R
+             * @phpstan-return V
              */
             public function getRightUnsafe()
             {
@@ -298,7 +300,7 @@ abstract class Either implements IHashable, IteratorAggregate
              *
              * @phpstan-param E $else
              *
-             * @phpstan-return R|E
+             * @phpstan-return V|E
              */
             public function getOrElse($else)
             {
@@ -319,7 +321,7 @@ abstract class Either implements IHashable, IteratorAggregate
                 return sprintf('%s::right(%s)', self::class, $valueHash);
             }
 
-            /** @phpstan-return Traversable<int, R> */
+            /** @phpstan-return Traversable<int, V> */
             public function getIterator()
             {
                 return new ArrayIterator([$this->right]);
@@ -371,9 +373,11 @@ abstract class Either implements IHashable, IteratorAggregate
     abstract public function mapLeft(callable $mapper): self;
 
     /**
-     * @param R $value
+     * @template V
      *
-     * @phpstan-return self<L, R>
+     * @param V $value
+     *
+     * @phpstan-return self<L, V>
      */
     final public static function of($value): self
     {

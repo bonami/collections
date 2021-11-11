@@ -303,6 +303,7 @@ class Map implements Countable, IteratorAggregate
      */
     public function mapKeys(callable $mapper): self
     {
+        /** @var self<B, V> $map */
         $map = self::fromEmpty();
 
         $keysValues = array_map($mapper, $this->keys, $this->values);
@@ -350,6 +351,7 @@ class Map implements Countable, IteratorAggregate
      */
     public function mapValues(callable $mapper): self
     {
+        /** @var self<K, B> $map */
         $map = self::fromEmpty();
         $map->keys = $this->keys;
         $values = array_combine(
@@ -406,6 +408,7 @@ class Map implements Countable, IteratorAggregate
      */
     public function concat(Map $mergeMap)
     {
+        /** @var self<K|K2, V|V2> $map */
         $map = static::fromEmpty();
         $keys = array_replace($this->keys, $mergeMap->keys);
         $values = array_replace($this->values, $mergeMap->values);
@@ -899,6 +902,7 @@ class Map implements Countable, IteratorAggregate
             ->map(static function (array $zipped) {
                 [$keysChunk, $valuesChunk] = $zipped;
 
+                /** @var Map<K, V> $map */
                 $map = static::fromEmpty();
                 $map->keys = $keysChunk;
                 $map->values = $valuesChunk;

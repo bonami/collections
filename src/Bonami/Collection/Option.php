@@ -22,16 +22,18 @@ abstract class Option implements IHashable, IteratorAggregate
     private static $none;
 
     /**
-     * @phpstan-param ?T $value
+     * @template V
      *
-     * @phpstan-return self<T>
+     * @phpstan-param ?V $value
+     *
+     * @phpstan-return self<V>
      */
     final public static function fromNullable($value): self
     {
         return $value === null ? self::none() : self::some($value);
     }
 
-    /** @phpstan-return self<T> */
+    /** @phpstan-return self<mixed> */
     final public static function none(): Option
     {
         return self::$none ?? self::$none = new class extends Option {
@@ -152,18 +154,20 @@ abstract class Option implements IHashable, IteratorAggregate
     }
 
     /**
-     * @phpstan-param T $value
+     * @template V
      *
-     * @phpstan-return self<T>
+     * @phpstan-param V $value
+     *
+     * @phpstan-return self<V>
      */
     final public static function some($value): self
     {
         return new class ($value) extends Option {
 
-            /** @phpstan-var T */
+            /** @phpstan-var V */
             private $value;
 
-            /** @phpstan-param T $value */
+            /** @phpstan-param V $value */
             protected function __construct($value)
             {
                 $this->value = $value;
@@ -224,7 +228,7 @@ abstract class Option implements IHashable, IteratorAggregate
              *
              * @throws ValueIsNotPresentException
              *
-             * @phpstan-return T
+             * @phpstan-return V
              */
             public function getUnsafe()
             {
@@ -236,7 +240,7 @@ abstract class Option implements IHashable, IteratorAggregate
              *
              * @phpstan-param E $else
              *
-             * @phpstan-return T|E
+             * @phpstan-return V|E
              */
             public function getOrElse($else)
             {
@@ -253,7 +257,7 @@ abstract class Option implements IHashable, IteratorAggregate
              *
              * @param L $left
              *
-             * @return Either<L, T>
+             * @return Either<L, V>
              */
             public function toEither($left): Either
             {
@@ -269,7 +273,7 @@ abstract class Option implements IHashable, IteratorAggregate
                 return sprintf('%s::some(%s)', self::class, $valueHash);
             }
 
-            /** @phpstan-return Traversable<int, T> */
+            /** @phpstan-return Traversable<int, V> */
             public function getIterator()
             {
                 return new ArrayIterator([$this->value]);
@@ -302,9 +306,11 @@ abstract class Option implements IHashable, IteratorAggregate
     abstract public function map(callable $mapper): self;
 
     /**
-     * @phpstan-param T $value
+     * @template V
      *
-     * @phpstan-return self<T>
+     * @phpstan-param V $value
+     *
+     * @phpstan-return self<V>
      */
     final public static function of($value): self
     {

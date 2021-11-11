@@ -89,9 +89,11 @@ class LazyList implements IteratorAggregate
     }
 
     /**
-     * @phpstan-param Traversable<T> $items
+     * @template V
      *
-     * @phpstan-return static<T>
+     * @phpstan-param Traversable<V> $items
+     *
+     * @phpstan-return static<V>
      */
     public static function fromTraversable(Traversable $items)
     {
@@ -99,9 +101,11 @@ class LazyList implements IteratorAggregate
     }
 
     /**
-     * @phpstan-param iterable<T> $iterable
+     * @template V
      *
-     * @phpstan-return static<T>
+     * @phpstan-param iterable<V> $iterable
+     *
+     * @phpstan-return static<V>
      */
     public static function fromIterable(iterable $iterable)
     {
@@ -109,9 +113,11 @@ class LazyList implements IteratorAggregate
     }
 
     /**
-     * @phpstan-param T ...$items
+     * @template V
      *
-     * @phpstan-return static<T>
+     * @phpstan-param V ...$items
+     *
+     * @phpstan-return static<V>
      */
     public static function of(...$items)
     {
