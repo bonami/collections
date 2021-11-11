@@ -130,7 +130,7 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
     {
         return $delimiter === ''
             ? new self(preg_split('//u', $string, -1, PREG_SPLIT_NO_EMPTY) ?: [])
-            : new self(explode($delimiter, $string) ?: []);
+            : new self(explode($delimiter, $string));
     }
 
     /**
