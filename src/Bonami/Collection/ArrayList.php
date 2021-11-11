@@ -1040,7 +1040,9 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
         return new ArrayList(
             array_map(
                 static function ($chunk) {
-                    return new static($chunk);
+                    /** @var static<T> $chunkList */
+                    $chunkList = new static($chunk);
+                    return $chunkList;
                 },
                 array_chunk($this->items, $size)
             )
