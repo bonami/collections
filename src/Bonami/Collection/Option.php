@@ -503,6 +503,18 @@ abstract class Option implements IHashable, IteratorAggregate
      */
     abstract public function toEither($left): Either;
 
+    /** @return ArrayList<T> */
+    public function toList(): ArrayList
+    {
+        return ArrayList::fromIterable($this);
+    }
+
+    /** @return array<T> */
+    public function toArray(): array
+    {
+        return iterator_to_array($this);
+    }
+
     /**
      * @phpstan-param self<T> $else
      *

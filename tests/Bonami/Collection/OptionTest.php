@@ -199,6 +199,20 @@ class OptionTest extends TestCase
         self::assertEquals(42, Option::none()->toEither(42)->getLeftUnsafe());
     }
 
+    public function testToList(): void
+    {
+        $val = 'Hello world';
+        self::assertEquals([$val], Option::some($val)->toList()->toArray());
+        self::assertEquals([], Option::none()->toList()->toArray());
+    }
+
+    public function testToArray(): void
+    {
+        $val = 'Hello world';
+        self::assertEquals([$val], Option::some($val)->toArray());
+        self::assertEquals([], Option::none()->toArray());
+    }
+
     public function testIterator(): void
     {
         $val = 'Hello world';
