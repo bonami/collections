@@ -8,6 +8,7 @@ use Bonami\Collection\Exception\OutOfBoundsException;
 use Bonami\Collection\Hash\IHashable;
 use Countable;
 use IteratorAggregate;
+use ReflectionClass;
 use Traversable;
 
 use function array_chunk;
@@ -141,11 +142,17 @@ class Map implements Countable, IteratorAggregate
             case $key instanceof IHashable:
                 $stringKey = get_class($key) . ' keyhash:' . $keyHash;
                 break;
+            case is_object($key) && (new ReflectionClass($key))->hasMethod('__toString'):
+                $stringKey = (string)$key;
+                break;
+            case is_object($key):
+                $stringKey = get_class($key);
+                break;
             default:
-                $stringKey = 'object';
+                $stringKey = 'unknown';
         }
 
-        throw new OutOfBoundsException(sprintf('Key (%d) does not exist', $stringKey));
+        throw new OutOfBoundsException(sprintf('Key (%s) does not exist', $stringKey));
     }
 
     /**

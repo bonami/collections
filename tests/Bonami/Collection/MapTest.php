@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Bonami\Collection;
 
 use ArrayIterator;
+use Bonami\Collection\Exception\OutOfBoundsException;
+use Bonami\Collection\Hash\IHashable;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use stdClass;
@@ -168,6 +170,37 @@ class MapTest extends TestCase
                 return $key === 2 && $value !== 'a';
             })->getUnsafe()
         );
+    }
+
+    /**
+     * @param mixed $key
+     * @param string $expectedMessage
+     *
+     * @dataProvider provideMissingKeys
+     */
+    public function testItShouldReportMissingKey($key, string $expectedMessage): void
+    {
+        $this->expectException(OutOfBoundsException::class);
+        $this->expectExceptionMessage($expectedMessage);
+
+        Map::fromEmpty()->getUnsafe($key);
+    }
+
+    /** @return iterable<string, array{mixed, string}> */
+    public function provideMissingKeys(): iterable
+    {
+
+        $hashable = new class implements IHashable {
+            public function hashCode()
+            {
+                return 'hash';
+            }
+        };
+
+        yield 'string key' => ['missing', 'Key (missing) does not exist'];
+        yield 'hashable key' => [$hashable, 'Key (' . get_class($hashable) . ' keyhash:hash) does not exist'];
+        yield 'stringable key' => [ArrayList::of(42), 'Key ([42]) does not exist'];
+        yield 'generic object key' => [new stdClass(), 'Key (stdClass) does not exist'];
     }
 
     public function testTake(): void
