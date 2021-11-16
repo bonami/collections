@@ -56,8 +56,10 @@ function testEqualsTransitivity(callable $assertEquals, callable $equals, $a, $b
 /* @see https://wiki.haskell.org/Functor#Functor_Laws */
 
 /**
- * @phpstan-param callable(mixed, mixed): void $assertEquals
- * @phpstan-param mixed $functor - this should implement some generic functor interface
+ * @template F
+ *
+ * @phpstan-param callable(F, F): void $assertEquals
+ * @phpstan-param F $functor - this should implement some generic functor interface
  *
  * @phpstan-return void
  */

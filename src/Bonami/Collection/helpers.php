@@ -55,6 +55,16 @@ function applicator(...$args): callable
     };
 }
 
+/**
+ * @template A
+ * @template B
+ * @template C
+ *
+ * @param callable(B): C $f
+ * @param callable(A): B $g
+ *
+ * @return callable(A): C
+ */
 function compose(callable $f, callable $g): callable
 {
     return static function (...$args) use ($f, $g) {
