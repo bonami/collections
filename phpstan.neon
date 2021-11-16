@@ -9,7 +9,7 @@ parameters:
 		- SimpleXMLElement
 	inferPrivatePropertyTypeFromConstructor: true
 	reportUnmatchedIgnoredErrors: false
-	level: 7
+	level: 8
 	paths:
 		- src/
 		- tests/
