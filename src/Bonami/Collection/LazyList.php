@@ -91,18 +91,6 @@ class LazyList implements IteratorAggregate
     /**
      * @template V
      *
-     * @phpstan-param Traversable<V> $items
-     *
-     * @phpstan-return static<V>
-     */
-    public static function fromTraversable(Traversable $items)
-    {
-         return new static($items);
-    }
-
-    /**
-     * @template V
-     *
      * @phpstan-param iterable<V> $iterable
      *
      * @phpstan-return static<V>
