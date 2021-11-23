@@ -306,7 +306,7 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      *
      * @phpstan-param callable(T, int): B $mapper
      *
-     * @phpstan-return self<mixed>
+     * @phpstan-return self<B>
      */
     public function map(callable $mapper): self
     {
