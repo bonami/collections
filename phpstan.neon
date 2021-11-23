@@ -1,15 +1,15 @@
 includes:
 	- phpstan.baseline.neon
+	- vendor/bonami/phpstan-collections/extension.neon
 parameters:
 	ignoreErrors:
-	autoload_directories:
 	universalObjectCratesClasses:
 		- stdClass
 		- DOMElement
 		- SimpleXMLElement
 	inferPrivatePropertyTypeFromConstructor: true
 	reportUnmatchedIgnoredErrors: false
-	level: 7
+	level: 8
 	paths:
 		- src/
 		- tests/

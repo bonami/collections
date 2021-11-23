@@ -69,13 +69,15 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      *
      * Complexity: o(n) - where n is number of passed items
      *
-     * @phpstan-param T ...$item - with any number of occurences
+     * @template V
      *
-     * @phpstan-return static<T>
+     * @phpstan-param V ...$item - with any number of occurences
+     *
+     * @phpstan-return static<V>
      */
     public static function of(...$item)
     {
-        return new static($item);
+        return new static(array_values($item));
     }
 
     /**
@@ -83,10 +85,12 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      *
      * Complexity: o(n)
      *
-     * @phpstan-param T $item - an item to be filled
+     * @template V
+     *
+     * @phpstan-param V $item - an item to be filled
      * @phpstan-param int $size - size of desired ArrayList with filled $item as each element
      *
-     * @phpstan-return static<T>
+     * @phpstan-return static<V>
      */
     public static function fill($item, int $size)
     {
@@ -130,7 +134,7 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
     {
         return $delimiter === ''
             ? new self(preg_split('//u', $string, -1, PREG_SPLIT_NO_EMPTY) ?: [])
-            : new self(explode($delimiter, $string) ?: []);
+            : new self(explode($delimiter, $string));
     }
 
     /**
@@ -143,13 +147,15 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      *
      * Complexity: o(n) or o(1) - depending on type of iterable collection passed.
      *
-     * @phpstan-param iterable<int, T> $iterable
+     * @template V
      *
-     * @phpstan-return static<T>
+     * @phpstan-param iterable<int, V> $iterable
+     *
+     * @phpstan-return static<V>
      */
     public static function fromIterable(iterable $iterable)
     {
-        return new static(static::convertIterableToArray($iterable));
+        return new static(self::convertIterableToArray($iterable));
     }
 
     /**
@@ -162,9 +168,11 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      *
      * @internal
      *
-     * @phpstan-param iterable<int, T> $iterable
+     * @template V
      *
-     * @phpstan-return array<T>
+     * @phpstan-param iterable<int, V> $iterable
+     *
+     * @phpstan-return array<V>
      */
     private static function convertIterableToArray(iterable $iterable): array
     {
@@ -1040,7 +1048,9 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
         return new ArrayList(
             array_map(
                 static function ($chunk) {
-                    return new static($chunk);
+                    /** @var static<T> $chunkList */
+                    $chunkList = new static($chunk);
+                    return $chunkList;
                 },
                 array_chunk($this->items, $size)
             )
@@ -1247,9 +1257,6 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      */
     final public static function traverse(iterable $iterable, callable $mapperToApplicative): self
     {
-        $mapperToApplicative = $mapperToApplicative ?? static function ($a) {
-            return $a;
-        };
         return LazyList::fromIterable($iterable)
             ->reduce(
                 static function (self $reducedApplicative, $impureItem) use ($mapperToApplicative): self {

@@ -70,13 +70,16 @@ class TrySafeTest extends TestCase
         );
 
         self::assertTrue(TrySafe::success('Hello world')->map($mapperThatThrows)->isFailure());
-        self::assertTrue($this->createFailure()->map($mapper)->isFailure());
-        self::assertTrue($this->createFailure()->map($mapperThatThrows)->isFailure());
+        /** @var TrySafe<string> $failure */
+        $failure = $this->createFailure();
+        self::assertTrue($failure->map($mapper)->isFailure());
+        self::assertTrue($failure->map($mapperThatThrows)->isFailure());
     }
 
     public function testEach(): void
     {
         $success = TrySafe::success(1);
+        /** @var TrySafe<int> $failure */
         $failure = TrySafe::failure(new Exception());
         $accumulated = 0;
 
@@ -94,6 +97,7 @@ class TrySafeTest extends TestCase
     public function testTap(): void
     {
         $success = TrySafe::success(1);
+        /** @var TrySafe<int> $failure */
         $failure = TrySafe::failure(new Exception());
         $accumulated = 0;
 
@@ -145,9 +149,11 @@ class TrySafeTest extends TestCase
             TrySafe::success('world')->flatMap($mapperToSuccess)
         );
 
-        self::assertTrue($this->createFailure()->flatMap($mapperToSuccess)->isFailure());
+        /** @var TrySafe<string> $trySafe */
+        $trySafe = $this->createFailure();
+        self::assertTrue($trySafe->flatMap($mapperToSuccess)->isFailure());
         self::assertTrue(TrySafe::success('world')->flatMap($mapperToFailure)->isFailure());
-        self::assertTrue($this->createFailure()->flatMap($mapperToFailure)->isFailure());
+        self::assertTrue($trySafe->flatMap($mapperToFailure)->isFailure());
         self::assertTrue(TrySafe::success('world')->flatMap($mapperThatThrows)->isFailure());
     }
 
@@ -206,6 +212,7 @@ class TrySafeTest extends TestCase
     public function testRecoverWith(): void
     {
         $success = TrySafe::success(42);
+        /** @var TrySafe<int> $failure */
         $failure = TrySafe::failure(new Exception());
 
         $recover = static function (Throwable $ex): TrySafe {
@@ -216,7 +223,8 @@ class TrySafeTest extends TestCase
             throw $exceptionThatRecoveryThrows;
         };
         $exceptionThatRecoveryWraps = new Exception();
-        $wrap = static function (Throwable $failure) use ($exceptionThatRecoveryWraps) {
+        /** @var callable(Throwable): TrySafe<int> $wrap */
+        $wrap = static function (Throwable $failure) use ($exceptionThatRecoveryWraps): TrySafe {
             return TrySafe::failure($exceptionThatRecoveryWraps);
         };
 
@@ -243,6 +251,7 @@ class TrySafeTest extends TestCase
     {
         $originalException = new Exception();
         $success = TrySafe::success(42);
+        /** @var TrySafe<int> $failure */
         $failure = TrySafe::failure($originalException);
 
         $recover = static function (Throwable $ex): TrySafe {
@@ -259,6 +268,7 @@ class TrySafeTest extends TestCase
             throw $exceptionThatRecoveryThrows;
         };
         $exceptionThatRecoveryWraps = new Exception();
+        /** @var callable(Throwable): TrySafe<int> $wrap */
         $wrap = static function (Throwable $failure) use ($exceptionThatRecoveryWraps) {
             return TrySafe::failure($exceptionThatRecoveryWraps);
         };

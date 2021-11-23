@@ -55,6 +55,16 @@ function applicator(...$args): callable
     };
 }
 
+/**
+ * @template A
+ * @template B
+ * @template C
+ *
+ * @param callable(B): C $f
+ * @param callable(A): B $g
+ *
+ * @return callable(A): C
+ */
 function compose(callable $f, callable $g): callable
 {
     return static function (...$args) use ($f, $g) {
@@ -70,11 +80,7 @@ function compose(callable $f, callable $g): callable
 function hashKey($key)
 {
     if ($key === (object)$key) {
-        if ($key instanceof IHashable) {
-              return $key->hashCode() ?? spl_object_hash($key);
-        }
-
-        return spl_object_hash($key);
+        return $key instanceof IHashable ? $key->hashCode() : spl_object_hash($key);
     }
     if (is_array($key)) {
          return serialize(array_map(static function ($value) {

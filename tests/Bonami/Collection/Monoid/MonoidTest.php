@@ -27,7 +27,7 @@ class MonoidTest extends TestCase
         self::assertEquals($result, $monoid->concat($a, $b));
     }
 
-    /** @phpstan-return iterable<array{0: mixed, 1: mixed, 2: Monoid<mixed>, 3: mixed}> */
+    /** @phpstan-return iterable<array{0: mixed, 1: mixed, 2: mixed, 3: mixed}> */
     public function provideFixtures(): iterable
     {
         yield [1, 2, new IntSumMonoid(), 3];

@@ -57,12 +57,6 @@ class LazyListTest extends TestCase
         self::assertEquals([1, 2, 3, 4, 5, 6, 7], $seq->toArray());
     }
 
-    public function testFromTraversable(): void
-    {
-        $seq = LazyList::fromTraversable(new ArrayIterator([1, 2, 3]));
-        self::assertEquals([1, 2, 3], $seq->toArray());
-    }
-
     public function testFromIterable(): void
     {
         $lazyList = LazyList::fromIterable(new ArrayIterator([1, 2]));
@@ -97,14 +91,14 @@ class LazyListTest extends TestCase
 
     public function testAp(): void
     {
-        $callbacks = LazyList::of(
+        $callbacks = LazyList::fromIterable([
             static function ($a, $b) {
                 return $a . $b;
             },
             static function ($a, $b) {
                 return [$a, $b];
-            }
-        );
+            },
+        ]);
         $mapped = $callbacks
             ->ap(LazyList::of(1, 2))
             ->ap(LazyList::of('a', 'b'));
@@ -125,14 +119,14 @@ class LazyListTest extends TestCase
 
     public function testApNone(): void
     {
-        $callbacks = LazyList::of(
+        $callbacks = LazyList::fromIterable([
             static function ($a, $b) {
                 return $a . $b;
             },
             static function ($a, $b) {
                 return [$a, $b];
-            }
-        );
+            },
+        ]);
         $mapped = $callbacks
             ->ap(LazyList::of(1, 2))
             ->ap(LazyList::fromEmpty());
@@ -171,14 +165,16 @@ class LazyListTest extends TestCase
 
     public function testSequenceWithMultipleValues(): void
     {
+        /** @var array<LazyList<int|string>> $iterable */
+        $iterable = [LazyList::of(1, 2), LazyList::of('a', 'b')];
         self::assertEquals(
             [
-                ArrayList::of(1, 'a'),
-                ArrayList::of(2, 'a'),
-                ArrayList::of(1, 'b'),
-                ArrayList::of(2, 'b'),
+                ArrayList::fromIterable([1, 'a']),
+                ArrayList::fromIterable([2, 'a']),
+                ArrayList::fromIterable([1, 'b']),
+                ArrayList::fromIterable([2, 'b']),
             ],
-            LazyList::sequence([LazyList::of(1, 2), LazyList::of('a', 'b')])->toArray()
+            LazyList::sequence($iterable)->toArray()
         );
     }
 

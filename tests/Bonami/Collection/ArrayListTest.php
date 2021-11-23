@@ -109,14 +109,14 @@ class ArrayListTest extends TestCase
 
     public function testAp(): void
     {
-        $callbacks = ArrayList::of(
+        $callbacks = ArrayList::fromIterable([
             static function ($a, $b) {
                 return $a . $b;
             },
             static function ($a, $b) {
                 return [$a, $b];
-            }
-        );
+            },
+        ]);
         $mapped = $callbacks
             ->ap(ArrayList::of(1, 2))
             ->ap(ArrayList::of('a', 'b'));
@@ -137,14 +137,14 @@ class ArrayListTest extends TestCase
 
     public function testApNone(): void
     {
-        $callbacks = ArrayList::of(
+        $callbacks = ArrayList::fromIterable([
             static function ($a, $b) {
                 return $a . $b;
             },
             static function ($a, $b) {
                 return [$a, $b];
-            }
-        );
+            },
+        ]);
         $mapped = $callbacks
             ->ap(ArrayList::of(1, 2))
             ->ap(ArrayList::fromEmpty());
@@ -186,14 +186,18 @@ class ArrayListTest extends TestCase
 
     public function testSequenceWithMultipleValues(): void
     {
+        /** @var ArrayList<int|string> $a */
+        $a = ArrayList::of(1, 2);
+        /** @var ArrayList<int|string> $b */
+        $b = ArrayList::of('a', 'b');
         self::assertEquals(
             ArrayList::of(
-                ArrayList::of(1, 'a'),
-                ArrayList::of(2, 'a'),
-                ArrayList::of(1, 'b'),
-                ArrayList::of(2, 'b')
+                ArrayList::fromIterable([1, 'a']),
+                ArrayList::fromIterable([2, 'a']),
+                ArrayList::fromIterable([1, 'b']),
+                ArrayList::fromIterable([2, 'b']),
             ),
-            ArrayList::sequence([ArrayList::of(1, 2), ArrayList::of('a', 'b')])
+            ArrayList::sequence([$a, $b])
         );
     }
 
@@ -341,7 +345,7 @@ class ArrayListTest extends TestCase
     {
         self::assertEquals(
             Option::none(),
-            ArrayList::of()->findKey(tautology())
+            ArrayList::fromEmpty()->findKey(tautology())
         );
     }
 
@@ -368,12 +372,14 @@ class ArrayListTest extends TestCase
 
     public function testContains(): void
     {
-        self::assertTrue(ArrayList::of(1)->contains('1', false));
-        self::assertFalse(ArrayList::of(1)->contains('1', true));
-        self::assertTrue(ArrayList::of(1)->contains(1, true));
+        /** @var int|string $i */
+        $i = 1;
+        self::assertTrue(ArrayList::of($i)->contains('1', false));
+        self::assertFalse(ArrayList::of($i)->contains('1', true));
+        self::assertTrue(ArrayList::of($i)->contains($i, true));
 
-        $o1 = (object)['a' => 1];
-        $o2 = (object)['a' => 1];
+        $o1 = (object)['a' => $i];
+        $o2 = (object)['a' => $i];
         self::assertTrue(ArrayList::of($o1)->contains($o2, false));
         self::assertFalse(ArrayList::of($o1)->contains($o2, true));
         self::assertTrue(ArrayList::of($o1)->contains($o1, true));
@@ -465,7 +471,7 @@ class ArrayListTest extends TestCase
     {
         self::assertEquals(Option::some(3), ArrayList::of(2, 1, 3)->max(comparator()));
         self::assertEquals(Option::some(3), ArrayList::of(3, 3, 3)->max(comparator()));
-        self::assertEquals(Option::none(), ArrayList::of()->max(comparator()));
+        self::assertEquals(Option::none(), ArrayList::fromEmpty()->max(comparator()));
     }
 
     public function testEach(): void
@@ -536,7 +542,7 @@ class ArrayListTest extends TestCase
     {
         self::assertEquals(
             ArrayList::of(1),
-            ArrayList::of(null, 1, null)->withoutNulls()
+            ArrayList::fromIterable([null, 1, null])->withoutNulls()
         );
     }
 
