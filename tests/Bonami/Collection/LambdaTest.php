@@ -9,7 +9,6 @@ use PHPUnit\Framework\TestCase;
 
 class LambdaTest extends TestCase
 {
-
     public function testCurry(): void
     {
         $curried = Lambda::of(static function (int $a, int $b): int {

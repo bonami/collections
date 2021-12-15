@@ -13,7 +13,6 @@ use stdClass;
 
 class ArrayListTest extends TestCase
 {
-
     public function testFromEmpty(): void
     {
         self::assertEquals(new ArrayList([]), ArrayList::fromEmpty());

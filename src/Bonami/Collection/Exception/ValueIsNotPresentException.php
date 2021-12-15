@@ -8,5 +8,4 @@ use RuntimeException;
 
 class ValueIsNotPresentException extends RuntimeException implements CollectionException
 {
-
 }

@@ -10,7 +10,6 @@ use Throwable;
 
 class EitherTest extends TestCase
 {
-
     public function testCreate(): void
     {
         $left = Either::left('error');

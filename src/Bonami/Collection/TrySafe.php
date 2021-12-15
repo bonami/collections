@@ -52,7 +52,6 @@ abstract class TrySafe implements IHashable, IteratorAggregate
     {
         /** @phpstan-extends TrySafe<T> */
         return new class ($value) extends TrySafe {
-
             /** @phpstan-var T */
             private $value;
 
@@ -191,7 +190,6 @@ abstract class TrySafe implements IHashable, IteratorAggregate
     {
         /** @phpstan-extends TrySafe<T> */
         return new class ($failure) extends TrySafe {
-
             /** @phpstan-var Throwable */
             private $failure;
 

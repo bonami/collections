@@ -13,7 +13,6 @@ use Bonami\Collection\Option;
  */
 class OptionMonoid implements Monoid
 {
-
     /** @phpstan-var Monoid<T> */
     private $monoid;
 

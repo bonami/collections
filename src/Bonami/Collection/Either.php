@@ -30,7 +30,6 @@ use Traversable;
  */
 abstract class Either implements IHashable, IteratorAggregate
 {
-
     /**
      * @param L $left
      *
@@ -39,7 +38,6 @@ abstract class Either implements IHashable, IteratorAggregate
     final public static function left($left): self
     {
         return new class ($left) extends Either {
-
             /** @var L */
             private $left;
 
@@ -199,7 +197,6 @@ abstract class Either implements IHashable, IteratorAggregate
     final public static function right($right): self
     {
         return new class ($right) extends Either {
-
             /** @phpstan-var R */
             private $right;
 

@@ -11,7 +11,6 @@ namespace Bonami\Collection;
  */
 class EnumList extends ArrayList
 {
-
     /** @phpstan-return ArrayList<int|string> */
     public function getValueList(): ArrayList
     {

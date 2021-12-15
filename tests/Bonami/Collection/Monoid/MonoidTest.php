@@ -9,7 +9,6 @@ use PHPUnit\Framework\TestCase;
 
 class MonoidTest extends TestCase
 {
-
     /**
      * @dataProvider provideFixtures
      *

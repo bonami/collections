@@ -7,7 +7,6 @@ namespace Bonami\Collection\Monoid;
 /** @phpstan-implements Monoid<int> */
 class IntSumMonoid implements Monoid
 {
-
     public function concat($a, $b): int
     {
         return $a + $b;

@@ -10,7 +10,6 @@ use stdClass;
 
 class EnumTest extends TestCase
 {
-
     public function testItShouldThrowExceptionWhenCreateMethodArgumentIsObject(): void
     {
         $this->expectException(InvalidEnumValueException::class);

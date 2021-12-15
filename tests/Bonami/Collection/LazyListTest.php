@@ -13,7 +13,6 @@ use stdClass;
 
 class LazyListTest extends TestCase
 {
-
     public function testRange(): void
     {
         $range = LazyList::range(3, 30, 3);

@@ -12,7 +12,6 @@ use function gettype;
 
 class InvalidEnumValueException extends InvalidArgumentException
 {
-
     /**
      * @param mixed $value
      * @param class-string<Enum> $enumClass
