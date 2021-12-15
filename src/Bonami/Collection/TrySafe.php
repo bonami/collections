@@ -19,6 +19,9 @@ use Throwable;
  */
 abstract class TrySafe implements IHashable, IteratorAggregate
 {
+    /** @use Monad1<T> */
+    use Monad1;
+
     /**
      * @template V
      *
@@ -27,6 +30,18 @@ abstract class TrySafe implements IHashable, IteratorAggregate
      * @phpstan-return self<V>
      */
     final public static function of($value): self
+    {
+        return self::success($value);
+    }
+
+    /**
+     * @template V
+     *
+     * @phpstan-param V $value
+     *
+     * @phpstan-return self<V>
+     */
+    final public static function pure($value): self
     {
         return self::success($value);
     }
@@ -77,15 +92,6 @@ abstract class TrySafe implements IHashable, IteratorAggregate
             {
                 return self::fromCallable(function () use ($mapper) {
                     return $mapper($this->value);
-                });
-            }
-
-            /** @inheritDoc */
-            public function ap(TrySafe $trySafe): TrySafe
-            {
-                assert(is_callable($this->value));
-                return $trySafe->map(function ($value) {
-                    return Lambda::of($this->value)($value);
                 });
             }
 
@@ -214,11 +220,6 @@ abstract class TrySafe implements IHashable, IteratorAggregate
                 return $this;
             }
 
-            public function ap(TrySafe $trySafe): TrySafe
-            {
-                return $this;
-            }
-
             public function flatMap(callable $mapper): TrySafe
             {
                 return $this;
@@ -334,13 +335,6 @@ abstract class TrySafe implements IHashable, IteratorAggregate
             }
         };
     }
-
-    /**
-     * @phpstan-param self<mixed> $trySafe
-     *
-     * @phpstan-return self<mixed>
-     */
-    abstract public function ap(self $trySafe): self;
 
     /**
      * @template B
@@ -518,75 +512,4 @@ abstract class TrySafe implements IHashable, IteratorAggregate
      * @phpstan-return B
      */
     abstract public function resolve(callable $handleFailure, callable $handleSuccess);
-
-    /**
-     * Upgrades callable to accept and return `self` as arguments.
-     *
-     * @phpstan-param callable $callable
-     *
-     * @phpstan-return callable
-     */
-    final public static function lift(callable $callable): callable
-    {
-        return static function (self ...$arguments) use ($callable): self {
-            $reducer = static function (self $applicative, self $argument): self {
-                /** @phpstan-var mixed $argument */
-                return $applicative->ap($argument);
-            };
-            return LazyList::fromIterable($arguments)
-                ->reduce($reducer, self::of($callable));
-        };
-    }
-
-    /**
-     * Takes any `iterable<A>`, for each item `A` transforms to applicative with $mapperToApplicative
-     * `A => self<B>` and cumulates it in `self<ArrayList<B>>`.
-     *
-     * @see sequence - behaves same as traverse, execept it is called with identity
-     *
-     * @template A
-     * @template B
-     *
-     * @phpstan-param iterable<A> $iterable
-     * @phpstan-param callable(A): self<B> $mapperToApplicative
-     *
-     * @phpstan-return self<ArrayList<B>>
-     */
-    final public static function traverse(iterable $iterable, callable $mapperToApplicative): self
-    {
-        return LazyList::fromIterable($iterable)
-            ->reduce(
-                static function (self $reducedApplicative, $impureItem) use ($mapperToApplicative): self {
-                    $applicative = $mapperToApplicative($impureItem);
-                    assert($applicative instanceof self);
-                    return $reducedApplicative
-                        ->map(static function (ArrayList $resultIterable): callable {
-                            return static function ($item) use ($resultIterable): ArrayList {
-                                return $resultIterable->concat(ArrayList::of($item));
-                            };
-                        })
-                        ->ap($applicative);
-                },
-                self::of(ArrayList::fromEmpty())
-            );
-    }
-
-    /**
-     * Takes any `iterable<self<A>>` and sequence it into `self<ArrayList<A>>`. If any `self` is failure, the result is
-     * "short circuited" and result is first failure.
-     *
-     * @template A
-     *
-     * @phpstan-param iterable<self<A>> $iterable
-     *
-     * @phpstan-return self<ArrayList<A>>
-     */
-    final public static function sequence(iterable $iterable): self
-    {
-        /** @phpstan-var callable(self<A>): self<A> $identity */
-        $identity = static function ($a) {
-            return $a;
-        };
-        return self::traverse($iterable, $identity);
-    }
 }

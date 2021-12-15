@@ -30,6 +30,9 @@ use IteratorAggregate;
  */
 abstract class Either implements IHashable, IteratorAggregate
 {
+    /** @use Monad2<L, R> */
+    use Monad2;
+
     /**
      * @param L $left
      *
@@ -65,11 +68,6 @@ abstract class Either implements IHashable, IteratorAggregate
             public function mapLeft(callable $mapper): Either
             {
                 return self::left($mapper($this->left));
-            }
-
-            public function ap(Either $either): Either
-            {
-                return $this;
             }
 
             public function flatMap(callable $mapper): Either
@@ -218,14 +216,6 @@ abstract class Either implements IHashable, IteratorAggregate
                 return true;
             }
 
-            public function ap(Either $either): Either
-            {
-                assert(is_callable($this->right));
-                return $either->map(function ($value) {
-                    return Lambda::of($this->right)($value);
-                });
-            }
-
             public function map(callable $mapper): Either
             {
                 return self::of($mapper($this->right));
@@ -352,11 +342,11 @@ abstract class Either implements IHashable, IteratorAggregate
     }
 
     /**
-     * @template B
+     * @template A
      *
-     * @param callable(R): B $mapper
+     * @param callable(R): A $mapper
      *
-     * @phpstan-return self<L, B>
+     * @phpstan-return self<L, A>
      */
     abstract public function map(callable $mapper): self;
 
@@ -382,83 +372,15 @@ abstract class Either implements IHashable, IteratorAggregate
     }
 
     /**
-     * Upgrades callable to accept and return `self` as arguments.
+     * @template V
      *
-     * @phpstan-param callable $callable
+     * @param V $value
      *
-     * @phpstan-return callable
+     * @phpstan-return self<L, V>
      */
-    final public static function lift(callable $callable): callable
+    final public static function pure($value): self
     {
-        return static function (self ...$arguments) use ($callable): self {
-            $reducer = static function (self $applicative, self $argument): self {
-                /** @phpstan-var mixed $argument */
-                return $applicative->ap($argument);
-            };
-            return LazyList::fromIterable($arguments)
-                ->reduce($reducer, self::of($callable));
-        };
-    }
-
-    /**
-     * @phpstan-param self<L, mixed> $either
-     *
-     * @phpstan-return self<L, mixed>
-     */
-    abstract public function ap(self $either): self;
-
-    /**
-     * Takes any `iterable<Either<L2, R2>>` and sequence it into `Either<L2, ArrayList<R2>>`.
-     * If any `Either` is left instance, the result is "short circuited" and result is left.
-     *
-     * @template L2
-     * @template R2
-     *
-     * @phpstan-param iterable<self<L2, R2>> $iterable
-     *
-     * @phpstan-return self<L2, ArrayList<R2>>
-     */
-    final public static function sequence(iterable $iterable): self
-    {
-        /** @phpstan-var callable(self<L2, R2>): self<L2, R2> $identity */
-        $identity = static function ($a) {
-            return $a;
-        };
-        return self::traverse($iterable, $identity);
-    }
-
-    /**
-     * Takes any `iterable<A>`, for each item `A` transforms to applicative with $mapperToApplicative
-     * `A => Either<L2, R2>` and cumulates it in `Either<L2, ArrayList<R2>>`.
-     *
-     * @see sequence - behaves same as traverse, execept it is called with identity
-     *
-     * @template A
-     * @template L2
-     * @template R2
-     *
-     * @phpstan-param iterable<A> $iterable
-     * @phpstan-param callable(A): self<L2, R2> $mapperToApplicative
-     *
-     * @phpstan-return self<L2, ArrayList<R2>>
-     */
-    final public static function traverse(iterable $iterable, callable $mapperToApplicative): self
-    {
-        return LazyList::fromIterable($iterable)
-            ->reduce(
-                static function (self $reducedApplicative, $impureItem) use ($mapperToApplicative): self {
-                    $applicative = $mapperToApplicative($impureItem);
-                    assert($applicative instanceof self);
-                    return $reducedApplicative
-                        ->map(static function (ArrayList $resultIterable): callable {
-                            return static function ($item) use ($resultIterable): ArrayList {
-                                return $resultIterable->concat(ArrayList::of($item));
-                            };
-                        })
-                        ->ap($applicative);
-                },
-                self::of(ArrayList::fromEmpty())
-            );
+        return self::right($value);
     }
 
     abstract public function isRight(): bool;

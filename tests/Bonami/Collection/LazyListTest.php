@@ -90,45 +90,46 @@ class LazyListTest extends TestCase
 
     public function testAp(): void
     {
+        /** @var LazyList<CurriedFunction<string, CurriedFunction<string, string|array<string>>>> */
         $callbacks = LazyList::fromIterable([
-            static function ($a, $b) {
+            CurriedFunction::curry2(static function ($a, $b) {
                 return $a . $b;
-            },
-            static function ($a, $b) {
+            }),
+            CurriedFunction::curry2(static function ($a, $b) {
                 return [$a, $b];
-            },
+            }),
         ]);
-        $mapped = $callbacks
-            ->ap(LazyList::of(1, 2))
-            ->ap(LazyList::of('a', 'b'));
+        $numbersApplied = LazyList::ap($callbacks, LazyList::of('1', '2'));
+        $lettersApplied = LazyList::ap($numbersApplied, LazyList::of('a', 'b'));
 
         $expected = [
             '1a',
-            [1, 'a'],
-            '2a',
-            [2, 'a'],
             '1b',
-            [1, 'b'],
+            '2a',
             '2b',
-            [2, 'b'],
+            ['1', 'a'],
+            ['1', 'b'],
+            ['2', 'a'],
+            ['2', 'b'],
         ];
 
-        self::assertEquals($expected, $mapped->toArray());
+        self::assertEquals($expected, $lettersApplied->toArray());
     }
 
     public function testApNone(): void
     {
+        /** @var LazyList<CurriedFunction<string, CurriedFunction<string, string|array<string>>>> */
         $callbacks = LazyList::fromIterable([
-            static function ($a, $b) {
+            CurriedFunction::curry2(static function ($a, $b) {
                 return $a . $b;
-            },
-            static function ($a, $b) {
+            }),
+            CurriedFunction::curry2(static function ($a, $b) {
                 return [$a, $b];
-            },
+            }),
         ]);
-        $mapped = $callbacks
-            ->ap(LazyList::of(1, 2))
-            ->ap(LazyList::fromEmpty());
+        /** @var LazyList<string> $empty */
+        $empty = LazyList::fromEmpty();
+        $mapped = LazyList::ap(LazyList::ap($callbacks, LazyList::of('1', '2')), $empty);
 
         self::assertEquals([], $mapped->toArray());
     }
@@ -141,7 +142,7 @@ class LazyListTest extends TestCase
 
         $mapped = $lifted(LazyList::of(1, 2), LazyList::of('a', 'b'));
 
-        self::assertEquals(['1a', '2a', '1b', '2b'], $mapped->toArray());
+        self::assertEquals(['1a', '1b', '2a', '2b'], $mapped->toArray());
     }
 
     public function testSequence(): void
@@ -169,8 +170,8 @@ class LazyListTest extends TestCase
         self::assertEquals(
             [
                 ArrayList::fromIterable([1, 'a']),
-                ArrayList::fromIterable([2, 'a']),
                 ArrayList::fromIterable([1, 'b']),
+                ArrayList::fromIterable([2, 'a']),
                 ArrayList::fromIterable([2, 'b']),
             ],
             LazyList::sequence($iterable)->toArray()
