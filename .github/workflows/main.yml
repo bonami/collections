@@ -23,7 +23,7 @@ jobs:
       - name: "Install PHP"
         uses: "shivammathur/setup-php@v2"
         with:
-          php-versions: "${{ matrix.php }}"
+          php-version: "${{ matrix.php }}"
           extensions: "json, dom, mbstring"
 
       - name: "Cache dependencies"
@@ -54,7 +54,7 @@ jobs:
       - name: "Install PHP"
         uses: "shivammathur/setup-php@v2"
         with:
-          php-versions: "${{ matrix.php }}"
+          php-version: "${{ matrix.php }}"
           extensions: "json, dom, mbstring"
 
       - name: "Cache dependencies"
@@ -85,7 +85,7 @@ jobs:
       - name: "Install PHP"
         uses: "shivammathur/setup-php@v2"
         with:
-          php-versions: "${{ matrix.php }}"
+          php-version: "${{ matrix.php }}"
           extensions: "json, dom, mbstring"
 
       - name: "Validate Composer"
