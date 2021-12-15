@@ -11,13 +11,13 @@ test:
 	$(MAKE) fmt-check
 
 phpstan:
-	docker run -it --rm -v ${PWD}:/app -w /app composer run-script phpstan
+	docker run -it --rm -v ${PWD}:/app -w /app php:8.0-cli-alpine php -d memory_limit=-1 bin/phpstan --ansi analyse
 
 phpunit:
-	docker run -it --rm -v ${PWD}:/app -w /app composer run-script phpunit
+	docker run -it --rm -v ${PWD}:/app -w /app php:8.0-cli-alpine php bin/phpunit --colors=always
 
 fmt-check:
-	docker run -it --rm -v ${PWD}:/app -w /app composer run-script phpcs
+	docker run -it --rm -v ${PWD}:/app -w /app php:8.0-cli-alpine php bin/phpcs --standard=./ruleset.xml --extensions=php --tab-width=4 -sp ./src ./tests
 
 fmt:
-	docker run -it --rm -v ${PWD}:/app -w /app composer run-script phpcbf
+	docker run -it --rm -v ${PWD}:/app -w /app php:8.0-cli-alpine php bin/phpcbf --standard=./ruleset.xml --extensions=php --tab-width=4 -sp ./src ./tests
