@@ -68,7 +68,7 @@ jobs:
         run: "composer update --no-suggest --no-interaction --prefer-dist --no-progress"
 
       - name: "PHPStan"
-        run: "composer phpstan"
+        run: "bin/phpstan --ansi analyse"
 
   coding-standards:
     name: "Coding Standard"
