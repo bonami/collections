@@ -44,14 +44,16 @@ function falsy(): callable
 /**
  * Returns function that supplies $args as an arguments to passed function
  *
- * @phpstan-param mixed... $args
+ * @template A
  *
- * @phpstan-return callable
+ * @phpstan-param A $arg $args
+ *
+ * @phpstan-return callable(callable(A): mixed): mixed
  */
-function applicator(...$args): callable
+function applicator1($arg): callable
 {
-    return static function (callable $callable) use ($args) {
-        return $callable(...$args);
+    return static function (callable $callable) use ($arg) {
+        return $callable($arg);
     };
 }
 

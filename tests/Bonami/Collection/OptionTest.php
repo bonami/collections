@@ -288,21 +288,23 @@ class OptionTest extends TestCase
 
     public function testAp(): void
     {
-        $plus = static function (int $x, int $y): int {
+        $purePlus = Option::of(CurriedFunction::curry2(static function (int $x, int $y): int {
             return $x + $y;
-        };
-
-        $purePlus = Option::of($plus);
-        $none = Option::none();
+        }));
+        /** @var Option<int> $noneInt */
+        $noneInt = Option::none();
         $one = Option::some(1);
         $two = Option::some(2);
         $three = Option::some(3);
 
-        $this->equals($purePlus->ap($one)->ap($two), $three);
-        $this->equals($purePlus->ap($one)->ap($none), $none);
-        $this->equals($purePlus->ap($none)->ap($one), $none);
-        $this->equals($purePlus->ap($none)->ap($none), $none);
-        $this->equals($none->ap($one)->ap($two), $none);
+        /** @var Option<CurriedFunction<int, CurriedFunction<int, int>>> $noneClosure */
+        $noneClosure = Option::none();
+
+        $this->equals(Option::ap(Option::ap($purePlus, $one), $two), $three);
+        $this->equals(Option::ap(Option::ap($purePlus, $one), $noneInt), $noneInt);
+        $this->equals(Option::ap(Option::ap($purePlus, $noneInt), $one), $noneInt);
+        $this->equals(Option::ap(Option::ap($purePlus, $noneInt), $noneInt), $noneInt);
+        $this->equals(Option::ap(Option::ap($noneClosure, $one), $two), $noneInt);
     }
 
     public function testTraverse(): void
@@ -404,11 +406,16 @@ class OptionTest extends TestCase
 
     public function testLaws(): void
     {
+
         $assertEquals = function ($a, $b): void {
             $this->equals($a, $b);
         };
         $optionEquals = static function (Option $a, Option $b): bool {
             return $a->equals($b);
+        };
+        $ap = static function (Option $a, Option $b): Option {
+            // @phpstan-ignore-next-line
+            return Option::ap($a, $b);
         };
         $pure = static function ($value): Option {
             return Option::of($value);
@@ -419,12 +426,12 @@ class OptionTest extends TestCase
         $someThree = Option::some(3);
         $none = Option::none();
 
-        $plus2 = static function (int $x): int {
+        $plus2 = CurriedFunction::of(static function (int $x): int {
             return $x + 2;
-        };
-        $multiple2 = static function (int $x): int {
+        });
+        $multiple2 = CurriedFunction::of(static function (int $x): int {
             return $x * 2;
-        };
+        });
 
         testEqualsReflexivity($assertEquals, $optionEquals, $someOne);
         testEqualsReflexivity($assertEquals, $optionEquals, $none);
@@ -444,19 +451,19 @@ class OptionTest extends TestCase
         testFunctorComposition($assertEquals, $someOne, $plus2, $multiple2);
         testFunctorComposition($assertEquals, $none, $plus2, $multiple2);
 
-        testApplicativeIdentity($assertEquals, $pure, $someOne);
-        testApplicativeIdentity($assertEquals, $pure, $none);
+        testApplicativeIdentity($assertEquals, $ap, $pure, $someOne);
+        testApplicativeIdentity($assertEquals, $ap, $pure, $none);
 
-        testApplicativeHomomorphism($assertEquals, $pure, 666, $multiple2);
-        testApplicativeHomomorphism($assertEquals, $pure, 666, $multiple2);
+        testApplicativeHomomorphism($assertEquals, $ap, $pure, 666, $multiple2);
+        testApplicativeHomomorphism($assertEquals, $ap, $pure, 666, $multiple2);
 
-        testApplicativeComposition($assertEquals, $pure, $someOne, $pure($plus2), $pure($multiple2));
-        testApplicativeComposition($assertEquals, $pure, $none, $pure($plus2), $pure($multiple2));
-        testApplicativeComposition($assertEquals, $pure, $someOne, $none, $pure($multiple2));
-        testApplicativeComposition($assertEquals, $pure, $none, $pure($plus2), $none);
+        testApplicativeComposition($assertEquals, $ap, $pure, $someOne, $pure($plus2), $pure($multiple2));
+        testApplicativeComposition($assertEquals, $ap, $pure, $none, $pure($plus2), $pure($multiple2));
+        testApplicativeComposition($assertEquals, $ap, $pure, $someOne, $none, $pure($multiple2));
+        testApplicativeComposition($assertEquals, $ap, $pure, $none, $pure($plus2), $none);
 
-        testApplicativeInterchange($assertEquals, $pure, 666, $pure($plus2));
-        testApplicativeInterchange($assertEquals, $pure, 666, $none);
+        testApplicativeInterchange($assertEquals, $ap, $pure, 666, $pure($plus2));
+        testApplicativeInterchange($assertEquals, $ap, $pure, 666, $none);
     }
 
     /**

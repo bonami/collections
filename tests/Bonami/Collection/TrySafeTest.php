@@ -366,6 +366,11 @@ class TrySafeTest extends TestCase
         $tryEquals = static function (TrySafe $a, TrySafe $b): bool {
             return $a->equals($b);
         };
+
+        $ap = static function (TrySafe $a, TrySafe $b): TrySafe {
+            // @phpstan-ignore-next-line
+            return TrySafe::ap($a, $b);
+        };
         $pure = static function ($value): TrySafe {
             return TrySafe::of($value);
         };
@@ -375,15 +380,15 @@ class TrySafeTest extends TestCase
         $successThree = TrySafe::success(3);
         $failure = $this->createFailure();
 
-        $plus2 = static function (int $x): int {
+        $plus2 = CurriedFunction::of(static function (int $x): int {
             return $x + 2;
-        };
-        $multiple2 = static function (int $x): int {
+        });
+        $multiple2 = CurriedFunction::of(static function (int $x): int {
             return $x * 2;
-        };
-        $throws = function () {
+        });
+        $throws = CurriedFunction::of(function (int $_) {
             throw $this->createHashableException();
-        };
+        });
 
         testEqualsReflexivity($assertEquals, $tryEquals, $successOne);
         testEqualsReflexivity($assertEquals, $tryEquals, $failure);
@@ -409,20 +414,20 @@ class TrySafeTest extends TestCase
         testFunctorComposition($assertEquals, $successOne, $throws, $throws);
         testFunctorComposition($assertEquals, $failure, $throws, $throws);
 
-        testApplicativeIdentity($assertEquals, $pure, $successOne);
-        testApplicativeIdentity($assertEquals, $pure, $failure);
+        testApplicativeIdentity($assertEquals, $ap, $pure, $successOne);
+        testApplicativeIdentity($assertEquals, $ap, $pure, $failure);
 
-        testApplicativeHomomorphism($assertEquals, $pure, 666, $multiple2);
-        testApplicativeHomomorphism($assertEquals, $pure, 666, $multiple2);
+        testApplicativeHomomorphism($assertEquals, $ap, $pure, 666, $multiple2);
+        testApplicativeHomomorphism($assertEquals, $ap, $pure, 666, $multiple2);
 
-        testApplicativeComposition($assertEquals, $pure, $successOne, $pure($plus2), $pure($multiple2));
-        testApplicativeComposition($assertEquals, $pure, $failure, $pure($plus2), $pure($multiple2));
-        testApplicativeComposition($assertEquals, $pure, $successOne, $failure, $pure($multiple2));
-        testApplicativeComposition($assertEquals, $pure, $failure, $pure($plus2), $failure);
+        testApplicativeComposition($assertEquals, $ap, $pure, $successOne, $pure($plus2), $pure($multiple2));
+        testApplicativeComposition($assertEquals, $ap, $pure, $failure, $pure($plus2), $pure($multiple2));
+        testApplicativeComposition($assertEquals, $ap, $pure, $successOne, $failure, $pure($multiple2));
+        testApplicativeComposition($assertEquals, $ap, $pure, $failure, $pure($plus2), $failure);
 
-        testApplicativeInterchange($assertEquals, $pure, 666, $pure($plus2));
-        testApplicativeInterchange($assertEquals, $pure, 666, $pure($throws));
-        testApplicativeInterchange($assertEquals, $pure, 666, $failure);
+        testApplicativeInterchange($assertEquals, $ap, $pure, 666, $pure($plus2));
+        testApplicativeInterchange($assertEquals, $ap, $pure, 666, $pure($throws));
+        testApplicativeInterchange($assertEquals, $ap, $pure, 666, $failure);
     }
 
     /**

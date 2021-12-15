@@ -1,0 +1,39 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Bonami\Collection;
+
+/** @template T */
+trait Monad1
+{
+    /** @use Applicative1<T> */
+    use Applicative1;
+
+    /**
+     * @template A
+     * @template B
+     *
+     * @param self<CurriedFunction<A, B>> $closure
+     * @param self<A> $argument
+     *
+     * @return self<B>
+     */
+    final public static function ap(self $closure, self $argument): self
+    {
+        return $closure->flatMap(static function (CurriedFunction $c) use ($argument) {
+            return $argument->map(static function ($a) use ($c) {
+                return $c($a);
+            });
+        });
+    }
+
+    /**
+     * @template B
+     *
+     * @phpstan-param callable(T, int): iterable<B> $mapper
+     *
+     * @phpstan-return self<B>
+     */
+    abstract public function flatMap(callable $mapper): self;
+}

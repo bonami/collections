@@ -277,21 +277,27 @@ class EitherTest extends TestCase
 
     public function testAp(): void
     {
-        $plus = static function (int $x, int $y): int {
+        $plus = CurriedFunction::curry2(static function (int $x, int $y): int {
             return $x + $y;
-        };
+        });
+        /** @var Either<string, CurriedFunction<int, CurriedFunction<int, int>>> */
+        $leftOp = Either::left('undefined operation');
 
         $purePlus = Either::of($plus);
-        $left = Either::left(666);
+        /** @var Either<string, int> */
+        $left = Either::left('missing value');
+        /** @var Either<string, int> */
         $one = Either::right(1);
+        /** @var Either<string, int> */
         $two = Either::right(2);
+        /** @var Either<string, int> */
         $three = Either::right(3);
 
-        $this->equals($purePlus->ap($one)->ap($two), $three);
-        $this->equals($purePlus->ap($one)->ap($left), $left);
-        $this->equals($purePlus->ap($left)->ap($one), $left);
-        $this->equals($purePlus->ap($left)->ap($left), $left);
-        $this->equals($left->ap($one)->ap($two), $left);
+        $this->equals(Either::ap(Either::ap($purePlus, $one), $two), $three);
+        $this->equals(Either::ap(Either::ap($purePlus, $one), $left), $left);
+        $this->equals(Either::ap(Either::ap($purePlus, $left), $one), $left);
+        $this->equals(Either::ap(Either::ap($purePlus, $left), $left), $left);
+        $this->equals(Either::ap(Either::ap($leftOp, $one), $two), $leftOp);
     }
 
     public function testTraverse(): void
@@ -401,6 +407,10 @@ class EitherTest extends TestCase
         $eitherEquals = static function (Either $a, Either $b): bool {
             return $a->equals($b);
         };
+        $ap = static function (Either $a, Either $b): Either {
+            // @phpstan-ignore-next-line
+            return Either::ap($a, $b);
+        };
         $pure = static function ($value): Either {
             return Either::of($value);
         };
@@ -410,12 +420,12 @@ class EitherTest extends TestCase
         $rightThree = Either::right(3);
         $error = Either::left('error');
 
-        $plus2 = static function (int $x): int {
+        $plus2 = CurriedFunction::of(static function (int $x): int {
             return $x + 2;
-        };
-        $multiple2 = static function (int $x): int {
+        });
+        $multiple2 = CurriedFunction::of(static function (int $x): int {
             return $x * 2;
-        };
+        });
 
         testEqualsReflexivity($assertEquals, $eitherEquals, $rightOne);
         testEqualsReflexivity($assertEquals, $eitherEquals, $error);
@@ -435,19 +445,19 @@ class EitherTest extends TestCase
         testFunctorComposition($assertEquals, $rightOne, $plus2, $multiple2);
         testFunctorComposition($assertEquals, $error, $plus2, $multiple2);
 
-        testApplicativeIdentity($assertEquals, $pure, $rightOne);
-        testApplicativeIdentity($assertEquals, $pure, $error);
+        testApplicativeIdentity($assertEquals, $ap, $pure, $rightOne);
+        testApplicativeIdentity($assertEquals, $ap, $pure, $error);
 
-        testApplicativeHomomorphism($assertEquals, $pure, 666, $multiple2);
-        testApplicativeHomomorphism($assertEquals, $pure, 666, $multiple2);
+        testApplicativeHomomorphism($assertEquals, $ap, $pure, 666, $multiple2);
+        testApplicativeHomomorphism($assertEquals, $ap, $pure, 666, $multiple2);
 
-        testApplicativeComposition($assertEquals, $pure, $rightOne, $pure($plus2), $pure($multiple2));
-        testApplicativeComposition($assertEquals, $pure, $error, $pure($plus2), $pure($multiple2));
-        testApplicativeComposition($assertEquals, $pure, $rightOne, $error, $pure($multiple2));
-        testApplicativeComposition($assertEquals, $pure, $error, $pure($plus2), $error);
+        testApplicativeComposition($assertEquals, $ap, $pure, $rightOne, $pure($plus2), $pure($multiple2));
+        testApplicativeComposition($assertEquals, $ap, $pure, $error, $pure($plus2), $pure($multiple2));
+        testApplicativeComposition($assertEquals, $ap, $pure, $rightOne, $error, $pure($multiple2));
+        testApplicativeComposition($assertEquals, $ap, $pure, $error, $pure($plus2), $error);
 
-        testApplicativeInterchange($assertEquals, $pure, 666, $pure($plus2));
-        testApplicativeInterchange($assertEquals, $pure, 666, $error);
+        testApplicativeInterchange($assertEquals, $ap, $pure, 666, $pure($plus2));
+        testApplicativeInterchange($assertEquals, $ap, $pure, 666, $error);
     }
 
     /**

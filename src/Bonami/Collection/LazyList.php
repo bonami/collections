@@ -19,6 +19,9 @@ use RuntimeException;
  */
 class LazyList implements IteratorAggregate
 {
+    /** @use Monad1<T> */
+    use Monad1;
+
     /** @phpstan-var iterable<int, T> */
     private $items;
 
@@ -112,6 +115,18 @@ class LazyList implements IteratorAggregate
     }
 
     /**
+     * @template V
+     *
+     * @phpstan-param V $item
+     *
+     * @phpstan-return static<V>
+     */
+    public static function pure($item)
+    {
+         return new static([$item]);
+    }
+
+    /**
      * @template B
      *
      * @phpstan-param callable(T, int): B $mapper
@@ -126,26 +141,6 @@ class LazyList implements IteratorAggregate
             }
          };
         return new self($map($mapper));
-    }
-
-    /**
-     * @phpstan-param self<mixed> $lazyList
-     *
-     * @phpstan-return self<Lambda|mixed>
-     */
-    public function ap(self $lazyList): self
-    {
-         $mappers = $this->map(static function (callable $mapper) {
-             return Lambda::of($mapper);
-         })->toList();
-
-         return $lazyList->flatMap(static function ($value) use ($mappers): iterable {
-             /** @phpstan-var self<Lambda|mixed> $applied */
-             $applied = $mappers->map(static function (Lambda $mapper) use ($value) {
-                 return ($mapper)($value);
-             });
-             return $applied;
-         });
     }
 
     /**
@@ -644,76 +639,5 @@ class LazyList implements IteratorAggregate
         return (static function (iterable $iterable): Generator {
             yield from $iterable;
         })($iterable);
-    }
-
-    /**
-     * Upgrades callable to accept and return `self` as arguments.
-     *
-     * @phpstan-param callable $callable
-     *
-     * @phpstan-return callable
-     */
-    final public static function lift(callable $callable): callable
-    {
-        return static function (self ...$arguments) use ($callable): self {
-            $reducer = static function (self $applicative, self $argument): self {
-                /** @phpstan-var mixed $argument */
-                return $applicative->ap($argument);
-            };
-            return LazyList::fromIterable($arguments)
-                ->reduce($reducer, self::of($callable));
-        };
-    }
-
-    /**
-     * Takes any `iterable<A>`, for each item `A` transforms to applicative with $mapperToApplicative
-     * `A => self<B>` and cumulates it in `self<ArrayList<B>>`.
-     *
-     * @see sequence - behaves same as traverse, execept it is called with identity
-     *
-     * @template A
-     * @template B
-     *
-     * @phpstan-param iterable<A> $iterable
-     * @phpstan-param callable(A): self<B> $mapperToApplicative
-     *
-     * @phpstan-return self<ArrayList<B>>
-     */
-    final public static function traverse(iterable $iterable, callable $mapperToApplicative): self
-    {
-        return LazyList::fromIterable($iterable)
-            ->reduce(
-                static function (self $reducedApplicative, $impureItem) use ($mapperToApplicative): self {
-                    $applicative = $mapperToApplicative($impureItem);
-                    assert($applicative instanceof self);
-                    return $reducedApplicative
-                        ->map(static function (ArrayList $resultIterable): callable {
-                            return static function ($item) use ($resultIterable): ArrayList {
-                                return $resultIterable->concat(ArrayList::of($item));
-                            };
-                        })
-                        ->ap($applicative);
-                },
-                self::of(ArrayList::fromEmpty())
-            );
-    }
-
-    /**
-     * Takes any `iterable<LazyList<A>>` and sequence it into `LazyList<ArrayList<A>>`. If any `LazyList` is empty,
-     * then the result is "short circuited" and empty LazyList is returned.
-     *
-     * @template A
-     *
-     * @phpstan-param iterable<self<A>> $iterable
-     *
-     * @phpstan-return self<ArrayList<A>>
-     */
-    final public static function sequence(iterable $iterable): self
-    {
-        /** @phpstan-var callable(self<A>): self<A> $identity */
-        $identity = static function ($a) {
-            return $a;
-        };
-        return self::traverse($iterable, $identity);
     }
 }

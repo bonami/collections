@@ -108,27 +108,26 @@ class ArrayListTest extends TestCase
 
     public function testAp(): void
     {
+        /** @var ArrayList<CurriedFunction<string, CurriedFunction<string, string|array<string>>>> */
         $callbacks = ArrayList::fromIterable([
-            static function ($a, $b) {
+            CurriedFunction::curry2(static function ($a, $b) {
                 return $a . $b;
-            },
-            static function ($a, $b) {
+            }),
+            CurriedFunction::curry2(static function ($a, $b) {
                 return [$a, $b];
-            },
+            }),
         ]);
-        $mapped = $callbacks
-            ->ap(ArrayList::of(1, 2))
-            ->ap(ArrayList::of('a', 'b'));
+        $mapped = ArrayList::ap(ArrayList::ap($callbacks, ArrayList::of('1', '2')), ArrayList::of('a', 'b'));
 
         $expected = [
             '1a',
-            [1, 'a'],
-            '2a',
-            [2, 'a'],
             '1b',
-            [1, 'b'],
+            '2a',
             '2b',
-            [2, 'b'],
+            ['1', 'a'],
+            ['1', 'b'],
+            ['2', 'a'],
+            ['2', 'b'],
         ];
 
         self::assertEquals($expected, $mapped->toArray());
@@ -136,17 +135,18 @@ class ArrayListTest extends TestCase
 
     public function testApNone(): void
     {
+        /** @var ArrayList<CurriedFunction<string, CurriedFunction<string, string|array<string>>>> */
         $callbacks = ArrayList::fromIterable([
-            static function ($a, $b) {
+            CurriedFunction::curry2(static function ($a, $b) {
                 return $a . $b;
-            },
-            static function ($a, $b) {
+            }),
+            CurriedFunction::curry2(static function ($a, $b) {
                 return [$a, $b];
-            },
+            }),
         ]);
-        $mapped = $callbacks
-            ->ap(ArrayList::of(1, 2))
-            ->ap(ArrayList::fromEmpty());
+        /** @var ArrayList<string> */
+        $strings = ArrayList::fromEmpty();
+        $mapped = ArrayList::ap(ArrayList::ap($callbacks, ArrayList::of('1', '2')), $strings);
 
         self::assertEquals([], $mapped->toArray());
     }
@@ -159,7 +159,7 @@ class ArrayListTest extends TestCase
 
         $mapped = $lifted(ArrayList::of(1, 2), ArrayList::of('a', 'b'));
 
-        self::assertEquals(['1a', '2a', '1b', '2b'], $mapped->toArray());
+        self::assertEquals(['1a', '1b', '2a', '2b'], $mapped->toArray());
     }
 
     public function testTraverse(): void
@@ -192,8 +192,8 @@ class ArrayListTest extends TestCase
         self::assertEquals(
             ArrayList::of(
                 ArrayList::fromIterable([1, 'a']),
-                ArrayList::fromIterable([2, 'a']),
                 ArrayList::fromIterable([1, 'b']),
+                ArrayList::fromIterable([2, 'a']),
                 ArrayList::fromIterable([2, 'b']),
             ),
             ArrayList::sequence([$a, $b])
