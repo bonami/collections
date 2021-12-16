@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - 0.4.x
   pull_request:
 
 jobs:
@@ -13,7 +14,7 @@ jobs:
 
     strategy:
       matrix:
-        php: ['7.2', '7.3', '7.4', '8.0']
+        php: ['7.3', '7.4', '8.0']
 
     steps:
       - name: "Checkout"
@@ -22,7 +23,7 @@ jobs:
       - name: "Install PHP"
         uses: "shivammathur/setup-php@v2"
         with:
-          php-versions: "${{ matrix.php }}"
+          php-version: "${{ matrix.php }}"
           extensions: "json, dom, mbstring"
 
       - name: "Cache dependencies"
@@ -44,7 +45,7 @@ jobs:
 
     strategy:
       matrix:
-        php: ['7.2', '7.3', '7.4', '8.0']
+        php: ['7.3', '7.4', '8.0']
 
     steps:
       - name: "Checkout"
@@ -53,7 +54,7 @@ jobs:
       - name: "Install PHP"
         uses: "shivammathur/setup-php@v2"
         with:
-          php-versions: "${{ matrix.php }}"
+          php-version: "${{ matrix.php }}"
           extensions: "json, dom, mbstring"
 
       - name: "Cache dependencies"
@@ -84,7 +85,7 @@ jobs:
       - name: "Install PHP"
         uses: "shivammathur/setup-php@v2"
         with:
-          php-versions: "${{ matrix.php }}"
+          php-version: "${{ matrix.php }}"
           extensions: "json, dom, mbstring"
 
       - name: "Validate Composer"
