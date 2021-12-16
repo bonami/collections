@@ -8,8 +8,8 @@ use ArrayIterator;
 use Bonami\Collection\Exception\ValueIsNotPresentException;
 use Bonami\Collection\Hash\IHashable;
 use EmptyIterator;
+use Iterator;
 use IteratorAggregate;
-use Traversable;
 
 /**
  * @template T
@@ -129,8 +129,8 @@ abstract class Option implements IHashable, IteratorAggregate
                 return spl_object_hash($this); // There should be only one instance of none
             }
 
-            /** @phpstan-return Traversable<int, T> */
-            public function getIterator(): Traversable
+            /** @phpstan-return Iterator <int, T> */
+            public function getIterator(): Iterator
             {
                 return new EmptyIterator();
             }
@@ -271,8 +271,8 @@ abstract class Option implements IHashable, IteratorAggregate
                 return sprintf('%s::some(%s)', self::class, $valueHash);
             }
 
-            /** @phpstan-return Traversable<int, V> */
-            public function getIterator()
+            /** @phpstan-return Iterator<int, V> */
+            public function getIterator(): Iterator
             {
                 return new ArrayIterator([$this->value]);
             }

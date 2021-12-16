@@ -7,6 +7,7 @@ namespace Bonami\Collection;
 use Bonami\Collection\Exception\OutOfBoundsException;
 use Bonami\Collection\Hash\IHashable;
 use Countable;
+use Iterator;
 use IteratorAggregate;
 use ReflectionClass;
 use Traversable;
@@ -204,9 +205,9 @@ class Map implements Countable, IteratorAggregate
      * Complexity: o(1) - getting the iterator itself is o(1) because it uses yield internally.
      * Iterating over the iterator is of course o(n)
      *
-     * @phpstan-return Traversable<K, V>
+     * @phpstan-return Iterator<K, V>
      */
-    public function getIterator(): Traversable
+    public function getIterator(): Iterator
     {
         foreach ($this->values as $keyHash => $value) {
             yield $this->keys[$keyHash] => $value;
