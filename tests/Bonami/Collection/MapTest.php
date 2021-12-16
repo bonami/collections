@@ -359,17 +359,11 @@ class MapTest extends TestCase
 
     public function testAssociativeArrayScalars(): void
     {
-        $bools = [true => 't', false => 'f'];
-        self::assertEquals($bools, Map::fromAssociativeArray($bools)->toAssociativeArray());
-
         $ints = [1 => 'a', 2 => 'b'];
-        self::assertEquals($ints, Map::fromAssociativeArray($ints)->toAssociativeArray());
-
-        $floats = [1.1 => 'a', 2.1 => 'b'];
-        self::assertEquals($floats, Map::fromAssociativeArray($floats)->toAssociativeArray());
+        self::assertSame($ints, Map::fromAssociativeArray($ints)->toAssociativeArray());
 
         $strings = ['A' => 'a', 'B' => 'b'];
-        self::assertEquals($strings, Map::fromAssociativeArray($strings)->toAssociativeArray());
+        self::assertSame($strings, Map::fromAssociativeArray($strings)->toAssociativeArray());
     }
 
     public function testAssociativeArrayObjectKeys(): void
