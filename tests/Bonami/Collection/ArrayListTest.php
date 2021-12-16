@@ -722,7 +722,7 @@ class ArrayListTest extends TestCase
             (object)['b' => 2],
         ]);
 
-        self::assertMatchesRegularExpression('~^\[\(stdClass\) [0-9a-f]+?, \(stdClass\) [0-9a-f]+?\]$~', (string)$a);
+        self::assertTrue(preg_match('~^\[\(stdClass\) [0-9a-f]+?, \(stdClass\) [0-9a-f]+?\]$~', (string)$a) !== false);
     }
 
     public function testToStringArrays(): void
