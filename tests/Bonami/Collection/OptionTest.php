@@ -10,7 +10,6 @@ use Throwable;
 
 class OptionTest extends TestCase
 {
-
     public function testCreate(): void
     {
         $none = Option::none();

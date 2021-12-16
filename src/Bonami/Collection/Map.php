@@ -33,7 +33,6 @@ use function iterator_to_array;
  */
 class Map implements Countable, IteratorAggregate
 {
-
     /** @phpstan-var array<int|string, K> */
     protected $keys;
 

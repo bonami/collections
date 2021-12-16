@@ -14,7 +14,6 @@ use function Bonami\Collection\hashKey;
  */
 class Map extends \Bonami\Collection\Map
 {
-
     /**
      * @phpstan-param K $key
      * @phpstan-param V $value

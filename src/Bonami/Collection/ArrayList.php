@@ -42,7 +42,6 @@ use function usort;
  */
 class ArrayList implements Countable, IteratorAggregate, JsonSerializable
 {
-
     /** @phpstan-var array<int, T> */
     protected $items;
 

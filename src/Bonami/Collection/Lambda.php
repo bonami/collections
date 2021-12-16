@@ -11,7 +11,6 @@ use ReflectionFunction;
 
 final class Lambda
 {
-
     /** @var callable */
     protected $callable;
 

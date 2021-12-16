@@ -37,7 +37,6 @@ abstract class Option implements IHashable, IteratorAggregate
     final public static function none(): Option
     {
         return self::$none ?? self::$none = new class extends Option {
-
             public function isDefined(): bool
             {
                 return false;
@@ -163,7 +162,6 @@ abstract class Option implements IHashable, IteratorAggregate
     final public static function some($value): self
     {
         return new class ($value) extends Option {
-
             /** @phpstan-var V */
             private $value;
 

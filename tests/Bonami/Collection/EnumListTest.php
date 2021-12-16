@@ -8,7 +8,6 @@ use PHPUnit\Framework\TestCase;
 
 class EnumListTest extends TestCase
 {
-
     public function testFromOnly(): void
     {
         $item = DummyEnum::create(DummyEnum::HI);

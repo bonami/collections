@@ -14,7 +14,6 @@ use function is_object;
 
 abstract class Enum implements IHashable, JsonSerializable
 {
-
     /** @phpstan-var array<string, Map<int|string, static>> */
     private static $instances = [];
 

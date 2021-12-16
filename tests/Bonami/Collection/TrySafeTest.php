@@ -12,7 +12,6 @@ use Throwable;
 
 class TrySafeTest extends TestCase
 {
-
     public function testCreate(): void
     {
         $trySafeFromScalar = TrySafe::of(666);

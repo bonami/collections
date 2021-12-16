@@ -8,7 +8,6 @@ use PHPUnit\Framework\TestCase;
 
 class HelpersTest extends TestCase
 {
-
     public function testCompose(): void
     {
         $multiplyBy3 = static function (int $x): int {

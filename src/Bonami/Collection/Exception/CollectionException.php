@@ -6,5 +6,4 @@ namespace Bonami\Collection\Exception;
 
 interface CollectionException
 {
-
 }

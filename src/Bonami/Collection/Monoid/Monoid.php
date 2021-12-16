@@ -7,7 +7,6 @@ namespace Bonami\Collection\Monoid;
 /** @template A */
 interface Monoid
 {
-
     /**
      * A binary operation.
      *

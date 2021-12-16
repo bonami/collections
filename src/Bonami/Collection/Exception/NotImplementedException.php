@@ -8,5 +8,4 @@ use RuntimeException;
 
 class NotImplementedException extends RuntimeException implements CollectionException
 {
-
 }

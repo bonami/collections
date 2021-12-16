@@ -13,7 +13,6 @@ use stdClass;
 
 class MapTest extends TestCase
 {
-
     public function testFromIterable(): void
     {
         /** @phpstan-var iterable<array{0: string, 1: int}> */
