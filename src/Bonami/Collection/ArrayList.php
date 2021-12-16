@@ -9,6 +9,7 @@ use Bonami\Collection\Exception\NotImplementedException;
 use Bonami\Collection\Exception\OutOfBoundsException;
 use Bonami\Collection\Monoid\Monoid;
 use Countable;
+use Iterator;
 use IteratorAggregate;
 use JsonSerializable;
 use Traversable;
@@ -187,9 +188,9 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      *
      * Complexity: o(1) - Retriving the iterator itself is constant. Iterating over it is of course o(n)
      *
-     * @phpstan-return Traversable<int, T>
+     * @phpstan-return Iterator <int, T>
      */
-    public function getIterator(): Traversable
+    public function getIterator(): Iterator
     {
         return new ArrayIterator($this->items);
     }

@@ -11,7 +11,6 @@ use InvalidArgumentException;
 use Iterator;
 use IteratorAggregate;
 use RuntimeException;
-use Traversable;
 
 /**
  * @template T

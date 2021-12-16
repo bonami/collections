@@ -8,8 +8,8 @@ use ArrayIterator;
 use Bonami\Collection\Exception\ValueIsNotPresentException;
 use Bonami\Collection\Hash\IHashable;
 use EmptyIterator;
+use Iterator;
 use IteratorAggregate;
-use Traversable;
 
 /**
  * A generic structure for a type with two possibilities: a Either::left(L) or a Either::right(R).
@@ -156,8 +156,8 @@ abstract class Either implements IHashable, IteratorAggregate
                 return sprintf('%s::left(%s)', self::class, $valueHash);
             }
 
-            /** @phpstan-return Traversable<int, R> */
-            public function getIterator(): Traversable
+            /** @phpstan-return Iterator<int, R> */
+            public function getIterator(): Iterator
             {
                 return new EmptyIterator();
             }
@@ -316,8 +316,8 @@ abstract class Either implements IHashable, IteratorAggregate
                 return sprintf('%s::right(%s)', self::class, $valueHash);
             }
 
-            /** @phpstan-return Traversable<int, R> */
-            public function getIterator()
+            /** @phpstan-return Iterator<int, R> */
+            public function getIterator(): Iterator
             {
                 return new ArrayIterator([$this->right]);
             }
