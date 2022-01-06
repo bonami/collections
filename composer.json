@@ -51,24 +51,5 @@
     "files": [
       "tests/Bonami/Collection/helpers.php"
     ]
-  },
-  "scripts": {
-    "phpstan": [
-      "bin/phpstan --ansi analyse"
-    ],
-    "phpunit": [
-      "bin/phpunit --colors=always"
-    ],
-    "phpcs": [
-      "bin/phpcs --standard=./ruleset.xml --extensions=php --tab-width=4 -sp ./src ./tests"
-    ],
-    "phpcbf": [
-      "bin/phpcbf --standard=./ruleset.xml --extensions=php --tab-width=4 -sp ./src ./tests"
-    ],
-    "test": [
-      "@phpunit",
-      "@phpstan",
-      "@phpcs"
-    ]
   }
 }
