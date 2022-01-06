@@ -8,6 +8,8 @@ namespace Bonami\Collection;
 trait Applicative1
 {
     /**
+     * Wraps impure item into pure context of type class.
+     *
      * @template A
      *
      * @phpstan-param A $value
@@ -17,6 +19,8 @@ trait Applicative1
     abstract public static function pure($value);
 
     /**
+     * Applies argument to callable in context of type class.
+     *
      * @template A
      * @template B
      *
@@ -28,6 +32,8 @@ trait Applicative1
     abstract public static function ap(self $closure, self $argument): self;
 
     /**
+     * Maps over values wrapped in context of type class.
+     *
      * @template A
      *
      * @phpstan-param callable(T): A $mapper
@@ -54,7 +60,7 @@ trait Applicative1
 
     /**
      * Takes any `iterable<self<A>>` and sequence it into `self<ArrayList<A>>`. If any `self` is "empty", the result is
-     * "short circuited".
+     * "empty" as well.
      *
      * @template A
      *

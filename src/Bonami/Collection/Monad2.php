@@ -14,6 +14,9 @@ trait Monad2
     use Applicative2;
 
     /**
+     * Default implementation of ap, derived from flatMap and map. It can be overridden by concrete
+     * implementation
+     *
      * @template A
      * @template B
      *
@@ -32,6 +35,8 @@ trait Monad2
     }
 
     /**
+     * Chain mapper call on Monad
+     *
      * @template B
      *
      * @phpstan-param callable(R, int): iterable<B> $mapper
