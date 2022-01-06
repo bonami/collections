@@ -43,6 +43,19 @@ class EitherTest extends TestCase
         );
     }
 
+    public function testLiftN(): void
+    {
+        self::assertEquals(Either::right(42), Either::lift1(static fn (int $a): int => $a)(Either::right(42)));
+        self::assertEquals(
+            Either::right(708),
+            Either::lift2(static fn (int $a, int $b): int => $a + $b)(Either::right(42), Either::right(666))
+        );
+        self::assertEquals(
+            Either::left("fail"),
+            Either::lift2(static fn (int $a, int $b): int => $a + $b)(Either::right(42), Either::left("fail"))
+        );
+    }
+
     public function testMap(): void
     {
         $greeter = static function (string $s): string {
