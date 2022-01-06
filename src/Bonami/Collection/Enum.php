@@ -148,8 +148,7 @@ abstract class Enum implements IHashable, JsonSerializable
         return $this->getValue();
     }
 
-    /** @return mixed */
-    public function jsonSerialize()
+    public function jsonSerialize(): string
     {
         return (string)$this->value;
     }
