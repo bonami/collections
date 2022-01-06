@@ -51,6 +51,15 @@ class OptionTest extends TestCase
         );
     }
 
+    public function testLiftN(): void
+    {
+        self::assertEquals(Option::some(42), Option::lift1(static fn (int $a): int => $a)(Option::some(42)));
+        self::assertEquals(
+            Option::some(708),
+            Option::lift2(static fn (int $a, int $b): int => $a + $b)(Option::some(42), Option::some(666))
+        );
+    }
+
     public function testMap(): void
     {
         $mapper = static function (string $s): string {
