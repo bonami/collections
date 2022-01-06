@@ -4,6 +4,14 @@
     <rule ref="./vendor/squizlabs/php_codesniffer/src/Standards/PSR2/ruleset.xml" />
     <rule ref="./vendor/squizlabs/php_codesniffer/src/Standards/PSR12/ruleset.xml" />
 
+    <rule ref="Generic.Files.LineLength">
+        <properties>
+            <property name="lineLimit" value="120"/>
+            <property name="absoluteLineLimit" value="120"/>
+            <property name="ignoreComments" value="true"/>
+        </properties>
+    </rule>
+
     <rule ref="SlevomatCodingStandard.Whitespaces.DuplicateSpaces">
         <properties>
             <property name="ignoreSpacesInComment" value="true"/>
