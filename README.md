@@ -305,12 +305,21 @@ We can do better with the little help of `TrySafe` class:
 ```php
 use Bonami\Collection\TrySafe;
 
-interface Div {
+interface Div
+{
+    /**
+     * @param int $a
+     * @param int $b
+     *
+     * @return TrySafe<float>
+     */
     public function compute(int $a, int $b): TrySafe;
 }
 
-class DivImplementation {
-    public function compute(int $a, int $b): TrySafe {
+class DivImplementation implements Div
+{
+    public function compute(int $a, int $b): TrySafe
+    {
         return $b === 0
             ? TrySafe::failure(new RuntimeException("Can not divide by zero, bro"))
             : TrySafe::success($a / $b);
@@ -319,6 +328,7 @@ class DivImplementation {
 
 $div = new DivImplementation();
 $outcome = $div->compute(10, 0);
+
 
 ```
 
@@ -329,33 +339,31 @@ You can use `TrySafe` to wrap unsafe (throwing) calls and chain the computations
 ```php
 use Bonami\Collection\TrySafe;
 
-$getTheUltimateAnswerOrThrow = function(bool $shouldThrow): int {
+$getTheUltimateAnswerOrThrow = static function (bool $shouldThrow): int {
     if ($shouldThrow) {
         throw new RuntimeException("There is no ultimate answer!");
     }
     return 42;
 };
 
-$makeTheAnswerBiggerOrThrow = function(int $answer): int {
-  if ($answer !== 42) {
-      throw new RuntimeException("Unlucky!");
-  }
-  return $answer + 624;
+$makeTheAnswerBiggerOrThrow = static function (int $answer): int {
+    if ($answer !== 42) {
+        throw new RuntimeException("Unlucky!");
+    }
+    return $answer + 624;
 };
 
-TrySafe::fromCallable(fn() => $getTheUltimateAnswerOrThrow(true))
-    ->flatMap(fn (int $answer) => TrySafe::fromCallable(fn() => $makeTheAnswerBiggerOrThrow($answer)))
-    ->resolve (
-        function(Throwable $e): void { 
+TrySafe::fromCallable(static fn() => $getTheUltimateAnswerOrThrow(true))
+    ->flatMap(static fn (int $answer) => TrySafe::fromCallable(static fn() => $makeTheAnswerBiggerOrThrow($answer)))
+    ->resolve(
+        static function (Throwable $e): void {
             print $e->getMessage();
         },
-        function(int $biggerAnswer): void { 
+        static function (int $biggerAnswer): void {
             print "The ultimate answer is {$biggerAnswer}";
         }
     );
 ```
- 
-_Disclaimer:_ As you probably noticed, we reflect possible exception in return type now, but on the other side, we've lost the information that wrapped success value is `float`.  This applies also to `Option`, `ArrayList` etc. Unfortunately there is no silver bullet solution, until PHP have the generics implemented (but hey, have look at [phpstan generics templates](https://medium.com/@ondrejmirtes/generics-in-php-using-phpdocs-14e7301953)). 
 
 #### TrySafe recovery
 
