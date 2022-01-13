@@ -15,7 +15,7 @@ use Throwable;
 /**
  * @template T
  *
- * @phpstan-implements IteratorAggregate<int, T>
+ * @implements IteratorAggregate<int, T>
  */
 abstract class TrySafe implements IHashable, IteratorAggregate
 {
@@ -25,9 +25,9 @@ abstract class TrySafe implements IHashable, IteratorAggregate
     /**
      * @template V
      *
-     * @phpstan-param V $value
+     * @param V $value
      *
-     * @phpstan-return self<V>
+     * @return self<V>
      */
     final public static function of($value): self
     {
@@ -37,9 +37,9 @@ abstract class TrySafe implements IHashable, IteratorAggregate
     /**
      * @template V
      *
-     * @phpstan-param V $value
+     * @param V $value
      *
-     * @phpstan-return self<V>
+     * @return self<V>
      */
     final public static function pure($value): self
     {
@@ -49,9 +49,9 @@ abstract class TrySafe implements IHashable, IteratorAggregate
     /**
      * @template V
      *
-     * @phpstan-param callable(): V $callable
+     * @param callable(): V $callable
      *
-     * @phpstan-return self<V>
+     * @return self<V>
      */
     final public static function fromCallable(callable $callable): self
     {
@@ -65,18 +65,18 @@ abstract class TrySafe implements IHashable, IteratorAggregate
     /**
      * @template V
      *
-     * @phpstan-param V $value
+     * @param V $value
      *
-     * @phpstan-return self<V>
+     * @return self<V>
      */
     final public static function success($value): self
     {
-        /** @phpstan-extends TrySafe<V> */
+        /** @extends TrySafe<V> */
         return new class ($value) extends TrySafe {
-            /** @phpstan-var V */
+            /** @var V */
             private $value;
 
-            /** @phpstan-param V $value */
+            /** @param V $value */
             protected function __construct($value)
             {
                 $this->value = $value;
@@ -137,7 +137,7 @@ abstract class TrySafe implements IHashable, IteratorAggregate
                 return $this;
             }
 
-            /** @phpstan-return V */
+            /** @return V */
             public function getUnsafe()
             {
                 return $this->value;
@@ -146,9 +146,9 @@ abstract class TrySafe implements IHashable, IteratorAggregate
             /**
              * @template E
              *
-             * @phpstan-param E $else
+             * @param E $else
              *
-             * @phpstan-return V|E
+             * @return V|E
              */
             public function getOrElse($else)
             {
@@ -176,13 +176,13 @@ abstract class TrySafe implements IHashable, IteratorAggregate
                 return $handleSuccess($this->value);
             }
 
-            /** @phpstan-return Iterator<int, V> */
+            /** @return Iterator<int, V> */
             public function getIterator(): Iterator
             {
                 return new ArrayIterator([$this->value]);
             }
 
-            /** @phpstan-return int|string */
+            /** @return int|string */
             public function hashCode()
             {
                 $valueHash = $this->value instanceof IHashable
@@ -194,15 +194,15 @@ abstract class TrySafe implements IHashable, IteratorAggregate
     }
 
     /**
-     * @phpstan-param Throwable $failure
+     * @param Throwable $failure
      *
-     * @phpstan-return self<mixed>
+     * @return self<mixed>
      */
     final public static function failure(Throwable $failure): TrySafe
     {
-        /** @phpstan-extends TrySafe<V> */
+        /** @extends TrySafe<V> */
         return new class ($failure) extends TrySafe {
-            /** @phpstan-var Throwable */
+            /** @var Throwable */
             private $failure;
 
             protected function __construct(Throwable $failure)
@@ -280,7 +280,7 @@ abstract class TrySafe implements IHashable, IteratorAggregate
              *
              * @throws ValueIsNotPresentException
              *
-             * @phpstan-return T
+             * @return T
              */
             public function getUnsafe()
             {
@@ -290,9 +290,9 @@ abstract class TrySafe implements IHashable, IteratorAggregate
             /**
              * @template E
              *
-             * @phpstan-param E $else
+             * @param E $else
              *
-             * @phpstan-return T|E
+             * @return T|E
              */
             public function getOrElse($else)
             {
@@ -319,13 +319,13 @@ abstract class TrySafe implements IHashable, IteratorAggregate
                 return $handleFailure($this->failure);
             }
 
-            /** @phpstan-return Iterator <int, T> */
+            /** @return Iterator <int, T> */
             public function getIterator(): Iterator
             {
                 return new EmptyIterator();
             }
 
-            /** @phpstan-return int|string */
+            /** @return int|string */
             public function hashCode()
             {
                 $failureHash = $this->failure instanceof IHashable
@@ -339,18 +339,18 @@ abstract class TrySafe implements IHashable, IteratorAggregate
     /**
      * @template B
      *
-     * @phpstan-param callable(T): B $mapper
+     * @param callable(T): B $mapper
      *
-     * @phpstan-return self<B>
+     * @return self<B>
      */
     abstract public function map(callable $mapper): self;
 
     /**
      * @template B
      *
-     * @phpstan-param callable(T): self<B> $mapper
+     * @param callable(T): self<B> $mapper
      *
-     * @phpstan-return self<B>
+     * @return self<B>
      */
     abstract public function flatMap(callable $mapper): self;
 
@@ -359,9 +359,9 @@ abstract class TrySafe implements IHashable, IteratorAggregate
      *
      * Complexity: o(1)
      *
-     * @phpstan-param callable(T): void $sideEffect
+     * @param callable(T): void $sideEffect
      *
-     * @phpstan-return void
+     * @return void
      */
     public function each(callable $sideEffect): void
     {
@@ -378,9 +378,9 @@ abstract class TrySafe implements IHashable, IteratorAggregate
      *
      * Complexity: o(1)
      *
-     * @phpstan-param callable(T): void $sideEffect
+     * @param callable(T): void $sideEffect
      *
-     * @phpstan-return self<T>
+     * @return self<T>
      */
     public function tap(callable $sideEffect): self
     {
@@ -399,19 +399,19 @@ abstract class TrySafe implements IHashable, IteratorAggregate
      *
      * Complexity: o(1)
      *
-     * @phpstan-param callable(Throwable): void $sideEffect
+     * @param callable(Throwable): void $sideEffect
      *
-     * @phpstan-return self<T>
+     * @return self<T>
      */
     abstract public function tapFailure(callable $sideEffect): self;
 
     /**
      * @template R
      *
-     * @phpstan-param callable(R, T): R $reducer
-     * @phpstan-param R $initialReduction
+     * @param callable(R, T): R $reducer
+     * @param R $initialReduction
      *
-     * @phpstan-return R
+     * @return R
      */
     final public function reduce(callable $reducer, $initialReduction)
     {
@@ -419,9 +419,9 @@ abstract class TrySafe implements IHashable, IteratorAggregate
     }
 
     /**
-     * @phpstan-param self<T> $value
+     * @param self<T> $value
      *
-     * @phpstan-return bool
+     * @return bool
      */
     final public function equals($value): bool
     {
@@ -430,9 +430,9 @@ abstract class TrySafe implements IHashable, IteratorAggregate
     }
 
     /**
-     * @phpstan-param callable(Throwable): T $callable
+     * @param callable(Throwable): T $callable
      *
-     * @phpstan-return self<T>
+     * @return self<T>
      */
     abstract public function recover(callable $callable): self;
 
@@ -442,17 +442,17 @@ abstract class TrySafe implements IHashable, IteratorAggregate
      * Recovery must return directly the value or throw another exception
      * (which is automatically wrapped into TrySafe)
      *
-     * @phpstan-param callable(Throwable): bool $predicate
-     * @phpstan-param callable(Throwable): T $recovery
+     * @param callable(Throwable): bool $predicate
+     * @param callable(Throwable): T $recovery
      *
-     * @phpstan-return self<T>
+     * @return self<T>
      */
     abstract public function recoverIf(callable $predicate, callable $recovery): self;
 
     /**
-     * @phpstan-param callable(Throwable): TrySafe<T> $callable
+     * @param callable(Throwable): TrySafe<T> $callable
      *
-     * @phpstan-return self<T>
+     * @return self<T>
      */
     abstract public function recoverWith(callable $callable): self;
 
@@ -462,10 +462,10 @@ abstract class TrySafe implements IHashable, IteratorAggregate
      * Recovery must return TrySafe::success() if the recovery is successful or TrySafe::failure() if it fails.
      * That allows chaining multiple calls with possible failure.
      *
-     * @phpstan-param callable(Throwable): bool $predicate - checks if conditions are met to run recovery.
-     * @phpstan-param callable(Throwable): TrySafe<T> $recovery - a recovery you want to try run
+     * @param callable(Throwable): bool $predicate - checks if conditions are met to run recovery.
+     * @param callable(Throwable): TrySafe<T> $recovery - a recovery you want to try run
      *
-     * @phpstan-return self<T>
+     * @return self<T>
      */
     abstract public function recoverWithIf(callable $predicate, callable $recovery): self;
 
@@ -481,23 +481,23 @@ abstract class TrySafe implements IHashable, IteratorAggregate
      *
      * @throws ValueIsNotPresentException
      *
-     * @phpstan-return T
+     * @return T
      */
     abstract public function getUnsafe();
 
     /**
      * @template E
      *
-     * @phpstan-param E $else
+     * @param E $else
      *
-     * @phpstan-return T|E
+     * @return T|E
      */
     abstract public function getOrElse($else);
 
     /** @throws ValueIsNotPresentException */
     abstract public function getFailureUnsafe(): Throwable;
 
-    /** @phpstan-return Option<T> */
+    /** @return Option<T> */
     abstract public function toOption(): Option;
 
     /** @return Either<Throwable, T> */
@@ -506,10 +506,10 @@ abstract class TrySafe implements IHashable, IteratorAggregate
     /**
      * @template B
      *
-     * @phpstan-param callable(Throwable): B $handleFailure
-     * @phpstan-param callable(T): B $handleSuccess
+     * @param callable(Throwable): B $handleFailure
+     * @param callable(T): B $handleSuccess
      *
-     * @phpstan-return B
+     * @return B
      */
     abstract public function resolve(callable $handleFailure, callable $handleSuccess);
 }

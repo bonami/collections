@@ -12,9 +12,9 @@ trait Applicative1
      *
      * @template A
      *
-     * @phpstan-param A $value
+     * @param A $value
      *
-     * @phpstan-return static<A>
+     * @return static<A>
      */
     abstract public static function pure($value);
 
@@ -36,18 +36,18 @@ trait Applicative1
      *
      * @template A
      *
-     * @phpstan-param callable(T): A $mapper
+     * @param callable(T): A $mapper
      *
-     * @phpstan-return self<A>
+     * @return self<A>
      */
     abstract public function map(callable $mapper): self;
 
     /**
      * Upgrades callable to accept and return `self` as arguments.
      *
-     * @phpstan-param callable $callable
+     * @param callable $callable
      *
-     * @phpstan-return callable
+     * @return callable
      */
     final public static function lift(callable $callable): callable
     {
@@ -64,9 +64,9 @@ trait Applicative1
      * @template I1
      * @template O
      *
-     * @phpstan-param callable(I1): O $callable
+     * @param callable(I1): O $callable
      *
-     * @phpstan-return callable(self<I1>): self<O>
+     * @return callable(self<I1>): self<O>
      */
     final public static function lift1(callable $callable): callable
     {
@@ -80,9 +80,9 @@ trait Applicative1
      * @template I2
      * @template O
      *
-     * @phpstan-param callable(I1, I2): O $callable
+     * @param callable(I1, I2): O $callable
      *
-     * @phpstan-return callable(self<I1>, self<I2>): self<O>
+     * @return callable(self<I1>, self<I2>): self<O>
      */
     final public static function lift2(callable $callable): callable
     {
@@ -97,9 +97,9 @@ trait Applicative1
      * @template I3
      * @template O
      *
-     * @phpstan-param callable(I1, I2, I3): O $callable
+     * @param callable(I1, I2, I3): O $callable
      *
-     * @phpstan-return callable(self<I1>, self<I2>, self<I3>): self<O>
+     * @return callable(self<I1>, self<I2>, self<I3>): self<O>
      */
     final public static function lift3(callable $callable): callable
     {
@@ -115,9 +115,9 @@ trait Applicative1
      * @template I4
      * @template O
      *
-     * @phpstan-param callable(I1, I2, I3, I4): O $callable
+     * @param callable(I1, I2, I3, I4): O $callable
      *
-     * @phpstan-return callable(self<I1>, self<I2>, self<I3>, self<I4>): self<O>
+     * @return callable(self<I1>, self<I2>, self<I3>, self<I4>): self<O>
      */
     final public static function lift4(callable $callable): callable
     {
@@ -134,9 +134,9 @@ trait Applicative1
      * @template I5
      * @template O
      *
-     * @phpstan-param callable(I1, I2, I3, I4, I5): O $callable
+     * @param callable(I1, I2, I3, I4, I5): O $callable
      *
-     * @phpstan-return callable(self<I1>, self<I2>, self<I3>, self<I4>, self<I5>): self<O>
+     * @return callable(self<I1>, self<I2>, self<I3>, self<I4>, self<I5>): self<O>
      */
     final public static function lift5(callable $callable): callable
     {
@@ -154,9 +154,9 @@ trait Applicative1
      * @template I6
      * @template O
      *
-     * @phpstan-param callable(I1, I2, I3, I4, I5, I6): O $callable
+     * @param callable(I1, I2, I3, I4, I5, I6): O $callable
      *
-     * @phpstan-return callable(self<I1>, self<I2>, self<I3>, self<I4>, self<I5>, self<I6>): self<O>
+     * @return callable(self<I1>, self<I2>, self<I3>, self<I4>, self<I5>, self<I6>): self<O>
      */
     final public static function lift6(callable $callable): callable
     {
@@ -175,9 +175,9 @@ trait Applicative1
      * @template I7
      * @template O
      *
-     * @phpstan-param callable(I1, I2, I3, I4, I5, I6, I7): O $callable
+     * @param callable(I1, I2, I3, I4, I5, I6, I7): O $callable
      *
-     * @phpstan-return callable(self<I1>, self<I2>, self<I3>, self<I4>, self<I5>, self<I6>, self<I7>): self<O>
+     * @return callable(self<I1>, self<I2>, self<I3>, self<I4>, self<I5>, self<I6>, self<I7>): self<O>
      */
     final public static function lift7(callable $callable): callable
     {
@@ -197,9 +197,9 @@ trait Applicative1
      * @template I8
      * @template O
      *
-     * @phpstan-param callable(I1, I2, I3, I4, I5, I6, I7, I8): O $callable
+     * @param callable(I1, I2, I3, I4, I5, I6, I7, I8): O $callable
      *
-     * @phpstan-return callable(self<I1>, self<I2>, self<I3>, self<I4>, self<I5>, self<I6>, self<I7>, self<I8>): self<O>
+     * @return callable(self<I1>, self<I2>, self<I3>, self<I4>, self<I5>, self<I6>, self<I7>, self<I8>): self<O>
      */
     final public static function lift8(callable $callable): callable
     {
@@ -220,9 +220,9 @@ trait Applicative1
      * @template I9
      * @template O
      *
-     * @phpstan-param callable(I1, I2, I3, I4, I5, I6, I7, I8, I9): O $callable
+     * @param callable(I1, I2, I3, I4, I5, I6, I7, I8, I9): O $callable
      *
-     * @phpstan-return callable(self<I1>, self<I2>, self<I3>, self<I4>, self<I5>, self<I6>, self<I7>, self<I8>, self<I9>): self<O>
+     * @return callable(self<I1>, self<I2>, self<I3>, self<I4>, self<I5>, self<I6>, self<I7>, self<I8>, self<I9>): self<O>
      */
     final public static function lift9(callable $callable): callable
     {
@@ -244,9 +244,9 @@ trait Applicative1
      * @template I10
      * @template O
      *
-     * @phpstan-param callable(I1, I2, I3, I4, I5, I6, I7, I8, I9, I10): O $callable
+     * @param callable(I1, I2, I3, I4, I5, I6, I7, I8, I9, I10): O $callable
      *
-     * @phpstan-return callable(self<I1>, self<I2>, self<I3>, self<I4>, self<I5>, self<I6>, self<I7>, self<I8>, self<I9>, self<I10>): self<O>
+     * @return callable(self<I1>, self<I2>, self<I3>, self<I4>, self<I5>, self<I6>, self<I7>, self<I8>, self<I9>, self<I10>): self<O>
      */
     final public static function lift10(callable $callable): callable
     {
@@ -269,9 +269,9 @@ trait Applicative1
      * @template I11
      * @template O
      *
-     * @phpstan-param callable(I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11): O $callable
+     * @param callable(I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11): O $callable
      *
-     * @phpstan-return callable(self<I1>, self<I2>, self<I3>, self<I4>, self<I5>, self<I6>, self<I7>, self<I8>, self<I9>, self<I10>, self<I11>): self<O>
+     * @return callable(self<I1>, self<I2>, self<I3>, self<I4>, self<I5>, self<I6>, self<I7>, self<I8>, self<I9>, self<I10>, self<I11>): self<O>
      */
     final public static function lift11(callable $callable): callable
     {
@@ -295,9 +295,9 @@ trait Applicative1
      * @template I12
      * @template O
      *
-     * @phpstan-param callable(I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12): O $callable
+     * @param callable(I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12): O $callable
      *
-     * @phpstan-return callable(self<I1>, self<I2>, self<I3>, self<I4>, self<I5>, self<I6>, self<I7>, self<I8>, self<I9>, self<I10>, self<I11>, self<I12>): self<O>
+     * @return callable(self<I1>, self<I2>, self<I3>, self<I4>, self<I5>, self<I6>, self<I7>, self<I8>, self<I9>, self<I10>, self<I11>, self<I12>): self<O>
      */
     final public static function lift12(callable $callable): callable
     {
@@ -322,9 +322,9 @@ trait Applicative1
      * @template I13
      * @template O
      *
-     * @phpstan-param callable(I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13): O $callable
+     * @param callable(I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13): O $callable
      *
-     * @phpstan-return callable(self<I1>, self<I2>, self<I3>, self<I4>, self<I5>, self<I6>, self<I7>, self<I8>, self<I9>, self<I10>, self<I11>, self<I12>, self<I13>): self<O>
+     * @return callable(self<I1>, self<I2>, self<I3>, self<I4>, self<I5>, self<I6>, self<I7>, self<I8>, self<I9>, self<I10>, self<I11>, self<I12>, self<I13>): self<O>
      */
     final public static function lift13(callable $callable): callable
     {
@@ -350,9 +350,9 @@ trait Applicative1
      * @template I14
      * @template O
      *
-     * @phpstan-param callable(I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14): O $callable
+     * @param callable(I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14): O $callable
      *
-     * @phpstan-return callable(self<I1>, self<I2>, self<I3>, self<I4>, self<I5>, self<I6>, self<I7>, self<I8>, self<I9>, self<I10>, self<I11>, self<I12>, self<I13>, self<I14>): self<O>
+     * @return callable(self<I1>, self<I2>, self<I3>, self<I4>, self<I5>, self<I6>, self<I7>, self<I8>, self<I9>, self<I10>, self<I11>, self<I12>, self<I13>, self<I14>): self<O>
      */
     final public static function lift14(callable $callable): callable
     {
@@ -379,9 +379,9 @@ trait Applicative1
      * @template I15
      * @template O
      *
-     * @phpstan-param callable(I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15): O $callable
+     * @param callable(I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15): O $callable
      *
-     * @phpstan-return callable(self<I1>, self<I2>, self<I3>, self<I4>, self<I5>, self<I6>, self<I7>, self<I8>, self<I9>, self<I10>, self<I11>, self<I12>, self<I13>, self<I14>, self<I15>): self<O>
+     * @return callable(self<I1>, self<I2>, self<I3>, self<I4>, self<I5>, self<I6>, self<I7>, self<I8>, self<I9>, self<I10>, self<I11>, self<I12>, self<I13>, self<I14>, self<I15>): self<O>
      */
     final public static function lift15(callable $callable): callable
     {
@@ -409,9 +409,9 @@ trait Applicative1
      * @template I16
      * @template O
      *
-     * @phpstan-param callable(I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15, I16): O $callable
+     * @param callable(I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15, I16): O $callable
      *
-     * @phpstan-return callable(self<I1>, self<I2>, self<I3>, self<I4>, self<I5>, self<I6>, self<I7>, self<I8>, self<I9>, self<I10>, self<I11>, self<I12>, self<I13>, self<I14>, self<I15>, self<I16>): self<O>
+     * @return callable(self<I1>, self<I2>, self<I3>, self<I4>, self<I5>, self<I6>, self<I7>, self<I8>, self<I9>, self<I10>, self<I11>, self<I12>, self<I13>, self<I14>, self<I15>, self<I16>): self<O>
      */
     final public static function lift16(callable $callable): callable
     {
@@ -440,9 +440,9 @@ trait Applicative1
      * @template I17
      * @template O
      *
-     * @phpstan-param callable(I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15, I16, I17): O $callable
+     * @param callable(I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15, I16, I17): O $callable
      *
-     * @phpstan-return callable(self<I1>, self<I2>, self<I3>, self<I4>, self<I5>, self<I6>, self<I7>, self<I8>, self<I9>, self<I10>, self<I11>, self<I12>, self<I13>, self<I14>, self<I15>, self<I16>, self<I17>): self<O>
+     * @return callable(self<I1>, self<I2>, self<I3>, self<I4>, self<I5>, self<I6>, self<I7>, self<I8>, self<I9>, self<I10>, self<I11>, self<I12>, self<I13>, self<I14>, self<I15>, self<I16>, self<I17>): self<O>
      */
     final public static function lift17(callable $callable): callable
     {
@@ -472,9 +472,9 @@ trait Applicative1
      * @template I18
      * @template O
      *
-     * @phpstan-param callable(I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15, I16, I17, I18): O $callable
+     * @param callable(I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15, I16, I17, I18): O $callable
      *
-     * @phpstan-return callable(self<I1>, self<I2>, self<I3>, self<I4>, self<I5>, self<I6>, self<I7>, self<I8>, self<I9>, self<I10>, self<I11>, self<I12>, self<I13>, self<I14>, self<I15>, self<I16>, self<I17>, self<I18>): self<O>
+     * @return callable(self<I1>, self<I2>, self<I3>, self<I4>, self<I5>, self<I6>, self<I7>, self<I8>, self<I9>, self<I10>, self<I11>, self<I12>, self<I13>, self<I14>, self<I15>, self<I16>, self<I17>, self<I18>): self<O>
      */
     final public static function lift18(callable $callable): callable
     {
@@ -505,9 +505,9 @@ trait Applicative1
      * @template I19
      * @template O
      *
-     * @phpstan-param callable(I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15, I16, I17, I18, I19): O $callable
+     * @param callable(I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15, I16, I17, I18, I19): O $callable
      *
-     * @phpstan-return callable(self<I1>, self<I2>, self<I3>, self<I4>, self<I5>, self<I6>, self<I7>, self<I8>, self<I9>, self<I10>, self<I11>, self<I12>, self<I13>, self<I14>, self<I15>, self<I16>, self<I17>, self<I18>, self<I19>): self<O>
+     * @return callable(self<I1>, self<I2>, self<I3>, self<I4>, self<I5>, self<I6>, self<I7>, self<I8>, self<I9>, self<I10>, self<I11>, self<I12>, self<I13>, self<I14>, self<I15>, self<I16>, self<I17>, self<I18>, self<I19>): self<O>
      */
     final public static function lift19(callable $callable): callable
     {
@@ -539,9 +539,9 @@ trait Applicative1
      * @template I20
      * @template O
      *
-     * @phpstan-param callable(I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15, I16, I17, I18, I19, I20): O $callable
+     * @param callable(I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15, I16, I17, I18, I19, I20): O $callable
      *
-     * @phpstan-return callable(self<I1>, self<I2>, self<I3>, self<I4>, self<I5>, self<I6>, self<I7>, self<I8>, self<I9>, self<I10>, self<I11>, self<I12>, self<I13>, self<I14>, self<I15>, self<I16>, self<I17>, self<I18>, self<I19>, self<I20>): self<O>
+     * @return callable(self<I1>, self<I2>, self<I3>, self<I4>, self<I5>, self<I6>, self<I7>, self<I8>, self<I9>, self<I10>, self<I11>, self<I12>, self<I13>, self<I14>, self<I15>, self<I16>, self<I17>, self<I18>, self<I19>, self<I20>): self<O>
      */
     final public static function lift20(callable $callable): callable
     {
@@ -574,9 +574,9 @@ trait Applicative1
      * @template I21
      * @template O
      *
-     * @phpstan-param callable(I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15, I16, I17, I18, I19, I20, I21): O $callable
+     * @param callable(I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15, I16, I17, I18, I19, I20, I21): O $callable
      *
-     * @phpstan-return callable(self<I1>, self<I2>, self<I3>, self<I4>, self<I5>, self<I6>, self<I7>, self<I8>, self<I9>, self<I10>, self<I11>, self<I12>, self<I13>, self<I14>, self<I15>, self<I16>, self<I17>, self<I18>, self<I19>, self<I20>, self<I21>): self<O>
+     * @return callable(self<I1>, self<I2>, self<I3>, self<I4>, self<I5>, self<I6>, self<I7>, self<I8>, self<I9>, self<I10>, self<I11>, self<I12>, self<I13>, self<I14>, self<I15>, self<I16>, self<I17>, self<I18>, self<I19>, self<I20>, self<I21>): self<O>
      */
     final public static function lift21(callable $callable): callable
     {
@@ -610,9 +610,9 @@ trait Applicative1
      * @template I22
      * @template O
      *
-     * @phpstan-param callable(I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15, I16, I17, I18, I19, I20, I21, I22): O $callable
+     * @param callable(I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15, I16, I17, I18, I19, I20, I21, I22): O $callable
      *
-     * @phpstan-return callable(self<I1>, self<I2>, self<I3>, self<I4>, self<I5>, self<I6>, self<I7>, self<I8>, self<I9>, self<I10>, self<I11>, self<I12>, self<I13>, self<I14>, self<I15>, self<I16>, self<I17>, self<I18>, self<I19>, self<I20>, self<I21>, self<I22>): self<O>
+     * @return callable(self<I1>, self<I2>, self<I3>, self<I4>, self<I5>, self<I6>, self<I7>, self<I8>, self<I9>, self<I10>, self<I11>, self<I12>, self<I13>, self<I14>, self<I15>, self<I16>, self<I17>, self<I18>, self<I19>, self<I20>, self<I21>, self<I22>): self<O>
      */
     final public static function lift22(callable $callable): callable
     {
@@ -647,9 +647,9 @@ trait Applicative1
      * @template I23
      * @template O
      *
-     * @phpstan-param callable(I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15, I16, I17, I18, I19, I20, I21, I22, I23): O $callable
+     * @param callable(I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15, I16, I17, I18, I19, I20, I21, I22, I23): O $callable
      *
-     * @phpstan-return callable(self<I1>, self<I2>, self<I3>, self<I4>, self<I5>, self<I6>, self<I7>, self<I8>, self<I9>, self<I10>, self<I11>, self<I12>, self<I13>, self<I14>, self<I15>, self<I16>, self<I17>, self<I18>, self<I19>, self<I20>, self<I21>, self<I22>, self<I23>): self<O>
+     * @return callable(self<I1>, self<I2>, self<I3>, self<I4>, self<I5>, self<I6>, self<I7>, self<I8>, self<I9>, self<I10>, self<I11>, self<I12>, self<I13>, self<I14>, self<I15>, self<I16>, self<I17>, self<I18>, self<I19>, self<I20>, self<I21>, self<I22>, self<I23>): self<O>
      */
     final public static function lift23(callable $callable): callable
     {
@@ -685,9 +685,9 @@ trait Applicative1
      * @template I24
      * @template O
      *
-     * @phpstan-param callable(I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15, I16, I17, I18, I19, I20, I21, I22, I23, I24): O $callable
+     * @param callable(I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15, I16, I17, I18, I19, I20, I21, I22, I23, I24): O $callable
      *
-     * @phpstan-return callable(self<I1>, self<I2>, self<I3>, self<I4>, self<I5>, self<I6>, self<I7>, self<I8>, self<I9>, self<I10>, self<I11>, self<I12>, self<I13>, self<I14>, self<I15>, self<I16>, self<I17>, self<I18>, self<I19>, self<I20>, self<I21>, self<I22>, self<I23>, self<I24>): self<O>
+     * @return callable(self<I1>, self<I2>, self<I3>, self<I4>, self<I5>, self<I6>, self<I7>, self<I8>, self<I9>, self<I10>, self<I11>, self<I12>, self<I13>, self<I14>, self<I15>, self<I16>, self<I17>, self<I18>, self<I19>, self<I20>, self<I21>, self<I22>, self<I23>, self<I24>): self<O>
      */
     final public static function lift24(callable $callable): callable
     {
@@ -724,9 +724,9 @@ trait Applicative1
      * @template I25
      * @template O
      *
-     * @phpstan-param callable(I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15, I16, I17, I18, I19, I20, I21, I22, I23, I24, I25): O $callable
+     * @param callable(I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15, I16, I17, I18, I19, I20, I21, I22, I23, I24, I25): O $callable
      *
-     * @phpstan-return callable(self<I1>, self<I2>, self<I3>, self<I4>, self<I5>, self<I6>, self<I7>, self<I8>, self<I9>, self<I10>, self<I11>, self<I12>, self<I13>, self<I14>, self<I15>, self<I16>, self<I17>, self<I18>, self<I19>, self<I20>, self<I21>, self<I22>, self<I23>, self<I24>, self<I25>): self<O>
+     * @return callable(self<I1>, self<I2>, self<I3>, self<I4>, self<I5>, self<I6>, self<I7>, self<I8>, self<I9>, self<I10>, self<I11>, self<I12>, self<I13>, self<I14>, self<I15>, self<I16>, self<I17>, self<I18>, self<I19>, self<I20>, self<I21>, self<I22>, self<I23>, self<I24>, self<I25>): self<O>
      */
     final public static function lift25(callable $callable): callable
     {
@@ -764,9 +764,9 @@ trait Applicative1
      * @template I26
      * @template O
      *
-     * @phpstan-param callable(I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15, I16, I17, I18, I19, I20, I21, I22, I23, I24, I25, I26): O $callable
+     * @param callable(I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15, I16, I17, I18, I19, I20, I21, I22, I23, I24, I25, I26): O $callable
      *
-     * @phpstan-return callable(self<I1>, self<I2>, self<I3>, self<I4>, self<I5>, self<I6>, self<I7>, self<I8>, self<I9>, self<I10>, self<I11>, self<I12>, self<I13>, self<I14>, self<I15>, self<I16>, self<I17>, self<I18>, self<I19>, self<I20>, self<I21>, self<I22>, self<I23>, self<I24>, self<I25>, self<I26>): self<O>
+     * @return callable(self<I1>, self<I2>, self<I3>, self<I4>, self<I5>, self<I6>, self<I7>, self<I8>, self<I9>, self<I10>, self<I11>, self<I12>, self<I13>, self<I14>, self<I15>, self<I16>, self<I17>, self<I18>, self<I19>, self<I20>, self<I21>, self<I22>, self<I23>, self<I24>, self<I25>, self<I26>): self<O>
      */
     final public static function lift26(callable $callable): callable
     {
@@ -805,9 +805,9 @@ trait Applicative1
      * @template I27
      * @template O
      *
-     * @phpstan-param callable(I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15, I16, I17, I18, I19, I20, I21, I22, I23, I24, I25, I26, I27): O $callable
+     * @param callable(I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15, I16, I17, I18, I19, I20, I21, I22, I23, I24, I25, I26, I27): O $callable
      *
-     * @phpstan-return callable(self<I1>, self<I2>, self<I3>, self<I4>, self<I5>, self<I6>, self<I7>, self<I8>, self<I9>, self<I10>, self<I11>, self<I12>, self<I13>, self<I14>, self<I15>, self<I16>, self<I17>, self<I18>, self<I19>, self<I20>, self<I21>, self<I22>, self<I23>, self<I24>, self<I25>, self<I26>, self<I27>): self<O>
+     * @return callable(self<I1>, self<I2>, self<I3>, self<I4>, self<I5>, self<I6>, self<I7>, self<I8>, self<I9>, self<I10>, self<I11>, self<I12>, self<I13>, self<I14>, self<I15>, self<I16>, self<I17>, self<I18>, self<I19>, self<I20>, self<I21>, self<I22>, self<I23>, self<I24>, self<I25>, self<I26>, self<I27>): self<O>
      */
     final public static function lift27(callable $callable): callable
     {
@@ -847,9 +847,9 @@ trait Applicative1
      * @template I28
      * @template O
      *
-     * @phpstan-param callable(I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15, I16, I17, I18, I19, I20, I21, I22, I23, I24, I25, I26, I27, I28): O $callable
+     * @param callable(I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15, I16, I17, I18, I19, I20, I21, I22, I23, I24, I25, I26, I27, I28): O $callable
      *
-     * @phpstan-return callable(self<I1>, self<I2>, self<I3>, self<I4>, self<I5>, self<I6>, self<I7>, self<I8>, self<I9>, self<I10>, self<I11>, self<I12>, self<I13>, self<I14>, self<I15>, self<I16>, self<I17>, self<I18>, self<I19>, self<I20>, self<I21>, self<I22>, self<I23>, self<I24>, self<I25>, self<I26>, self<I27>, self<I28>): self<O>
+     * @return callable(self<I1>, self<I2>, self<I3>, self<I4>, self<I5>, self<I6>, self<I7>, self<I8>, self<I9>, self<I10>, self<I11>, self<I12>, self<I13>, self<I14>, self<I15>, self<I16>, self<I17>, self<I18>, self<I19>, self<I20>, self<I21>, self<I22>, self<I23>, self<I24>, self<I25>, self<I26>, self<I27>, self<I28>): self<O>
      */
     final public static function lift28(callable $callable): callable
     {
@@ -890,9 +890,9 @@ trait Applicative1
      * @template I29
      * @template O
      *
-     * @phpstan-param callable(I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15, I16, I17, I18, I19, I20, I21, I22, I23, I24, I25, I26, I27, I28, I29): O $callable
+     * @param callable(I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15, I16, I17, I18, I19, I20, I21, I22, I23, I24, I25, I26, I27, I28, I29): O $callable
      *
-     * @phpstan-return callable(self<I1>, self<I2>, self<I3>, self<I4>, self<I5>, self<I6>, self<I7>, self<I8>, self<I9>, self<I10>, self<I11>, self<I12>, self<I13>, self<I14>, self<I15>, self<I16>, self<I17>, self<I18>, self<I19>, self<I20>, self<I21>, self<I22>, self<I23>, self<I24>, self<I25>, self<I26>, self<I27>, self<I28>, self<I29>): self<O>
+     * @return callable(self<I1>, self<I2>, self<I3>, self<I4>, self<I5>, self<I6>, self<I7>, self<I8>, self<I9>, self<I10>, self<I11>, self<I12>, self<I13>, self<I14>, self<I15>, self<I16>, self<I17>, self<I18>, self<I19>, self<I20>, self<I21>, self<I22>, self<I23>, self<I24>, self<I25>, self<I26>, self<I27>, self<I28>, self<I29>): self<O>
      */
     final public static function lift29(callable $callable): callable
     {
@@ -934,9 +934,9 @@ trait Applicative1
      * @template I30
      * @template O
      *
-     * @phpstan-param callable(I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15, I16, I17, I18, I19, I20, I21, I22, I23, I24, I25, I26, I27, I28, I29, I30): O $callable
+     * @param callable(I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15, I16, I17, I18, I19, I20, I21, I22, I23, I24, I25, I26, I27, I28, I29, I30): O $callable
      *
-     * @phpstan-return callable(self<I1>, self<I2>, self<I3>, self<I4>, self<I5>, self<I6>, self<I7>, self<I8>, self<I9>, self<I10>, self<I11>, self<I12>, self<I13>, self<I14>, self<I15>, self<I16>, self<I17>, self<I18>, self<I19>, self<I20>, self<I21>, self<I22>, self<I23>, self<I24>, self<I25>, self<I26>, self<I27>, self<I28>, self<I29>, self<I30>): self<O>
+     * @return callable(self<I1>, self<I2>, self<I3>, self<I4>, self<I5>, self<I6>, self<I7>, self<I8>, self<I9>, self<I10>, self<I11>, self<I12>, self<I13>, self<I14>, self<I15>, self<I16>, self<I17>, self<I18>, self<I19>, self<I20>, self<I21>, self<I22>, self<I23>, self<I24>, self<I25>, self<I26>, self<I27>, self<I28>, self<I29>, self<I30>): self<O>
      */
     final public static function lift30(callable $callable): callable
     {
@@ -949,9 +949,9 @@ trait Applicative1
      *
      * @template A
      *
-     * @phpstan-param iterable<self<A>> $iterable
+     * @param iterable<self<A>> $iterable
      *
-     * @phpstan-return self<ArrayList<A>>
+     * @return self<ArrayList<A>>
      */
     final public static function sequence(iterable $iterable): self
     {
@@ -968,10 +968,10 @@ trait Applicative1
      * @template A
      * @template B
      *
-     * @phpstan-param iterable<A> $iterable
-     * @phpstan-param callable(A): self<B> $mapperToApplicative
+     * @param iterable<A> $iterable
+     * @param callable(A): self<B> $mapperToApplicative
      *
-     * @phpstan-return self<ArrayList<B>>
+     * @return self<ArrayList<B>>
      */
     final public static function traverse(iterable $iterable, callable $mapperToApplicative): self
     {

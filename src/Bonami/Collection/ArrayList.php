@@ -39,17 +39,17 @@ use function usort;
 /**
  * @template T
  *
- * @phpstan-implements IteratorAggregate<int, T>
+ * @implements IteratorAggregate<int, T>
  */
 class ArrayList implements Countable, IteratorAggregate, JsonSerializable
 {
     /** @use Monad1<T> */
     use Monad1;
 
-    /** @phpstan-var array<int, T> */
+    /** @var array<int, T> */
     protected $items;
 
-    /** @phpstan-param array<int, T> $items */
+    /** @param array<int, T> $items */
     final public function __construct(array $items)
     {
         $this->items = $items;
@@ -60,7 +60,7 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      *
      * Complexity: o(1)
      *
-     * @phpstan-return static<T>
+     * @return static<T>
      */
     public static function fromEmpty()
     {
@@ -74,9 +74,9 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      *
      * @template V
      *
-     * @phpstan-param V ...$item - with any number of occurences
+     * @param V ...$item - with any number of occurences
      *
-     * @phpstan-return static<V>
+     * @return static<V>
      */
     public static function of(...$item)
     {
@@ -90,9 +90,9 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      *
      * @template V
      *
-     * @phpstan-param V $item
+     * @param V $item
      *
-     * @phpstan-return static<V>
+     * @return static<V>
      */
     public static function pure($item)
     {
@@ -106,10 +106,10 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      *
      * @template V
      *
-     * @phpstan-param V $item - an item to be filled
-     * @phpstan-param int $size - size of desired ArrayList with filled $item as each element
+     * @param V $item - an item to be filled
+     * @param int $size - size of desired ArrayList with filled $item as each element
      *
-     * @phpstan-return static<V>
+     * @return static<V>
      */
     public static function fill($item, int $size)
     {
@@ -123,13 +123,13 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      *
      * @see LazyList::range() - for initializing range lazily
      *
-     * @phpstan-param int $min - a minimal (starting) value of range
-     * @phpstan-param int $max - a maximum value of range - it may or maybe not be included
+     * @param int $min - a minimal (starting) value of range
+     * @param int $max - a maximum value of range - it may or maybe not be included
      *                 as last element if the step does not step
      *                 over it.
-     * @phpstan-param int $step - a size of step between each item of range
+     * @param int $step - a size of step between each item of range
      *
-     * @phpstan-return self<int>
+     * @return self<int>
      */
     public static function range(int $min, int $max, int $step = 1): self
     {
@@ -144,10 +144,10 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      *
      * Complexity: o(n) - where n is length of string
      *
-     * @phpstan-param string $delimiter - a delimiter to be used for spliting
-     * @phpstan-param string $string - a string to be exploded
+     * @param string $delimiter - a delimiter to be used for spliting
+     * @param string $string - a string to be exploded
      *
-     * @phpstan-return self<string>
+     * @return self<string>
      */
     public static function explode(string $delimiter, string $string): self
     {
@@ -168,9 +168,9 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      *
      * @template V
      *
-     * @phpstan-param iterable<int, V> $iterable
+     * @param iterable<int, V> $iterable
      *
-     * @phpstan-return static<V>
+     * @return static<V>
      */
     public static function fromIterable(iterable $iterable)
     {
@@ -189,9 +189,9 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      *
      * @template V
      *
-     * @phpstan-param iterable<int, V> $iterable
+     * @param iterable<int, V> $iterable
      *
-     * @phpstan-return array<V>
+     * @return array<V>
      */
     private static function convertIterableToArray(iterable $iterable): array
     {
@@ -215,7 +215,7 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      *
      * Complexity: o(1) - Retriving the iterator itself is constant. Iterating over it is of course o(n)
      *
-     * @phpstan-return Iterator <int, T>
+     * @return Iterator <int, T>
      */
     public function getIterator(): Iterator
     {
@@ -227,7 +227,7 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      *
      * Complexity: o(1)
      *
-     * @phpstan-return int
+     * @return int
      */
     public function count(): int
     {
@@ -241,7 +241,7 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      *
      * @see isNotEmpty
      *
-     * @phpstan-return bool
+     * @return bool
      */
     public function isEmpty(): bool
     {
@@ -255,7 +255,7 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      *
      * @see isEmpty
      *
-     * @phpstan-return bool
+     * @return bool
      */
     public function isNotEmpty(): bool
     {
@@ -270,9 +270,9 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      * @see getUnsafe - when you are 100 % sure, that key is set
      * @see getOrElse - for unboxing value directly with alternative value when value is not set
      *
-     * @phpstan-param int $key
+     * @param int $key
      *
-     * @phpstan-return Option<T>
+     * @return Option<T>
      */
     public function get(int $key): Option
     {
@@ -291,10 +291,10 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      *
      * @template E
      *
-     * @phpstan-param int $key
-     * @phpstan-param E $else
+     * @param int $key
+     * @param E $else
      *
-     * @phpstan-return T|E
+     * @return T|E
      */
     public function getOrElse(int $key, $else)
     {
@@ -309,11 +309,11 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      * @see get - for getting Option instead of unboxing it directly
      * @see getOrElse - for unboxing value directly with alternative value when value is not set
      *
-     * @phpstan-param int $key
+     * @param int $key
      *
      * @throws OutOfBoundsException
      *
-     * @phpstan-return T
+     * @return T
      */
     public function getUnsafe(int $key)
     {
@@ -332,9 +332,9 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      *
      * @template B
      *
-     * @phpstan-param callable(T, int): B $mapper
+     * @param callable(T, int): B $mapper
      *
-     * @phpstan-return self<B>
+     * @return self<B>
      */
     public function map(callable $mapper): self
     {
@@ -355,9 +355,9 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      *
      * @template B
      *
-     * @phpstan-param callable(T, int): iterable<B> $mapper
+     * @param callable(T, int): iterable<B> $mapper
      *
-     * @phpstan-return self<B>
+     * @return self<B>
      */
     public function flatMap(callable $mapper): self
     {
@@ -375,7 +375,7 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      *
      * @see flatMap
      *
-     * @phpstan-return self<mixed>
+     * @return self<mixed>
      */
     public function flatten(): self
     {
@@ -405,9 +405,9 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      *
      * @template B
      *
-     * @phpstan-param callable(T, int): B $mapper
+     * @param callable(T, int): B $mapper
      *
-     * @phpstan-return self<B>
+     * @return self<B>
      */
     public function uniqueMap(callable $mapper): self
     {
@@ -441,9 +441,9 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      *
      * @template B
      *
-     * @phpstan-param callable(T, int): B $discriminator
+     * @param callable(T, int): B $discriminator
      *
-     * @phpstan-return static<T>
+     * @return static<T>
      */
     public function uniqueBy(callable $discriminator)
     {
@@ -474,7 +474,7 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      * @see uniqueMap
      * @see IHashable::hashCode
      *
-     * @phpstan-return static<T>
+     * @return static<T>
      */
     public function unique()
     {
@@ -495,9 +495,9 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      * @see concat - to append items from iterable without deduplicating
      * @see unique - for more info about how deduplication work
      *
-     * @phpstan-param iterable<T> $list
+     * @param iterable<T> $list
      *
-     * @phpstan-return static<T>
+     * @return static<T>
      */
     public function union(iterable $list)
     {
@@ -509,9 +509,9 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      *
      * Complexity: o(n)
      *
-     * @phpstan-param callable(T, int): bool $predicate
+     * @param callable(T, int): bool $predicate
      *
-     * @phpstan-return static<T>
+     * @return static<T>
      */
     public function filter(callable $predicate)
     {
@@ -526,9 +526,9 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      * @see exists - if you just need to check if something matches by predicate
      * @see findKey - if you need to get key by predicate
      *
-     * @phpstan-param callable(T, int): bool $predicate
+     * @param callable(T, int): bool $predicate
      *
-     * @phpstan-return Option<T>
+     * @return Option<T>
      */
     public function find(callable $predicate): Option
     {
@@ -548,9 +548,9 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      * @see exists - if you just need to check if something matches by predicate
      * @see find - if you need to get item by predicate
      *
-     * @phpstan-param callable(T, int): bool $predicate
+     * @param callable(T, int): bool $predicate
      *
-     * @phpstan-return Option<int>
+     * @return Option<int>
      */
     public function findKey(callable $predicate): Option
     {
@@ -571,9 +571,9 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      * @see contains - if you need to check item existence directly without predicate
      * @see all - if you need to check if ALL items in List satisfy predicate
      *
-     * @phpstan-param callable(T, int): bool $predicate
+     * @param callable(T, int): bool $predicate
      *
-     * @phpstan-return bool
+     * @return bool
      */
     public function exists(callable $predicate): bool
     {
@@ -593,10 +593,10 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      * @see exists - if you need to check if something exists by predicate
      * @see find - if you need to get item by predicate
      *
-     * @phpstan-param T $item                     - item for lookup
-     * @phpstan-param bool|null $strictComparison - if true, identity (===) comparison is used, equality otherwise (==)
+     * @param T $item                     - item for lookup
+     * @param bool|null $strictComparison - if true, identity (===) comparison is used, equality otherwise (==)
      *
-     * @phpstan-return bool
+     * @return bool
      */
     public function contains($item, ?bool $strictComparison = true): bool
     {
@@ -611,9 +611,9 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      * @see exists - if you need to check if AT LEAST ONE item in List satisfy predicate
      * @see find - if you need to get item by predicate
      *
-     * @phpstan-param callable(T, int): bool $predicate
+     * @param callable(T, int): bool $predicate
      *
-     * @phpstan-return bool
+     * @return bool
      */
     public function all(callable $predicate): bool
     {
@@ -636,10 +636,10 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      *
      * @see comparator() - a default value for $comparator when ommited
      *
-     * @phpstan-param null|callable(T, T): int $comparator - classic comparator returning 1, 0 or -1
+     * @param null|callable(T, T): int $comparator - classic comparator returning 1, 0 or -1
      *                                                       if no comparator is passed, $first <=> $second is used
      *
-     * @phpstan-return static<T>
+     * @return static<T>
      */
     public function sort(?callable $comparator = null)
     {
@@ -655,9 +655,9 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      *
      * @template M
      *
-     * @phpstan-param callable(T, int): M $indexCallback
+     * @param callable(T, int): M $indexCallback
      *
-     * @phpstan-return Map<M, T>
+     * @return Map<M, T>
      */
     public function index(callable $indexCallback): Map
     {
@@ -671,7 +671,7 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      *
      * Complexity: o(1)
      *
-     * @phpstan-return array<T>
+     * @return array<T>
      */
     public function toArray(): array
     {
@@ -685,10 +685,10 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      *
      * @template R
      *
-     * @phpstan-param callable(R, T, int): R $reducer - ($carry: mixed, $item: mixed, $key: int) => mixed
-     * @phpstan-param R $initialReduction - initial value used as seed for $carry
+     * @param callable(R, T, int): R $reducer - ($carry: mixed, $item: mixed, $key: int) => mixed
+     * @param R $initialReduction - initial value used as seed for $carry
      *
-     * @phpstan-return R - reduced values. If the list is empty, $initialReduction is directly returned
+     * @return R - reduced values. If the list is empty, $initialReduction is directly returned
      */
     public function reduce(callable $reducer, $initialReduction)
     {
@@ -704,9 +704,9 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      *
      * @see sum - for trivial summing
      *
-     * @phpstan-param Monoid<T> $monoid
+     * @param Monoid<T> $monoid
      *
-     * @phpstan-return T
+     * @return T
      */
     public function mfold(Monoid $monoid)
     {
@@ -722,9 +722,9 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      *
      * @see mfold - for folding diferent types of items (E.g. classes representing BigNumbers and so on)
      *
-     * @phpstan-param callable(T): (int|float) $itemToNumber
+     * @param callable(T): (int|float) $itemToNumber
      *
-     * @phpstan-return int|float
+     * @return int|float
      */
     public function sum(callable $itemToNumber)
     {
@@ -738,10 +738,10 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      *
      * Complexity: o(n)
      *
-     * @phpstan-param null|callable(T, T): int $comparator - classic comparator returning 1, 0 or -1
+     * @param null|callable(T, T): int $comparator - classic comparator returning 1, 0 or -1
      *                                                       if no comparator is passed, $first <=> $second is used
      *
-     * @phpstan-return Option<T> minimal value wrapped in Option::some or Option::none when list is empty
+     * @return Option<T> minimal value wrapped in Option::some or Option::none when list is empty
      */
     public function min(?callable $comparator = null): Option
     {
@@ -766,10 +766,10 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      *
      * Complexity: o(n)
      *
-     * @phpstan-param null|callable(T, T): int $comparator - classic comparator returning 1, 0 or -1
+     * @param null|callable(T, T): int $comparator - classic comparator returning 1, 0 or -1
      *                                                       if no comparator is passed, $first <=> $second is used
      *
-     * @phpstan-return Option<T> minimal value wrapped in Option::some or Option::none when list is empty
+     * @return Option<T> minimal value wrapped in Option::some or Option::none when list is empty
      */
     public function max(?callable $comparator = null): Option
     {
@@ -794,9 +794,9 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      *
      * Complexity: o(n)
      *
-     * @phpstan-param callable(T, int): void $sideEffect
+     * @param callable(T, int): void $sideEffect
      *
-     * @phpstan-return void
+     * @return void
      */
     public function each(callable $sideEffect): void
     {
@@ -812,9 +812,9 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      *
      * Complexity: o(n)
      *
-     * @phpstan-param callable(T, int): void $sideEffect
+     * @param callable(T, int): void $sideEffect
      *
-     * @phpstan-return static<T>
+     * @return static<T>
      */
     public function tap(callable $sideEffect)
     {
@@ -830,7 +830,7 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      *
      * Complexity: o(1)
      *
-     * @phpstan-return Option<T> item wrapped with Option::some or Option::none if list is empty
+     * @return Option<T> item wrapped with Option::some or Option::none if list is empty
      */
     public function head(): Option
     {
@@ -842,7 +842,7 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      *
      * Complexity: o(n) - where n is `$size`
      *
-     * @phpstan-return static<T>
+     * @return static<T>
      */
     public function take(int $size)
     {
@@ -854,11 +854,11 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      *
      * Complexity: o(n) - where n is size of resulting List
      *
-     * @phpstan-param int $offset     - from which index the slicing should start
-     * @phpstan-param int|null $limit - how much items should be taken from offset.
+     * @param int $offset     - from which index the slicing should start
+     * @param int|null $limit - how much items should be taken from offset.
      *                                  when nothing is specified, the items are taken until end of List
      *
-     * @phpstan-return static<T>
+     * @return static<T>
      */
     public function slice(int $offset, ?int $limit = null)
     {
@@ -870,7 +870,7 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      *
      * Complexity: o(1)
      *
-     * @phpstan-return Option<T> item wrapped with Option::some or Option::none if list is empty
+     * @return Option<T> item wrapped with Option::some or Option::none if list is empty
      */
     public function last(): Option
     {
@@ -887,7 +887,7 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      *
      * Complexity: o(n)
      *
-     * @phpstan-return static<T>
+     * @return static<T>
      */
     public function withoutNulls()
     {
@@ -908,10 +908,10 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      * n = number of items in this list
      * m = number of items to remove.
      *
-     * @phpstan-param iterable<T> $itemsToRemove
-     * @phpstan-param bool|null $strictComparison
+     * @param iterable<T> $itemsToRemove
+     * @param bool|null $strictComparison
      *
-     * @phpstan-return static<T>
+     * @return static<T>
      */
     public function minus(iterable $itemsToRemove, ?bool $strictComparison = true)
     {
@@ -924,7 +924,7 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
         }
 
         if ($strictComparison) {
-            /** @phpstan-var array<array{0: T, 1: bool}> */
+            /** @var array<array{0: T, 1: bool}> */
             $pairs = array_map(static function ($item): array {
                 return [$item, true];
             }, $itemsToRemoveArray);
@@ -948,10 +948,10 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      *
      * Complexity: o(n) - strict comparison is slightly faster (with same complexity, but less hidden cost)
      *
-     * @phpstan-param T $itemToRemove
-     * @phpstan-param bool|null $strictComparison
+     * @param T $itemToRemove
+     * @param bool|null $strictComparison
      *
-     * @phpstan-return static<T>
+     * @return static<T>
      */
     public function minusOne($itemToRemove, ?bool $strictComparison = true)
     {
@@ -973,9 +973,9 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      *
      * @template T2
      *
-     * @phpstan-param iterable<T2> $itemsToAdd
+     * @param iterable<T2> $itemsToAdd
      *
-     * @phpstan-return static<T|T2>
+     * @return static<T|T2>
      */
     public function concat(iterable $itemsToAdd)
     {
@@ -987,9 +987,9 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      *
      * Complexity: o(n)
      *
-     * @phpstan-param iterable<T> $items
+     * @param iterable<T> $items
      *
-     * @phpstan-return static<T>
+     * @return static<T>
      */
     public function intersect(iterable $items)
     {
@@ -1006,9 +1006,9 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      *
      * @template G
      *
-     * @phpstan-param callable(T, int): G $groupBy
+     * @param callable(T, int): G $groupBy
      *
-     * @phpstan-return Map<G, static<T>>
+     * @return Map<G, static<T>>
      */
     public function groupBy(callable $groupBy): Map
     {
@@ -1026,9 +1026,9 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      *
      * Complexity: o(n)
      *
-     * @phpstan-param int $size - size of resulting nested List
+     * @param int $size - size of resulting nested List
      *
-     * @phpstan-return self<static<T>>
+     * @return self<static<T>>
      */
     public function chunk(int $size): self
     {
@@ -1055,9 +1055,9 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      *
      * @template V
      *
-     * @phpstan-param iterable<V> $values
+     * @param iterable<V> $values
      *
-     * @phpstan-return Map<T, V>
+     * @return Map<T, V>
      */
     public function combine(iterable $values): Map
     {
@@ -1076,9 +1076,9 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      *
      * @template B
      *
-     * @phpstan-param iterable<B> $iterable
+     * @param iterable<B> $iterable
      *
-     * @phpstan-return self<array{0: T, 1: B}>
+     * @return self<array{0: T, 1: B}>
      */
     public function zip(iterable $iterable): self
     {
@@ -1092,9 +1092,9 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      *
      * @template B
      *
-     * @phpstan-param callable(T, int): B $mapper
+     * @param callable(T, int): B $mapper
      *
-     * @phpstan-return Map<T, B>
+     * @return Map<T, B>
      */
     public function zipMap(callable $mapper): Map
     {
@@ -1107,9 +1107,9 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      *
      * Complexity: o(n)
      *
-     * @phpstan-param string $glue
+     * @param string $glue
      *
-     * @phpstan-return string
+     * @return string
      */
     public function join(string $glue): string
     {
@@ -1121,7 +1121,7 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      *
      * Complexity: o(n)
      *
-     * @phpstan-return array<T>
+     * @return array<T>
      */
     public function jsonSerialize(): array
     {
@@ -1133,7 +1133,7 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      *
      * Complexity: o(n)
      *
-     * @phpstan-return static<T>
+     * @return static<T>
      */
     public function reverse()
     {
@@ -1148,11 +1148,11 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      *
      * Complexity: o(n)
      *
-     * @phpstan-return Map<mixed, mixed>
+     * @return Map<mixed, mixed>
      */
     public function toMap(): Map
     {
-        /** @phpstan-var array<array{0: mixed, 1: mixed}> */
+        /** @var array<array{0: mixed, 1: mixed}> */
         $pairs = $this->items;
         return Map::fromIterable($pairs);
     }
@@ -1172,9 +1172,9 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      *
      * @internal
      *
-     * @phpstan-param T $item
+     * @param T $item
      *
-     * @phpstan-return string
+     * @return string
      */
     private function itemToString($item): string
     {

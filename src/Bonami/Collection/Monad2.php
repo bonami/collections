@@ -39,9 +39,9 @@ trait Monad2
      *
      * @template B
      *
-     * @phpstan-param callable(R, int): iterable<B> $mapper
+     * @param callable(R, int): iterable<B> $mapper
      *
-     * @phpstan-return self<L, B>
+     * @return self<L, B>
      */
     abstract public function flatMap(callable $mapper): self;
 }
