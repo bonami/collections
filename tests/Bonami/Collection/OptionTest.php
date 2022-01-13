@@ -7,6 +7,7 @@ namespace Bonami\Collection;
 use Bonami\Collection\Exception\ValueIsNotPresentException;
 use PHPUnit\Framework\TestCase;
 use Throwable;
+use function PHPStan\dumpType;
 
 class OptionTest extends TestCase
 {
@@ -53,6 +54,8 @@ class OptionTest extends TestCase
 
     public function testLiftN(): void
     {
+        dumpType(Option::of(42)->product(Option::of('foo')));
+
         self::assertEquals(Option::some(42), Option::lift1(static fn (int $a): int => $a)(Option::some(42)));
         self::assertEquals(
             Option::some(708),

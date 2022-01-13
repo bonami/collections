@@ -41,4 +41,20 @@ trait Monad1
      * @phpstan-return self<B>
      */
     abstract public function flatMap(callable $mapper): self;
+
+    /**
+     * Default implementation of product, derived from flatMap and map. It can be overridden by concrete
+     * implementation
+     *
+     * @template B
+     *
+     * @param self<B> $fb
+     *
+     * @return self<array{0: T, 1: B}> $argument
+     */
+    public function product(self $fb): self
+    {
+        // @phpstan-ignore-next-line
+        return $this->flatMap(static fn($a) => $fb->map(static fn($b) => [$a, $b]));
+    }
 }

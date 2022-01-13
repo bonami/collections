@@ -43,6 +43,14 @@ trait Applicative1
     abstract public function map(callable $mapper): self;
 
     /**
+     * @template B
+     *
+     * @param self<B> $fb
+     * @return self<array{T, B}>
+     */
+    abstract public function product(self $fb): self;
+
+    /**
      * Upgrades callable to accept and return `self` as arguments.
      *
      * @phpstan-param callable $callable

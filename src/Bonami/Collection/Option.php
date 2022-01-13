@@ -55,7 +55,18 @@ abstract class Option implements IHashable, IteratorAggregate
                 return $this;
             }
 
-            public function flatMap(callable $mapper): Option
+            /**
+             * @template B
+             *
+             * @param Option<B> $fb
+             * @return Option<array{T, B}>
+             */
+            function product(Option $fb): Option
+            {
+                return $this;
+            }
+
+                public function flatMap(callable $mapper): Option
             {
                 return $this;
             }
@@ -184,6 +195,18 @@ abstract class Option implements IHashable, IteratorAggregate
                 return self::of($mapper($this->value));
             }
 
+            /**
+             * @template B
+             *
+             * @param Option<B> $fb
+             * @return Option<array{V, B}>
+             */
+            function product(Option $fb): Option
+            {
+                // @phpstan-ignore-next-line
+                return $fb->map(fn ($b) => Option::some([$this->value, $b]));
+            }
+
             public function flatMap(callable $mapper): Option
             {
                 $option = $mapper($this->value);
@@ -292,6 +315,14 @@ abstract class Option implements IHashable, IteratorAggregate
      * @phpstan-return self<B>
      */
     abstract public function map(callable $mapper): self;
+
+    /**
+     * @template B
+     *
+     * @param self<B> $fb
+     * @return self<array{T, B}>
+     */
+    abstract public function product(self $fb): self;
 
     /**
      * @template V
