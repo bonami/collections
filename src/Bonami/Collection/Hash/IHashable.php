@@ -6,6 +6,6 @@ namespace Bonami\Collection\Hash;
 
 interface IHashable
 {
-    /** @phpstan-return int|string */
+    /** @return int|string */
     public function hashCode();
 }

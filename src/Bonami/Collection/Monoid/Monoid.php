@@ -14,17 +14,17 @@ interface Monoid
      * - associativity - `concat(concat($a, $b), $c) === concat($a, concat($b, $c))` for any element `A`
      * - identity law - `concat($a, getEmpty()) === concat(getEmpty(), $a) === $a`
      *
-     * @phpstan-param A $a
-     * @phpstan-param A $b
+     * @param A $a
+     * @param A $b
      *
-     * @phpstan-return A
+     * @return A
      */
     public function concat($a, $b);
 
     /**
      * Neutral element for binary concat operation
      *
-     * @phpstan-return A
+     * @return A
      */
     public function getEmpty();
 }

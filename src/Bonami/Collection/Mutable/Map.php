@@ -10,13 +10,13 @@ use function Bonami\Collection\hashKey;
  * @template K
  * @template V
  *
- * @phpstan-extends \Bonami\Collection\Map<K, V>
+ * @extends \Bonami\Collection\Map<K, V>
  */
 class Map extends \Bonami\Collection\Map
 {
     /**
-     * @phpstan-param K $key
-     * @phpstan-param V $value
+     * @param K $key
+     * @param V $value
      */
     public function add($key, $value): void
     {
@@ -26,10 +26,10 @@ class Map extends \Bonami\Collection\Map
     }
 
     /**
-     * @phpstan-param K $key
-     * @phpstan-param V $value
+     * @param K $key
+     * @param V $value
      *
-     * @phpstan-return V
+     * @return V
      */
     public function getOrAdd($key, $value)
     {

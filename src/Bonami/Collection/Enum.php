@@ -14,28 +14,28 @@ use function is_object;
 
 abstract class Enum implements IHashable, JsonSerializable
 {
-    /** @phpstan-var array<string, Map<int|string, static>> */
+    /** @var array<string, Map<int|string, static>> */
     private static $instances = [];
 
-    /** @phpstan-var array<string, array<int|string, static>> */
+    /** @var array<string, array<int|string, static>> */
     private static $instanceIndex;
 
-    /** @phpstan-var null|array<class-string<Enum>, array<int|string, string>> */
+    /** @var null|array<class-string<Enum>, array<int|string, string>> */
     private static $constNameIndex;
 
-    /** @phpstan-var int|string */
+    /** @var int|string */
     private $value;
 
-    /** @phpstan-param int|string $value */
+    /** @param int|string $value */
     final private function __construct($value)
     {
         $this->value = $value;
     }
 
     /**
-     * @phpstan-param mixed $value
+     * @param mixed $value
      *
-     * @phpstan-return static
+     * @return static
      */
     public static function create($value)
     {
@@ -56,13 +56,13 @@ abstract class Enum implements IHashable, JsonSerializable
         return self::$instanceIndex[$class][$value];
     }
 
-    /** @phpstan-return EnumList<static> */
+    /** @return EnumList<static> */
     public static function instanceList(): EnumList
     {
         return EnumList::fromIterable(self::instanceMap()->values());
     }
 
-    /** @phpstan-return Map<int|string, static> */
+    /** @return Map<int|string, static> */
     public static function instanceMap(): Map
     {
         $class = static::class;
@@ -71,7 +71,7 @@ abstract class Enum implements IHashable, JsonSerializable
             return self::$instances[$class];
         }
 
-        /** @phpstan-var iterable<int, array{0: int|string, 1: static}> $pairs */
+        /** @var iterable<int, array{0: int|string, 1: static}> $pairs */
         $pairs = array_map(
             static function ($value) {
                 return [$value, new static($value)];
@@ -82,16 +82,16 @@ abstract class Enum implements IHashable, JsonSerializable
         return self::$instances[$class] = Map::fromIterable($pairs);
     }
 
-    /** @phpstan-return array<string> */
+    /** @return array<string> */
     private static function getClassConstants(): array
     {
         return (new ReflectionClass(static::class))->getConstants();
     }
 
     /**
-     * @phpstan-param static ...$enums
+     * @param static ...$enums
      *
-     * @phpstan-return EnumList<static>
+     * @return EnumList<static>
      */
     public static function getListComplement(self ...$enums)
     {
@@ -99,9 +99,9 @@ abstract class Enum implements IHashable, JsonSerializable
     }
 
     /**
-     * @phpstan-param int|string $value
+     * @param int|string $value
      *
-     * @phpstan-return bool
+     * @return bool
      */
     public static function exists($value): bool
     {
@@ -137,7 +137,7 @@ abstract class Enum implements IHashable, JsonSerializable
         return (string)$this->getValue();
     }
 
-    /** @phpstan-return int|string */
+    /** @return int|string */
     public function getValue()
     {
         return $this->value;

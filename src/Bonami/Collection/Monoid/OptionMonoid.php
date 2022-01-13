@@ -9,24 +9,24 @@ use Bonami\Collection\Option;
 /**
  * @template T
  *
- * @phpstan-implements Monoid<Option<T>>
+ * @implements Monoid<Option<T>>
  */
 class OptionMonoid implements Monoid
 {
-    /** @phpstan-var Monoid<T> */
+    /** @var Monoid<T> */
     private $monoid;
 
-    /** @phpstan-param Monoid<T> $monoid */
+    /** @param Monoid<T> $monoid */
     public function __construct(Monoid $monoid)
     {
         $this->monoid = $monoid;
     }
 
     /**
-     * @phpstan-param Option<T> $a
-     * @phpstan-param Option<T> $b
+     * @param Option<T> $a
+     * @param Option<T> $b
      *
-     * @phpstan-return Option<T>
+     * @return Option<T>
      */
     public function concat($a, $b): Option
     {
@@ -35,7 +35,7 @@ class OptionMonoid implements Monoid
         })($a, $b);
     }
 
-    /** @phpstan-return Option<T> */
+    /** @return Option<T> */
     public function getEmpty(): Option
     {
         return Option::some($this->monoid->getEmpty());

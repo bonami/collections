@@ -24,10 +24,10 @@ final class CurriedFunction
     protected $numberOfArgs;
 
     /**
-     * @phpstan-param callable $callable      - closure to wrap and convert into curried closure
-     * @phpstan-param int $expectedNumberOfArgs  - if ommited, number of arguments is detected
+     * @param callable $callable      - closure to wrap and convert into curried closure
+     * @param int $expectedNumberOfArgs  - if ommited, number of arguments is detected
      *                                          with slight performance impact
-     * @phpstan-param array<mixed> $applied   - applied arguments tracked for delayed full aplication of final argument
+     * @param array<mixed> $applied   - applied arguments tracked for delayed full aplication of final argument
      */
     private function __construct(callable $callable, int $expectedNumberOfArgs, array $applied = [])
     {
@@ -1082,9 +1082,9 @@ final class CurriedFunction
     }
 
     /**
-     * @phpstan-param I $arg
+     * @param I $arg
      *
-     * @phpstan-return O
+     * @return O
      */
     public function __invoke($arg)
     {
