@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Bonami\Collection;
 
-use Bonami\Collection\Exception\InvalidStateException;
 use PHPUnit\Framework\TestCase;
 
 class CurriedFunctionTest extends TestCase
