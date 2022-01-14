@@ -9,6 +9,8 @@ use Closure;
 use ReflectionFunction;
 
 /**
+ * Represents single argument function
+ *
  * @template I
  * @template O
  */
@@ -45,6 +47,9 @@ final class CurriedFunction
     }
 
     /**
+     * Wraps single argument callable into CurriedFunction. It is semantically the same, but it allows calling methods
+     * on  it, like `map` for function composition.
+     *
      * @template A
      * @template Z
      *
@@ -1068,16 +1073,18 @@ final class CurriedFunction
     /**
      * Mapping over function is equivalent of composing functions
      *
+     * `$f->map($g)` is equivalent of `g ∘ f` or `g(f(x))` in mathematics notation.
+     *
      * @template A
      *
-     * @param CurriedFunction<O, A> $callable
+     * @param CurriedFunction<O, A> $then
      *
      * @return CurriedFunction<I, A>
      */
-    public function map(CurriedFunction $callable): CurriedFunction
+    public function map(CurriedFunction $then): CurriedFunction
     {
-        return self::of(function ($arg) use ($callable) {
-            return $callable($this($arg));
+        return self::of(function ($arg) use ($then) {
+            return $then($this($arg));
         });
     }
 

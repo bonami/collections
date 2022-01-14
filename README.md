@@ -8,13 +8,13 @@
 - [Show me the code!](#motivation)
 - [Features](#features)
     - [Structures](#structures)
-    - [Type classes](#type-classes)
     - [Type safety](#type-safety)
-    - [Currying](#currying)
     - [Option](#option)
     - [TrySafe](#trysafe)
     - [Lift operator](#lift-operator)
     - [Traverse](#traverse)
+- [Type classes](./docs/type-classes.md)
+- [Currying](./docs/curried-function.md)
 - [License](#features)
 - [Contributing](#features)
 
@@ -85,7 +85,7 @@ $coloredObjects = ArrayList::fromIterable($colors)
 use Bonami\Collection\ArrayList;
 
 $concat = fn (string $first, string $second) => "{$first} {$second}";
-$coloredObjects = ArrayList::lift($concat)($colors, $objects);
+$coloredObjects = ArrayList::lift2($concat)($colors, $objects);
 ```
 
 ### Character frequency analysis
@@ -129,7 +129,7 @@ $top10 = frequencyAnalysis($text)
 - `\Bonami\Collection\EnumList` - List of Enums, extending ArrayList
 - [`\Bonami\Collection\Option`](#option) - Immutable structure for representing, that you maybe have value and maybe not. It provides safe (functional) approach to handle null pointer errors.
 - [`\Bonami\Collection\TrySafe`](#trysafe) - Immutable structure for representing,  that you have value or error generated upon the way. It provides safe (functional) approach to handle errors without side effects.
-- `\Bonami\Collection\Lambda` - Wrapper around callable providing currying. Currying is very useful for some functional patterns
+- [`\Bonami\Collection\CurriedFunction`](./docs/curried-function.md) - Represents single argument function. It can create curried version of multi argument function, which is better for some function programming composition patterns.
 
 ### Type classes
 
@@ -144,36 +144,6 @@ $top10 = frequencyAnalysis($text)
 We are using [phpstan](https://phpstan.org/) annotations for better type safety, utilizing generics. For even better type
 resolving, we created optional dependency [phpstan-collections](https://github.com/bonami/phpstan-collections), which we strongly
 suggest installing if you use phpstan. It fixes some type resolving, especially for late static binding.
-
-### Currying
-
-If higher order functions are said to be bread & butter of functional programming then currying is ... well ... the spice of it. The concept is simple - it is transforming function taking multiple arguments into sequence of functions each taking single argument.
-
-Since PHP does not provide us with any means of currying, we implemented own callable wrapper `Lambda` capable of the task:
-
-```php
-$greeter = fn (string $greeting, string $name): string => "{$greeting} {$name}!";
-
-$helloGreeter = Lambda::of($greeter)("Hello");
-echo $helloGreeter("John"); // Hello John!
-echo $helloGreeter("Paul"); // Hello Paul!
-
-$holaGreeter = Lambda::of($greeter)("Hola");
-echo $holaGreeter("Diego"); // Hola Diego!
-```
-
-To be more developer friendly, it is possible to call functions either with multiple arguments or with single argument per call or even combine the both:
-
-```php
-$sumThree = Lambda::of(fn (int $x, int $y, int $z): int => $x + $y + $z);
-
-$sumThree(7)(42)(666);
-$sumThree(7)(42, 666);
-$sumThree(7, 42)(666);
-$sumThree(7, 42, 666);
-```
-
-All invocations will yield the same result.
 
 ### Option
 
