@@ -20,6 +20,8 @@ abstract class Option implements IHashable, IteratorAggregate
 {
     /** @use Monad1<T> */
     use Monad1;
+    /** @use Iterable1<T> */
+    use Iterable1;
 
     /** @var self<T>|null */
     private static $none;
@@ -329,7 +331,7 @@ abstract class Option implements IHashable, IteratorAggregate
     abstract public function filter(callable $predicate): self;
 
     /**
-     * @param callable(T): bool $predicate
+     * @param callable(T, int=): bool $predicate
      *
      * @return bool
      */

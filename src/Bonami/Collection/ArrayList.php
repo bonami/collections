@@ -45,6 +45,8 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
 {
     /** @use Monad1<T> */
     use Monad1;
+    /** @use Iterable1<T> */
+    use Iterable1;
 
     /** @var array<int, T> */
     protected $items;
