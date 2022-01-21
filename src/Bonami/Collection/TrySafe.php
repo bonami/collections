@@ -21,6 +21,8 @@ abstract class TrySafe implements IHashable, IteratorAggregate
 {
     /** @use Monad1<T> */
     use Monad1;
+    /** @use Iterable1<T> */
+    use Iterable1;
 
     /**
      * @template V

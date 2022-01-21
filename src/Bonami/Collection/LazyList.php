@@ -21,6 +21,8 @@ class LazyList implements IteratorAggregate
 {
     /** @use Monad1<T> */
     use Monad1;
+    /** @use Iterable1<T> */
+    use Iterable1;
 
     /** @var iterable<int, T> */
     private $items;
