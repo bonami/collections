@@ -14,6 +14,7 @@ Type-class traits we define:
 - `\Bonami\Collection\Applicative2` applicative with 2 holes for generic types
 - `\Bonami\Collection\Monad1` monad with 1 hole for generic type, uses `\Bonami\Collection\Applicative1`
 - `\Bonami\Collection\Monad2` monad with 2 holes for generic types, uses `\Bonami\Collection\Monad2`
+- `\Bonami\Collection\Iterable1` iterable / foldable struct 1 hole for generic type
 
 ## Applicative
 
@@ -38,7 +39,38 @@ If the class do, it also gain these methods for free:
 Class that mixin this trait needs to implement all methods from `Monad` and `Applicative` as well except `Applicative::ap` method,
 that is already implemented in `Monad`.
 
+## Iterable
+
+Iterable defines only 2 abstract methods:
+- `reduce` - for reducing structure to single value
+- `getIterator` - a method compatible with `\IteratorAggregate` iterface
+
+From those 2 simple methods we can derive lots of useful methods for free:
+- `mfold` - left folding via `\Bonami\Collection\Monoid\Monoid` instance
+- `sum` - transforms item to integer / float and then sums them together
+- `find` - finds item by predicate
+- `head` - gets very first item if present 
+- `last` - gets very last item if present
+- `min` - gets minimal item by comparator
+- `max`- gets maximal item by comparator
+- `exists` - checks if at least one element matches the predicate
+- `all` - checks if all elements matches the predicate 
+- `each` - executes side effect on each element
+- `tap` - executes side effect on each element and return self
+- `toArray` - converts structure to `array`
+- `toList` - converts structure to `\Bonami\Collection\ArrayList`
+- `count` - counts number of elements
+- `isEmpty` - checks if the structure is empty
+- `isNotEmpty` - checks if the structure is not empty
+
 ## Overriding methods
 
 Sometimes concrete type-class instance (the class that uses type-class trait) can have more optimal version of
 "derived" method. Mixing trait into does not forbid overriding it with more optimal version.
+
+## Caveats of traits
+
+They do surprisingly good job for us, but they have one big drawback: they are not types themselves.
+
+This mean we cannot use them anywhere in code in typehints and we cannot check object instances if 
+they are `instanceof` some concrete trait.  
