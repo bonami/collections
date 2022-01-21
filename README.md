@@ -10,7 +10,6 @@
     - [Structures](#structures)
     - [Type safety](#type-safety)
     - [Currying](#currying)
-    - [Option](#option)
     - [TrySafe](#trysafe)
     - [Lift operator](#lift-operator)
     - [Traverse](#traverse)
