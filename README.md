@@ -189,7 +189,6 @@ function printUserAgeById(int $id): void {
     }   
      
 }
-
 ```
 
 ```php
@@ -213,7 +212,7 @@ function getAgeByUserEmail(string $email): ?int {
 // The better way using `Option` 
 function printUserAgeById(int $id): void {
     print Option::fromNullable(getUserEmailById($id))
-        ->flatMap(fn (string $email) => Option::fromNullable(getAgeByUserEmail($email)))
+        ->flatMap(Option::fromNullable(getAgeByUserEmail(...))
         ->map(fn (int $age): string => "Age of user with id {$id} is {$age}")
         ->getOrElse("Dont know age of user with id {$id}");
 
