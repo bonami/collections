@@ -9,10 +9,10 @@
 - [Features](#features)
     - [Structures](#structures)
     - [Type safety](#type-safety)
-    - [Currying](#currying)
     - [Lift operator](#lift-operator)
     - [Traverse](#traverse)
 - [Type classes](./docs/type-classes.md)
+- [Currying](./docs/curried-function.md)
 - [License](#features)
 - [Contributing](#features)
 
