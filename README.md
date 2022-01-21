@@ -37,29 +37,18 @@ use Bonami\Collection\ArrayList;
 
 class Person {
 
-	private string $name;
-	private int $age;
-
-	public function __construct(string $name, int $age) {
-		$this->name = $name;
-		$this->age = $age;
-	}
-
-	public function getName(): string {
-		return $this->name;
-	}
-
-	public function getAge(): int {
-		return $this->age;
-	}
+	public function __construct(
+		private readonly string $name,
+		private readonly int $age
+	) {}
 
 }
 
 $persons = ArrayList::of(new Person('John', 31), new Person('Jacob', 22), new Person('Arthur', 29));
 $names = $persons
-	->filter(fn (Person $person): bool => $person->getAge() <= 30)
-	->sort(fn (Person $a, Person $b): int => $a->getName() <=> $b->getName())
-	->map(fn (Person $person): string => $person->getName())
+	->filter(fn (Person $person): bool => $person->age <= 30)
+	->sort(fn (Person $a, Person $b): int => $a->name <=> $b->name)
+	->map(fn (Person $person): string => $person->name)
 	->join(";");
 
 // $names = "Arthur;Jacob"
