@@ -8,13 +8,13 @@
 - [Show me the code!](#motivation)
 - [Features](#features)
     - [Structures](#structures)
-    - [Type classes](#type-classes)
     - [Type safety](#type-safety)
     - [Currying](#currying)
     - [Option](#option)
     - [TrySafe](#trysafe)
     - [Lift operator](#lift-operator)
     - [Traverse](#traverse)
+- [Type classes](./docs/type-classes.md)
 - [License](#features)
 - [Contributing](#features)
 
@@ -130,14 +130,6 @@ $top10 = frequencyAnalysis($text)
 - [`\Bonami\Collection\Option`](#option) - Immutable structure for representing, that you maybe have value and maybe not. It provides safe (functional) approach to handle null pointer errors.
 - [`\Bonami\Collection\TrySafe`](#trysafe) - Immutable structure for representing,  that you have value or error generated upon the way. It provides safe (functional) approach to handle errors without side effects.
 - [`\Bonami\Collection\CurriedFunction`](./docs/curried-function.md) - Represents single argument function. It can create curried version of multi argument function, which is better for some function programming composition patterns.
-
-### Type classes
-
-- `\Bonami\Collection\ArrayList`, `\Bonami\Collection\LazyList`, `\Bonami\Collection\Option`, `\Bonami\Collection\TrySafe` are Monads, which means that they support
-    - `->map` with functor laws
-    - `::of` (pure) and `->ap` (apply) with applicative laws
-    - `->flatMap` (bind) with monadic laws
-    - on top of that they support many friendly functional methods (like `exists`, `all`, `find` etc.) 
 
 ### Type safety
 
