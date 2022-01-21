@@ -284,7 +284,7 @@ abstract class TrySafe implements IHashable, IteratorAggregate
              */
             public function getUnsafe()
             {
-                throw new ValueIsNotPresentException('Can not get value from Failure');
+                throw new ValueIsNotPresentException('Can not get value from Failure', 0, $this->failure);
             }
 
             /**
