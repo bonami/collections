@@ -74,7 +74,7 @@ $coloredObjects = ArrayList::fromIterable($colors)
 use Bonami\Collection\ArrayList;
 
 $concat = fn (string $first, string $second) => "{$first} {$second}";
-$coloredObjects = ArrayList::lift($concat)($colors, $objects);
+$coloredObjects = ArrayList::lift2($concat)($colors, $objects);
 ```
 
 ### Character frequency analysis
