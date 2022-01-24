@@ -44,14 +44,16 @@ function falsy(): callable
 /**
  * Returns function that supplies $args as an arguments to passed function
  *
- * @phpstan-param mixed... $args
+ * @template A
  *
- * @phpstan-return callable
+ * @param A $arg $args
+ *
+ * @return callable(callable(A): mixed): mixed
  */
-function applicator(...$args): callable
+function applicator1($arg): callable
 {
-    return static function (callable $callable) use ($args) {
-        return $callable(...$args);
+    return static function (callable $callable) use ($arg) {
+        return $callable($arg);
     };
 }
 
@@ -73,9 +75,9 @@ function compose(callable $f, callable $g): callable
 }
 
 /**
- * @phpstan-param mixed $key
+ * @param mixed $key
  *
- * @phpstan-return int|string
+ * @return int|string
  */
 function hashKey($key)
 {

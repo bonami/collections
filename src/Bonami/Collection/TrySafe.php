@@ -15,16 +15,21 @@ use Throwable;
 /**
  * @template T
  *
- * @phpstan-implements IteratorAggregate<int, T>
+ * @implements IteratorAggregate<int, T>
  */
 abstract class TrySafe implements IHashable, IteratorAggregate
 {
+    /** @use Monad1<T> */
+    use Monad1;
+    /** @use Iterable1<T> */
+    use Iterable1;
+
     /**
      * @template V
      *
-     * @phpstan-param V $value
+     * @param V $value
      *
-     * @phpstan-return self<V>
+     * @return self<V>
      */
     final public static function of($value): self
     {
@@ -34,9 +39,21 @@ abstract class TrySafe implements IHashable, IteratorAggregate
     /**
      * @template V
      *
-     * @phpstan-param callable(): V $callable
+     * @param V $value
      *
-     * @phpstan-return self<V>
+     * @return self<V>
+     */
+    final public static function pure($value): self
+    {
+        return self::success($value);
+    }
+
+    /**
+     * @template V
+     *
+     * @param callable(): V $callable
+     *
+     * @return self<V>
      */
     final public static function fromCallable(callable $callable): self
     {
@@ -50,18 +67,18 @@ abstract class TrySafe implements IHashable, IteratorAggregate
     /**
      * @template V
      *
-     * @phpstan-param V $value
+     * @param V $value
      *
-     * @phpstan-return self<V>
+     * @return self<V>
      */
     final public static function success($value): self
     {
-        /** @phpstan-extends TrySafe<V> */
+        /** @extends TrySafe<V> */
         return new class ($value) extends TrySafe {
-            /** @phpstan-var V */
+            /** @var V */
             private $value;
 
-            /** @phpstan-param V $value */
+            /** @param V $value */
             protected function __construct($value)
             {
                 $this->value = $value;
@@ -77,15 +94,6 @@ abstract class TrySafe implements IHashable, IteratorAggregate
             {
                 return self::fromCallable(function () use ($mapper) {
                     return $mapper($this->value);
-                });
-            }
-
-            /** @inheritDoc */
-            public function ap(TrySafe $trySafe): TrySafe
-            {
-                assert(is_callable($this->value));
-                return $trySafe->map(function ($value) {
-                    return Lambda::of($this->value)($value);
                 });
             }
 
@@ -131,7 +139,7 @@ abstract class TrySafe implements IHashable, IteratorAggregate
                 return $this;
             }
 
-            /** @phpstan-return V */
+            /** @return V */
             public function getUnsafe()
             {
                 return $this->value;
@@ -140,9 +148,9 @@ abstract class TrySafe implements IHashable, IteratorAggregate
             /**
              * @template E
              *
-             * @phpstan-param E $else
+             * @param E $else
              *
-             * @phpstan-return V|E
+             * @return V|E
              */
             public function getOrElse($else)
             {
@@ -170,13 +178,13 @@ abstract class TrySafe implements IHashable, IteratorAggregate
                 return $handleSuccess($this->value);
             }
 
-            /** @phpstan-return Iterator<int, V> */
+            /** @return Iterator<int, V> */
             public function getIterator(): Iterator
             {
                 return new ArrayIterator([$this->value]);
             }
 
-            /** @phpstan-return int|string */
+            /** @return int|string */
             public function hashCode()
             {
                 $valueHash = $this->value instanceof IHashable
@@ -188,15 +196,15 @@ abstract class TrySafe implements IHashable, IteratorAggregate
     }
 
     /**
-     * @phpstan-param Throwable $failure
+     * @param Throwable $failure
      *
-     * @phpstan-return self<mixed>
+     * @return self<mixed>
      */
     final public static function failure(Throwable $failure): TrySafe
     {
-        /** @phpstan-extends TrySafe<V> */
+        /** @extends TrySafe<V> */
         return new class ($failure) extends TrySafe {
-            /** @phpstan-var Throwable */
+            /** @var Throwable */
             private $failure;
 
             protected function __construct(Throwable $failure)
@@ -210,11 +218,6 @@ abstract class TrySafe implements IHashable, IteratorAggregate
             }
 
             public function map(callable $mapper): TrySafe
-            {
-                return $this;
-            }
-
-            public function ap(TrySafe $trySafe): TrySafe
             {
                 return $this;
             }
@@ -279,19 +282,19 @@ abstract class TrySafe implements IHashable, IteratorAggregate
              *
              * @throws ValueIsNotPresentException
              *
-             * @phpstan-return T
+             * @return T
              */
             public function getUnsafe()
             {
-                throw new ValueIsNotPresentException('Can not get value from Failure');
+                throw new ValueIsNotPresentException('Can not get value from Failure', 0, $this->failure);
             }
 
             /**
              * @template E
              *
-             * @phpstan-param E $else
+             * @param E $else
              *
-             * @phpstan-return T|E
+             * @return T|E
              */
             public function getOrElse($else)
             {
@@ -318,13 +321,13 @@ abstract class TrySafe implements IHashable, IteratorAggregate
                 return $handleFailure($this->failure);
             }
 
-            /** @phpstan-return Iterator <int, T> */
+            /** @return Iterator <int, T> */
             public function getIterator(): Iterator
             {
                 return new EmptyIterator();
             }
 
-            /** @phpstan-return int|string */
+            /** @return int|string */
             public function hashCode()
             {
                 $failureHash = $this->failure instanceof IHashable
@@ -336,27 +339,20 @@ abstract class TrySafe implements IHashable, IteratorAggregate
     }
 
     /**
-     * @phpstan-param self<mixed> $trySafe
-     *
-     * @phpstan-return self<mixed>
-     */
-    abstract public function ap(self $trySafe): self;
-
-    /**
      * @template B
      *
-     * @phpstan-param callable(T): B $mapper
+     * @param callable(T): B $mapper
      *
-     * @phpstan-return self<B>
+     * @return self<B>
      */
     abstract public function map(callable $mapper): self;
 
     /**
      * @template B
      *
-     * @phpstan-param callable(T): self<B> $mapper
+     * @param callable(T): self<B> $mapper
      *
-     * @phpstan-return self<B>
+     * @return self<B>
      */
     abstract public function flatMap(callable $mapper): self;
 
@@ -365,9 +361,9 @@ abstract class TrySafe implements IHashable, IteratorAggregate
      *
      * Complexity: o(1)
      *
-     * @phpstan-param callable(T): void $sideEffect
+     * @param callable(T): void $sideEffect
      *
-     * @phpstan-return void
+     * @return void
      */
     public function each(callable $sideEffect): void
     {
@@ -384,9 +380,9 @@ abstract class TrySafe implements IHashable, IteratorAggregate
      *
      * Complexity: o(1)
      *
-     * @phpstan-param callable(T): void $sideEffect
+     * @param callable(T): void $sideEffect
      *
-     * @phpstan-return self<T>
+     * @return self<T>
      */
     public function tap(callable $sideEffect): self
     {
@@ -405,19 +401,19 @@ abstract class TrySafe implements IHashable, IteratorAggregate
      *
      * Complexity: o(1)
      *
-     * @phpstan-param callable(Throwable): void $sideEffect
+     * @param callable(Throwable): void $sideEffect
      *
-     * @phpstan-return self<T>
+     * @return self<T>
      */
     abstract public function tapFailure(callable $sideEffect): self;
 
     /**
      * @template R
      *
-     * @phpstan-param callable(R, T): R $reducer
-     * @phpstan-param R $initialReduction
+     * @param callable(R, T): R $reducer
+     * @param R $initialReduction
      *
-     * @phpstan-return R
+     * @return R
      */
     final public function reduce(callable $reducer, $initialReduction)
     {
@@ -425,9 +421,9 @@ abstract class TrySafe implements IHashable, IteratorAggregate
     }
 
     /**
-     * @phpstan-param self<T> $value
+     * @param self<T> $value
      *
-     * @phpstan-return bool
+     * @return bool
      */
     final public function equals($value): bool
     {
@@ -436,9 +432,9 @@ abstract class TrySafe implements IHashable, IteratorAggregate
     }
 
     /**
-     * @phpstan-param callable(Throwable): T $callable
+     * @param callable(Throwable): T $callable
      *
-     * @phpstan-return self<T>
+     * @return self<T>
      */
     abstract public function recover(callable $callable): self;
 
@@ -448,17 +444,17 @@ abstract class TrySafe implements IHashable, IteratorAggregate
      * Recovery must return directly the value or throw another exception
      * (which is automatically wrapped into TrySafe)
      *
-     * @phpstan-param callable(Throwable): bool $predicate
-     * @phpstan-param callable(Throwable): T $recovery
+     * @param callable(Throwable): bool $predicate
+     * @param callable(Throwable): T $recovery
      *
-     * @phpstan-return self<T>
+     * @return self<T>
      */
     abstract public function recoverIf(callable $predicate, callable $recovery): self;
 
     /**
-     * @phpstan-param callable(Throwable): TrySafe<T> $callable
+     * @param callable(Throwable): TrySafe<T> $callable
      *
-     * @phpstan-return self<T>
+     * @return self<T>
      */
     abstract public function recoverWith(callable $callable): self;
 
@@ -468,10 +464,10 @@ abstract class TrySafe implements IHashable, IteratorAggregate
      * Recovery must return TrySafe::success() if the recovery is successful or TrySafe::failure() if it fails.
      * That allows chaining multiple calls with possible failure.
      *
-     * @phpstan-param callable(Throwable): bool $predicate - checks if conditions are met to run recovery.
-     * @phpstan-param callable(Throwable): TrySafe<T> $recovery - a recovery you want to try run
+     * @param callable(Throwable): bool $predicate - checks if conditions are met to run recovery.
+     * @param callable(Throwable): TrySafe<T> $recovery - a recovery you want to try run
      *
-     * @phpstan-return self<T>
+     * @return self<T>
      */
     abstract public function recoverWithIf(callable $predicate, callable $recovery): self;
 
@@ -487,23 +483,23 @@ abstract class TrySafe implements IHashable, IteratorAggregate
      *
      * @throws ValueIsNotPresentException
      *
-     * @phpstan-return T
+     * @return T
      */
     abstract public function getUnsafe();
 
     /**
      * @template E
      *
-     * @phpstan-param E $else
+     * @param E $else
      *
-     * @phpstan-return T|E
+     * @return T|E
      */
     abstract public function getOrElse($else);
 
     /** @throws ValueIsNotPresentException */
     abstract public function getFailureUnsafe(): Throwable;
 
-    /** @phpstan-return Option<T> */
+    /** @return Option<T> */
     abstract public function toOption(): Option;
 
     /** @return Either<Throwable, T> */
@@ -512,81 +508,10 @@ abstract class TrySafe implements IHashable, IteratorAggregate
     /**
      * @template B
      *
-     * @phpstan-param callable(Throwable): B $handleFailure
-     * @phpstan-param callable(T): B $handleSuccess
+     * @param callable(Throwable): B $handleFailure
+     * @param callable(T): B $handleSuccess
      *
-     * @phpstan-return B
+     * @return B
      */
     abstract public function resolve(callable $handleFailure, callable $handleSuccess);
-
-    /**
-     * Upgrades callable to accept and return `self` as arguments.
-     *
-     * @phpstan-param callable $callable
-     *
-     * @phpstan-return callable
-     */
-    final public static function lift(callable $callable): callable
-    {
-        return static function (self ...$arguments) use ($callable): self {
-            $reducer = static function (self $applicative, self $argument): self {
-                /** @phpstan-var mixed $argument */
-                return $applicative->ap($argument);
-            };
-            return LazyList::fromIterable($arguments)
-                ->reduce($reducer, self::of($callable));
-        };
-    }
-
-    /**
-     * Takes any `iterable<A>`, for each item `A` transforms to applicative with $mapperToApplicative
-     * `A => self<B>` and cumulates it in `self<ArrayList<B>>`.
-     *
-     * @see sequence - behaves same as traverse, execept it is called with identity
-     *
-     * @template A
-     * @template B
-     *
-     * @phpstan-param iterable<A> $iterable
-     * @phpstan-param callable(A): self<B> $mapperToApplicative
-     *
-     * @phpstan-return self<ArrayList<B>>
-     */
-    final public static function traverse(iterable $iterable, callable $mapperToApplicative): self
-    {
-        return LazyList::fromIterable($iterable)
-            ->reduce(
-                static function (self $reducedApplicative, $impureItem) use ($mapperToApplicative): self {
-                    $applicative = $mapperToApplicative($impureItem);
-                    assert($applicative instanceof self);
-                    return $reducedApplicative
-                        ->map(static function (ArrayList $resultIterable): callable {
-                            return static function ($item) use ($resultIterable): ArrayList {
-                                return $resultIterable->concat(ArrayList::of($item));
-                            };
-                        })
-                        ->ap($applicative);
-                },
-                self::of(ArrayList::fromEmpty())
-            );
-    }
-
-    /**
-     * Takes any `iterable<self<A>>` and sequence it into `self<ArrayList<A>>`. If any `self` is failure, the result is
-     * "short circuited" and result is first failure.
-     *
-     * @template A
-     *
-     * @phpstan-param iterable<self<A>> $iterable
-     *
-     * @phpstan-return self<ArrayList<A>>
-     */
-    final public static function sequence(iterable $iterable): self
-    {
-        /** @phpstan-var callable(self<A>): self<A> $identity */
-        $identity = static function ($a) {
-            return $a;
-        };
-        return self::traverse($iterable, $identity);
-    }
 }

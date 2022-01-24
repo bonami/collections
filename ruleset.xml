@@ -4,6 +4,14 @@
     <rule ref="./vendor/squizlabs/php_codesniffer/src/Standards/PSR2/ruleset.xml" />
     <rule ref="./vendor/squizlabs/php_codesniffer/src/Standards/PSR12/ruleset.xml" />
 
+    <rule ref="Generic.Files.LineLength">
+        <properties>
+            <property name="lineLimit" value="120"/>
+            <property name="absoluteLineLimit" value="120"/>
+            <property name="ignoreComments" value="true"/>
+        </properties>
+    </rule>
+
     <rule ref="SlevomatCodingStandard.Whitespaces.DuplicateSpaces">
         <properties>
             <property name="ignoreSpacesInComment" value="true"/>
@@ -53,13 +61,16 @@
     <rule ref="SlevomatCodingStandard.Classes.RequireMultiLineMethodSignature"/>
     <rule ref="SlevomatCodingStandard.Classes.RequireSingleLineMethodSignature"/>
     <rule ref="SlevomatCodingStandard.Classes.TraitUseDeclaration"/>
-    <rule ref="SlevomatCodingStandard.Classes.TraitUseSpacing"/>
+    <rule ref="SlevomatCodingStandard.Classes.TraitUseSpacing">
+        <properties>
+            <property name="linesCountBeforeFirstUse" value="0"/>
+        </properties>
+    </rule>
     <rule ref="SlevomatCodingStandard.ControlStructures.LanguageConstructWithParentheses"/>
     <rule ref="SlevomatCodingStandard.ControlStructures.NewWithParentheses"/>
     <rule ref="SlevomatCodingStandard.ControlStructures.RequireShortTernaryOperator"/>
     <rule ref="SlevomatCodingStandard.ControlStructures.RequireTernaryOperator"/>
     <rule ref="SlevomatCodingStandard.ControlStructures.DisallowYodaComparison"/>
-    <rule ref="SlevomatCodingStandard.Functions.DisallowArrowFunction"/>
     <rule ref="SlevomatCodingStandard.Namespaces.AlphabeticallySortedUses"/>
     <rule ref="SlevomatCodingStandard.Namespaces.RequireOneNamespaceInFile"/>
     <rule ref="SlevomatCodingStandard.Namespaces.NamespaceDeclaration"/>
@@ -88,7 +99,6 @@
             <property name="linesCountAfterLastContent" value="0"/>
         </properties>
     </rule>
-    <rule ref="SlevomatCodingStandard.Commenting.InlineDocCommentDeclaration"/>
     <rule ref="SlevomatCodingStandard.Commenting.RequireOneLinePropertyDocComment"/>
     <rule ref="SlevomatCodingStandard.Commenting.RequireOneLineDocComment"/>
     <rule ref="SlevomatCodingStandard.Commenting.UselessFunctionDocComment"/>

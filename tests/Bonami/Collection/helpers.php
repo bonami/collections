@@ -77,16 +77,16 @@ function testFunctorIdentity(callable $assertEquals, $functor): void
 /**
  * @phpstan-param callable(mixed, mixed): void $assertEquals
  * @phpstan-param mixed $functor - this should implement some generic functor interface
- * @phpstan-param callable(mixed): mixed $f
- * @phpstan-param callable(mixed): mixed $g
+ * @phpstan-param CurriedFunction<mixed, mixed> $f
+ * @phpstan-param CurriedFunction<mixed, mixed> $g
  *
  * @phpstan-return void
  */
-function testFunctorComposition(callable $assertEquals, $functor, callable $f, callable $g): void
+function testFunctorComposition(callable $assertEquals, $functor, CurriedFunction $f, CurriedFunction $g): void
 {
     $assertEquals(
         $functor->map($g)->map($f),
-        $functor->map(compose($f, $g))
+        $functor->map($g->map($f))
     );
 }
 
@@ -94,53 +94,62 @@ function testFunctorComposition(callable $assertEquals, $functor, callable $f, c
 
 /**
  * @phpstan-param callable(mixed, mixed): void $assertEquals
+ * @phpstan-param callable(mixed, mixed): mixed $ap
  * @phpstan-param callable(mixed): mixed $pure
  * @phpstan-param mixed $applicative - this should implement some generic applicative interface
  *
  * @phpstan-return void
  */
-function testApplicativeIdentity(callable $assertEquals, callable $pure, $applicative): void
+function testApplicativeIdentity(callable $assertEquals, callable $ap, callable $pure, $applicative): void
 {
     $assertEquals(
-        $pure(identity())->ap($applicative),
+        $ap($pure(CurriedFunction::of(identity())), $applicative),
         $applicative
     );
 }
 
 /**
  * @phpstan-param callable(mixed, mixed): void $assertEquals
+ * @phpstan-param callable(mixed, mixed): mixed $ap
  * @phpstan-param callable(mixed): mixed $pure
  * @phpstan-param mixed $value
- * @phpstan-param callable(mixed): mixed $f
+ * @phpstan-param CurriedFunction<mixed, mixed> $f
  *
  * @phpstan-return void
  */
-function testApplicativeHomomorphism(callable $assertEquals, callable $pure, $value, callable $f): void
-{
+function testApplicativeHomomorphism(
+    callable $assertEquals,
+    callable $ap,
+    callable $pure,
+    $value,
+    CurriedFunction $f
+): void {
     $assertEquals(
-        $pure($f)->ap($pure($value)),
+        $ap($pure($f), $pure($value)),
         $pure($f($value))
     );
 }
 
 /**
  * @phpstan-param callable(mixed, mixed): void $assertEquals
+ * @phpstan-param callable(mixed, mixed): mixed $ap
  * @phpstan-param callable(mixed): mixed $pure
  * @phpstan-param mixed $value
  * @phpstan-param mixed $applicativeF - this should implement some generic applicative interface
  *
  * @phpstan-return void
  */
-function testApplicativeInterchange(callable $assertEquals, callable $pure, $value, $applicativeF): void
+function testApplicativeInterchange(callable $assertEquals, callable $ap, callable $pure, $value, $applicativeF): void
 {
     $assertEquals(
-        $applicativeF->ap($pure($value)),
-        $pure(applicator($value))->ap($applicativeF)
+        $ap($applicativeF, $pure($value)),
+        $ap($pure(CurriedFunction::of(applicator1($value))), $applicativeF),
     );
 }
 
 /**
  * @phpstan-param callable(mixed, mixed): void $assertEquals
+ * @phpstan-param callable(mixed, mixed): mixed $ap
  * @phpstan-param callable(mixed): mixed $pure
  * @phpstan-param mixed $applicative - this should implement some generic applicative interface
  * @phpstan-param mixed $applicativeF - this should implement some generic applicative interface
@@ -150,18 +159,19 @@ function testApplicativeInterchange(callable $assertEquals, callable $pure, $val
  */
 function testApplicativeComposition(
     callable $assertEquals,
+    callable $ap,
     callable $pure,
     $applicative,
     $applicativeF,
     $applicativeG
 ): void {
-    $curriedComposition = Lambda::of(static function (callable $f, callable $g): callable {
-        return compose($f, $g);
+    $curriedComposition = CurriedFunction::curry2(static function (CurriedFunction $f, CurriedFunction $g): callable {
+        return $g->map($f);
     });
 
     $assertEquals(
-        $pure($curriedComposition)->ap($applicativeF)->ap($applicativeG)->ap($applicative),
-        $applicativeF->ap($applicativeG->ap($applicative))
+        $ap($ap($ap($pure($curriedComposition), $applicativeF), $applicativeG), $applicative),
+        $ap($applicativeF, $ap($applicativeG, $applicative)),
     );
 }
 
