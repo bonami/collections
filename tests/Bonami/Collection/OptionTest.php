@@ -316,6 +316,12 @@ class OptionTest extends TestCase
         $this->equals(Option::ap(Option::ap($noneClosure, $one), $two), $noneInt);
     }
 
+    public function testProduct(): void
+    {
+        self::assertEquals(Option::some([1, 'a']), Option::product(Option::some(1), Option::some('a')));
+        self::assertEquals(Option::none(), Option::product(Option::some(1), Option::none()));
+    }
+
     public function testTraverse(): void
     {
         $iterable = [

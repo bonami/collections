@@ -313,6 +313,12 @@ class EitherTest extends TestCase
         $this->equals(Either::ap(Either::ap($leftOp, $one), $two), $leftOp);
     }
 
+    public function testProduct(): void
+    {
+        self::assertEquals(Either::right([1, 'a']), Either::product(Either::right(1), Either::right('a')));
+        self::assertEquals(Either::left('fuu'), Either::product(Either::right(1), Either::left('fuu')));
+    }
+
     public function testTraverse(): void
     {
         $iterable = [

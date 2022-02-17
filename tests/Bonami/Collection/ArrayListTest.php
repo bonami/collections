@@ -151,6 +151,31 @@ class ArrayListTest extends TestCase
         self::assertEquals([], $mapped->toArray());
     }
 
+    public function testProduct(): void
+    {
+        $products = ArrayList::product(
+            ArrayList::fromIterable([1, 2]),
+            ArrayList::fromIterable(['a', 'b']),
+        );
+
+        $expected = [
+            [1, 'a'],
+            [1, 'b'],
+            [2, 'a'],
+            [2, 'b'],
+        ];
+
+        self::assertEquals($expected, $products->toArray());
+    }
+
+    public function testProductEmpty(): void
+    {
+        self::assertEquals(
+            [],
+            ArrayList::product(ArrayList::of(5), ArrayList::fromEmpty())->toArray()
+        );
+    }
+
     public function testLift(): void
     {
         $lifted = ArrayList::lift(static function ($a, $b): string {

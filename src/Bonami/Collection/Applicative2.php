@@ -35,6 +35,19 @@ trait Applicative2
     abstract public static function ap(self $closure, self $argument): self;
 
     /**
+     * Takes two arguments wrapped into type and creates product of those arguments wrapped into type
+     *
+     * @template A
+     * @template B
+     *
+     * @param self<L, A> $a
+     * @param self<L, B> $b
+     *
+     * @return self<L, array{A,B}>
+     */
+    abstract public static function product(self $a, self $b): self;
+
+    /**
      * Maps over values wrapped in context of type class.
      *
      * @template A
