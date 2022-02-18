@@ -997,19 +997,9 @@ trait Applicative2
         // @phpstan-ignore-next-line
         return LazyList::fromIterable($iterable)
             ->reduce(
-                static function (self $reducedApplicative, $impureItem) use ($mapperToApplicative): self {
-                    $applicative = $mapperToApplicative($impureItem);
-                    assert($applicative instanceof self);
-                    return self::ap(
-                        $reducedApplicative
-                            ->map(static function (ArrayList $resultIterable): callable {
-                                return CurriedFunction::of(static function ($item) use ($resultIterable): ArrayList {
-                                    return $resultIterable->concat(ArrayList::of($item));
-                                });
-                            }),
-                        $applicative
-                    );
-                },
+                static fn(self $list, $x): self => self::product($list, $mapperToApplicative($x))->map(
+                    static fn (array $pair) => $pair[0]->add($pair[1])
+                ),
                 self::pure(ArrayList::fromEmpty())
             );
     }
