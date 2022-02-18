@@ -119,14 +119,6 @@ $top10 = frequencyAnalysis($text)
 - [`\Bonami\Collection\TrySafe`](./docs/try-safe.md) - Immutable structure for representing,  that you have value or error generated upon the way. It provides safe (functional) approach to handle errors without side effects.
 - [`\Bonami\Collection\CurriedFunction`](./docs/curried-function.md) - Represents single argument function. It can create curried version of multi argument function, which is better for some function programming composition patterns.
 
-### Type classes
-
-- `\Bonami\Collection\ArrayList`, `\Bonami\Collection\LazyList`, `\Bonami\Collection\Option`, `\Bonami\Collection\TrySafe` are Monads, which means that they support
-    - `->map` with functor laws
-    - `::of` (pure) and `->ap` (apply) with applicative laws
-    - `->flatMap` (bind) with monadic laws
-    - on top of that they support many friendly functional methods (like `exists`, `all`, `find` etc.) 
-
 ### Type safety
 
 We are using [phpstan](https://phpstan.org/) annotations for better type safety, utilizing generics. For even better type
