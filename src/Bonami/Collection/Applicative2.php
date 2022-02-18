@@ -27,12 +27,15 @@ trait Applicative2
      * @template A
      * @template B
      *
-     * @param self<L, callable(A): B> $closure
+     * @param self<L, CurriedFunction<A, B>> $closure
      * @param self<L, A> $argument
      *
      * @return self<L, B>
      */
-    abstract public static function ap(self $closure, self $argument): self;
+    public static function ap(self $closure, self $argument): self
+    {
+        return self::product($closure, $argument)->map(static fn (array $pair) => $pair[0]($pair[1]));
+    }
 
     /**
      * Takes two arguments wrapped into type and creates product of those arguments wrapped into type
