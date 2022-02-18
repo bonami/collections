@@ -985,6 +985,20 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
     }
 
     /**
+     * Appends item to Lust
+     *
+     * @template T2
+     *
+     * @param T2 ...$items
+     *
+     * @return static<T|T2>
+     */
+    public function add(...$items)
+    {
+        return $this->concat(new self(array_values($items)));
+    }
+
+    /**
      * Finds common items from this List and given items.
      *
      * Complexity: o(n)
