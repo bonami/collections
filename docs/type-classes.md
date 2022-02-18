@@ -20,7 +20,7 @@ Type-class traits we define:
 
 Applicative defines abstract methods:
 - `pure` - wraps single value into `Applicative` instance. Or more theoretically: pulls impure value into `Applicative` instance context.
-- `ap` - applies single value to callback in context of `Applicative`
+- `product` - creates product of two values in context of `Applicative`. Simply put, combines to values into array tupple wrapped in `Applicative` instance
 - `map` - maps over values in context of `Applicative`
 
 Class that mixin this trait needs to implement them. It should implement them in a way, that they obey applicative laws.
@@ -29,7 +29,8 @@ If the class do, it also gain these methods for free:
 - `lift1` - `lift30` - factory for augmenting callable to accept and return values wrapped in `Applicative` context. Supports up to 30 fixed arguments.
 - `lift` - generic version of lift above. The generic version has worse type safety checks.
 - `sequence` - operation to combine multiple `Applicative` instances into single `Applicative` instances containg multiple values (in `ArrayList`).
-- `travese` - similar to `sequence` allowing transformation of the values along the way.
+- `traverse` - similar to `sequence` allowing transformation of the values along the way.
+- `ap` - applies single value to callback in context of `Applicative`
 
 ## Monad
 
