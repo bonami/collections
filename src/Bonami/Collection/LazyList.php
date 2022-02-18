@@ -532,7 +532,7 @@ class LazyList implements IteratorAggregate
     public function concat(iterable ...$iterables)
     {
          $append = function (array $iterables): Generator {
-             yield from $this;
+            yield from $this;
             foreach ($iterables as $iterator) {
                 yield from $iterator;
             }

@@ -54,7 +54,7 @@ trait Monad1
      *
      * @template B
      *
-     * @param callable(T, int): iterable<B> $mapper
+     * @param callable(T, int=): iterable<B> $mapper
      *
      * @return self<B>
      */

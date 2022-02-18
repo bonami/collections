@@ -17,7 +17,7 @@ trait Iterable1
      *
      * @template R
      *
-     * @param callable(R, T, int): R $reducer - ($carry: mixed, $item: mixed, $key: int) => mixed
+     * @param callable(R, T, int=): R $reducer - ($carry: mixed, $item: mixed, $key: int) => mixed
      * @param R $initialReduction - initial value used as seed for $carry
      *
      * @return R - reduced values. If the list is empty, $initialReduction is directly returned

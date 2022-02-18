@@ -995,9 +995,10 @@ trait Applicative1
         return LazyList::fromIterable($iterable)
             ->reduce(
                 static fn(self $list, $x): self => self::product($list, $mapperToApplicative($x))->map(
-                    static fn (array $pair) => $pair[0]->add($pair[1])
+                    static fn (array $pair) => $pair[0]->prepend($pair[1])
                 ),
-                self::pure(ArrayList::fromEmpty())
-            );
+                self::pure(LinkedList::fromEmpty())
+            )
+            ->map(static fn (LinkedList $list) => $list->toList()->reverse());
     }
 }
