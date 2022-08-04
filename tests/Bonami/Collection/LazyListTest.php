@@ -289,6 +289,21 @@ class LazyListTest extends TestCase
         self::assertEquals(range(100, 1000, 100), iterator_to_array($mapped2));
     }
 
+    public function testDoWhile(): void
+    {
+        $taken = [];
+        $lazyList = new LazyList(new ArrayIterator(range(1, 10)));
+        $lazyList
+            ->tap(static function (int $i) use (&$taken): void {
+                $taken[] = $i;
+            })
+            ->doWhile(static function (int $i): bool {
+                return $i <= 3;
+            });
+
+        self::assertEquals(range(1, 4), $taken);
+    }
+
     public function testTakeWhile(): void
     {
         $lazyList = new LazyList(new ArrayIterator(range(1, 10)));
