@@ -29,7 +29,11 @@
     "bonami/phpstan-collections": "^0.4.x-dev"
   },
   "config": {
-    "bin-dir": "bin"
+    "bin-dir": "bin",
+    "allow-plugins": {
+      "dealerdirect/phpcodesniffer-composer-installer": true,
+      "ergebnis/composer-normalize": true
+    }
   },
   "extra": {
     "branch-alias": {
