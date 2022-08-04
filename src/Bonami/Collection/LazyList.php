@@ -289,6 +289,26 @@ class LazyList implements IteratorAggregate
     }
 
     /**
+     * Materialize lazy list and executes items until it hits predicate
+     *
+     * Can be used in combination with tap to execute side effect
+     * and early break after resolving last input passed to tap
+     * against predicate.
+     *
+     * @phpstan-param callable(T, int): bool $predicate
+     *
+     * @phpstan-return void
+     */
+    public function doWhile(callable $predicate): void
+    {
+        foreach ($this->items as $key => $item) {
+            if (!$predicate($item, $key)) {
+                break;
+            }
+        }
+    }
+
+    /**
      * @param callable(T, int): bool $predicate
      *
      * @return static<T>
