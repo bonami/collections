@@ -77,6 +77,18 @@ class MapTest extends TestCase
         self::assertEquals(ArrayList::fromIterable(['a:1', 'b:2']), $mapped);
     }
 
+    public function testFlatMap(): void
+    {
+        $map = new Map([
+            [1, 'a'],
+            [2, 'b'],
+        ]);
+        $mapped = $map->flatMap(static function (string $value, int $key) {
+            return ArrayList::fill(sprintf('%s:%s', $value, $key), $key);
+        });
+        self::assertEquals(ArrayList::fromIterable(['a:1', 'b:2', 'b:2']), $mapped);
+    }
+
     public function testMapKeys(): void
     {
         $map = new Map([
