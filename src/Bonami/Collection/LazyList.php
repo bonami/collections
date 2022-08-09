@@ -312,6 +312,24 @@ class LazyList implements IteratorAggregate
     }
 
     /**
+     * Materialize lazy list
+     *
+     * This is useful mainly when lazy list
+     * contains some side effects in its chain which you need to execute.
+     *
+     * @see doWhile for materializing until some predicate is matched (for early break)
+     * @see each for executing the side effect with direct materialization
+     * @see tap for delayed side effect chaining without direct materialization
+     */
+    public function run(): void
+    {
+        // phpcs:ignore
+        foreach ($this->items as $i) {
+            // noop, simply to start materialization
+        }
+    }
+
+    /**
      * @phpstan-param callable(T, int): bool $predicate
      *
      * @phpstan-return static<T>
