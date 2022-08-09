@@ -932,6 +932,7 @@ class Map implements Countable, IteratorAggregate
      *
      * @see mapValues - for mapping just values and keeping Map as result
      * @see mapKeys - for mapping just keys and keeping Map as result
+     * @see flatMap - when you need to flatten the resulting list
      *
      * @template B
      *
@@ -945,5 +946,34 @@ class Map implements Countable, IteratorAggregate
         $mapped = array_map($mapper, $this->values, $this->keys);
 
         return ArrayList::fromIterable($mapped);
+    }
+
+    /**
+     * This is not monadic flatMap operation!
+     *
+     * Constructs a list containing all elements after applying callback
+     * on each value-key pair from Map and then flattens that list.
+     *
+     * It is equivalent of chaining $map->map($mapper)->flatten() except,
+     * that this way we can do it more type safe.
+     *
+     * Complexity: o(n)
+     *
+     * @see mapValues - for mapping just values and keeping Map as result
+     * @see mapKeys - for mapping just keys and keeping Map as result
+     * @see map - for mapping key-value pairs when no flattenting is needed
+     *
+     * @template B
+     *
+     * @param callable(V, K): iterable<B> $mapper
+     *
+     * @return ArrayList<B>
+     */
+    public function flatMap(callable $mapper): ArrayList
+    {
+        /** @var array<int, iterable<B>> $mapped */
+        $mapped = array_map($mapper, $this->values, $this->keys);
+
+        return ArrayList::fromIterable($mapped)->flatten();
     }
 }
