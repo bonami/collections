@@ -54,6 +54,18 @@ class TrySafeTest extends TestCase
         );
     }
 
+    public function testMapFailure(): void
+    {
+        $success = TrySafe::success(42);
+        self::assertSame($success, $success->mapFailure(static fn (Throwable $ex) => new Exception()));
+
+        $failure = TrySafe::failure(new Exception('No towel'));
+        self::assertSame(
+            'oops',
+            $failure->mapFailure(static fn (Throwable $ex) => new Exception('oops'))->getFailureUnsafe()->getMessage()
+        );
+    }
+
     public function testMap(): void
     {
         $mapper = static function (string $s): string {
