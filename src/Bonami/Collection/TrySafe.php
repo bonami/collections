@@ -72,6 +72,11 @@ abstract class TrySafe implements IHashable, IteratorAggregate
                 return true;
             }
 
+            public function mapFailure(callable $exceptionMapper): TrySafe
+            {
+                return $this;
+            }
+
             /** @inheritDoc */
             public function map(callable $mapper): TrySafe
             {
@@ -209,6 +214,11 @@ abstract class TrySafe implements IHashable, IteratorAggregate
                 return false;
             }
 
+            public function mapFailure(callable $exceptionMapper): TrySafe
+            {
+                return self::failure($exceptionMapper($this->failure));
+            }
+
             public function map(callable $mapper): TrySafe
             {
                 return $this;
@@ -341,6 +351,16 @@ abstract class TrySafe implements IHashable, IteratorAggregate
      * @phpstan-return self<mixed>
      */
     abstract public function ap(self $trySafe): self;
+
+    /**
+     * Allow mapping failure. This can be useful when you need to translate
+     * some generic exception into something more domain specific.
+     *
+     * @param callable(Throwable): Throwable $exceptionMapper
+     *
+     * @return self<T>
+     */
+    abstract public function mapFailure(callable $exceptionMapper): self;
 
     /**
      * @template B
