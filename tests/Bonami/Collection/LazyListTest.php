@@ -44,18 +44,6 @@ class LazyListTest extends TestCase
         self::assertEquals(array_fill(0, 10, 'a'), $filled);
     }
 
-    public function testFromArray(): void
-    {
-        $seq = LazyList::fromArray([1, 2, 3]);
-        self::assertEquals([1, 2, 3], $seq->toArray());
-    }
-
-    public function testFromArrays(): void
-    {
-        $seq = LazyList::fromArray([1, 2, 3], [4, 5, 6], [7]);
-        self::assertEquals([1, 2, 3, 4, 5, 6, 7], $seq->toArray());
-    }
-
     public function testFromIterable(): void
     {
         $lazyList = LazyList::fromIterable(new ArrayIterator([1, 2]));

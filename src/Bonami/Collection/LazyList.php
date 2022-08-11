@@ -83,16 +83,6 @@ class LazyList implements IteratorAggregate
     }
 
     /**
-     * @param array<int, T> ...$items
-     *
-     * @return static<T>
-     */
-    public static function fromArray(array ...$items)
-    {
-         return static::fromEmpty()->concat(...$items);
-    }
-
-    /**
      * @template V
      *
      * @param iterable<V> $iterable
@@ -373,13 +363,13 @@ class LazyList implements IteratorAggregate
             foreach ($this->items as $item) {
                 $materializedChunk[] = $item;
                 if (count($materializedChunk) === $size) {
-                    yield static::fromArray($materializedChunk);
+                    yield static::fromIterable($materializedChunk);
                     $materializedChunk = [];
                 }
             }
 
             if (count($materializedChunk) !== 0) {
-                yield static::fromArray($materializedChunk);
+                yield static::fromIterable($materializedChunk);
             }
          };
 
