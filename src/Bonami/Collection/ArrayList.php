@@ -1039,7 +1039,7 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      *
      * Complexity: o(n)
      *
-     * @phpstan-param int $size - size of resulting nested List
+     * @phpstan-param int<1, max> $size - size of resulting nested List
      *
      * @phpstan-return self<static<T>>
      */

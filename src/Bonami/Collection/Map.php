@@ -900,7 +900,7 @@ class Map implements Countable, IteratorAggregate
      *
      * Complexity: o(n)
      *
-     * @phpstan-param int $size - A size of resulting Map chunk
+     * @phpstan-param int<1, max> $size - A size of resulting Map chunk
      *
      * @phpstan-return ArrayList<Map<K, V>> - a list of Map chunks of size $size
      */
