@@ -381,11 +381,11 @@ class Map implements Countable, IteratorAggregate
      *
      * Complexity: o(n)
      *
-     * @phpstan-return array<K, V>
+     * @phpstan-return array<string, V>
      */
     public function toAssociativeArray(): array
     {
-        /** @phpstan-var array<K, V> */
+        /** @phpstan-var array<string, V> */
         $assoc = array_combine(
             array_map(static function ($key) {
                 return (string)$key;
