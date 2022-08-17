@@ -427,8 +427,8 @@ class MapTest extends TestCase
 
     public function testMinus(): void
     {
-        $objects = Map::fromIterable(LazyList::range(1, 14)->map(static function ($i) {
-            return [(object)['prop' => $i], $i];
+        $objects = Map::fromIterable(LazyList::range(1, 14)->zipMap(static function ($i) {
+            return (object)['prop' => $i];
         }));
 
         $oneToTen = $objects->getByKeys(range(1, 10));
