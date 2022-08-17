@@ -48,10 +48,12 @@ class LazyList implements IteratorAggregate
     }
 
     /**
-     * @phpstan-param T $item
+     * @template A
+     *
+     * @phpstan-param A $item
      * @phpstan-param int|null $size - When no size is passed, infinite items are filled (lazily)
      *
-     * @phpstan-return static<T>
+     * @phpstan-return static<A>
      */
     public static function fill($item, ?int $size = null)
     {
