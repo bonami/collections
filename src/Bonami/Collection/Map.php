@@ -63,9 +63,12 @@ class Map implements Countable, IteratorAggregate
      *
      * @see fromIterable if you need to create Map from array of pairs (2-dimensional array)
      *
-     * @param array<K, V> $array
+     * @template A of int|string
+     * @template B
      *
-     * @return static<K, V>
+     * @param array<A, B> $array
+     *
+     * @return static<A, B>
      */
     public static function fromAssociativeArray(array $array)
     {
@@ -77,10 +80,13 @@ class Map implements Countable, IteratorAggregate
      *
      * Complexity: o(1)
      *
-     * @param K $key
-     * @param V $value
+     * @template A
+     * @template B
      *
-     * @return static<K, V>
+     * @param A $key
+     * @param B $value
+     *
+     * @return static<A, B>
      */
     public static function fromOnly($key, $value)
     {
@@ -596,9 +602,12 @@ class Map implements Countable, IteratorAggregate
      *
      * Complexity: o(n) - there are different hidden constants cost varying on given iterable.
      *
-     * @param Map<K, V>|iterable<array{0: K, 1: V}> $iterable
+     * @template A
+     * @template B
      *
-     * @return static<K, V>
+     * @param Map<A, B>|iterable<array{0: A, 1: B}> $iterable
+     *
+     * @return static<A, B>
      */
     public static function fromIterable(iterable $iterable)
     {

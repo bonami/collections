@@ -53,10 +53,12 @@ class LazyList implements IteratorAggregate
     }
 
     /**
-     * @param T $item
+     * @template A
+     *
+     * @param A $item
      * @param int|null $size - When no size is passed, infinite items are filled (lazily)
      *
-     * @return static<T>
+     * @return static<A>
      */
     public static function fill($item, ?int $size = null)
     {
