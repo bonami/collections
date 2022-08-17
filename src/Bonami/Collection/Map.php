@@ -900,7 +900,7 @@ class Map implements Countable, IteratorAggregate
      *
      * Complexity: o(n)
      *
-     * @param int $size - A size of resulting Map chunk
+     * @param int<1, max> $size - A size of resulting Map chunk
      *
      * @return ArrayList<Map<K, V>> - a list of Map chunks of size $size
      */

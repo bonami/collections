@@ -1042,7 +1042,7 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      *
      * Complexity: o(n)
      *
-     * @param int $size - size of resulting nested List
+     * @param int<1, max> $size - size of resulting nested List
      *
      * @return self<static<T>>
      */
