@@ -380,24 +380,15 @@ class MapTest extends TestCase
 
     public function testAssociativeArrayObjectKeys(): void
     {
-        $a = new class {
-            public function __toString()
-            {
-                return 'a';
-            }
-        };
-        $b = new class {
-            public function __toString()
-            {
-                return 'b';
-            }
-        };
+        $a = ArrayList::of('a');
+        $b = ArrayList::of('b');
+
         $map = new Map([
             [$a, 1],
             [$b, 2],
             [$a, 3],
         ]);
-        self::assertEquals(['b' => 2, 'a' => 3], $map->toAssociativeArray());
+        self::assertEquals(['[b]' => 2, '[a]' => 3], $map->toAssociativeArray());
     }
 
     public function testFlattenValues(): void
