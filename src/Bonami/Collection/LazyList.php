@@ -11,6 +11,7 @@ use InvalidArgumentException;
 use Iterator;
 use IteratorAggregate;
 use RuntimeException;
+use Traversable;
 
 /**
  * @template T
@@ -496,7 +497,7 @@ class LazyList implements IteratorAggregate
             $iterator->next();
         };
         $zip = function (iterable $iterable) use ($rewind, $isValid, $moveNext): Generator {
-            $traversables = self::of($this->getIterator(), $this->createTraversable($iterable));
+            $traversables = self::of($this->getIterator(), $this->createIterator($iterable));
 
             $traversables->each($rewind);
             while ($traversables->all($isValid)) {
@@ -598,10 +599,10 @@ class LazyList implements IteratorAggregate
          return implode($glue, $this->toArray());
     }
 
-    /** @phpstan-return Traversable<int, T> */
-    public function getIterator(): Traversable
+    /** @phpstan-return Iterator<int, T> */
+    public function getIterator(): Iterator
     {
-         return $this->createTraversable($this->items);
+         return $this->createIterator($this->items);
     }
 
     /** @phpstan-return ArrayList<T> */
@@ -630,9 +631,9 @@ class LazyList implements IteratorAggregate
     /**
      * @phpstan-param iterable<T> $iterable
      *
-     * @phpstan-return Traversable<T>
+     * @phpstan-return Iterator<T>
      */
-    private function createTraversable(iterable $iterable): Traversable
+    private function createIterator(iterable $iterable): Iterator
     {
         if ($iterable instanceof Iterator) {
               return $iterable;
