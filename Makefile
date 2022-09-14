@@ -3,7 +3,7 @@
 all: deps test
 
 deps:
-	docker run -it --rm -v ${PWD}:/app -w /app composer update --prefer-dist --verbose --no-interaction --optimize-autoloader
+	docker run -it --rm -v ${PWD}:/app -w /app composer composer update --prefer-dist --verbose --no-interaction --optimize-autoloader
 
 test:
 	$(MAKE) phpunit
