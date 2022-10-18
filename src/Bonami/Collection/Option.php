@@ -10,13 +10,14 @@ use Bonami\Collection\Hash\IHashable;
 use EmptyIterator;
 use Iterator;
 use IteratorAggregate;
+use JsonSerializable;
 
 /**
  * @template T
  *
  * @implements IteratorAggregate<int, T>
  */
-abstract class Option implements IHashable, IteratorAggregate
+abstract class Option implements IHashable, IteratorAggregate, JsonSerializable
 {
     /** @use Monad1<T> */
     use Monad1;
@@ -465,5 +466,10 @@ abstract class Option implements IHashable, IteratorAggregate
     {
         return $value instanceof self
             && $value->hashCode() === $this->hashCode();
+    }
+
+    public function jsonSerialize()
+    {
+        return $this->getOrElse(null);
     }
 }
