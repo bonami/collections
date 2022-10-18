@@ -498,4 +498,10 @@ class OptionTest extends TestCase
             self::assertEquals($a, $b);
         }
     }
+
+    public function testItShouldUnwrapInJsonSerialization(): void
+    {
+        self::assertEquals(json_encode(Option::some(42)), '42');
+        self::assertEquals(json_encode(Option::none()), 'null');
+    }
 }

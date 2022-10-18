@@ -676,4 +676,13 @@ class MapTest extends TestCase
 
         return $o;
     }
+
+    public function testItShouldJsonSerializeMapAsRecord(): void
+    {
+        $m = Map::fromIterable([
+            ['a', 1],
+            ['b', 2],
+        ]);
+        self::assertEquals('{"a":1,"b":2}', json_encode($m));
+    }
 }

@@ -9,6 +9,7 @@ use Bonami\Collection\Hash\IHashable;
 use Countable;
 use Iterator;
 use IteratorAggregate;
+use JsonSerializable;
 use ReflectionClass;
 use Traversable;
 
@@ -32,7 +33,7 @@ use function iterator_to_array;
  *
  * @implements IteratorAggregate<K, V>
  */
-class Map implements Countable, IteratorAggregate
+class Map implements Countable, IteratorAggregate, JsonSerializable
 {
     /** @var array<int|string, K> */
     protected $keys;
@@ -984,5 +985,23 @@ class Map implements Countable, IteratorAggregate
         $mapped = array_map($mapper, $this->values, $this->keys);
 
         return ArrayList::fromIterable($mapped)->flatten();
+    }
+
+    /**
+     * Converts map into associative array. It works well if keys are scalar values.
+     *
+     * Please note, that when applied on object keys, conversion to string is done. This should work well
+     * when object implements __toString method.
+     *
+     * Please note, that when converted object keys into strings causes duplicate keys in resulting array,
+     * then last value is used.
+     *
+     * Complexity: o(n)
+     *
+     * @return array<string, V>
+     */
+    public function jsonSerialize(): array
+    {
+        return $this->toAssociativeArray();
     }
 }
