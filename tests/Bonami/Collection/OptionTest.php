@@ -6,6 +6,7 @@ namespace Bonami\Collection;
 
 use Bonami\Collection\Exception\ValueIsNotPresentException;
 use PHPUnit\Framework\TestCase;
+use RuntimeException;
 use Throwable;
 
 class OptionTest extends TestCase
@@ -191,6 +192,35 @@ class OptionTest extends TestCase
         $else = 'Embrace the dark lord';
         self::assertEquals($val, $some->getOrElse($else));
         self::assertEquals($else, Option::none()->getOrElse($else));
+    }
+
+    public function testGetOrElseLazy(): void
+    {
+        $val = 'Hello world';
+        $some = Option::some($val);
+
+        $else = 'Embrace the dark lord';
+        self::assertEquals($val, $some->getOrElseLazy(static fn () => $else));
+        self::assertEquals($else, Option::none()->getOrElseLazy(static fn () => $else));
+    }
+
+    public function testGetOrThrow(): void
+    {
+        $val = 'Hello world';
+        $some = Option::some($val);
+
+        $exception = new RuntimeException('Embrace the dark lord');
+        $throw = static function () use ($exception) {
+            throw $exception;
+        };
+        self::assertEquals($val, $some->getOrThrow($throw));
+        try {
+            Option::none()->getOrThrow($throw);
+            self::fail('Calling getOrElseThrow method or None must throw');
+        } catch (Throwable $e) {
+            self::assertInstanceOf(RuntimeException::class, $e);
+            self::assertEquals('Embrace the dark lord', $e->getMessage());
+        }
     }
 
     public function testToTrySafe(): void

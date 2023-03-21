@@ -10,6 +10,7 @@ use Bonami\Collection\Hash\IHashable;
 use EmptyIterator;
 use Iterator;
 use IteratorAggregate;
+use Throwable;
 
 /**
  * @template T
@@ -104,6 +105,16 @@ abstract class Option implements IHashable, IteratorAggregate
             public function getOrElse($else)
             {
                 return $else;
+            }
+
+            public function getOrElseLazy($else)
+            {
+                return $else();
+            }
+
+            public function getOrThrow(callable $throw)
+            {
+                throw $throw();
             }
 
             public function toTrySafe(): TrySafe
@@ -233,6 +244,16 @@ abstract class Option implements IHashable, IteratorAggregate
              * @return V|E
              */
             public function getOrElse($else)
+            {
+                return $this->value;
+            }
+
+            public function getOrElseLazy($else)
+            {
+                return $this->value;
+            }
+
+            public function getOrThrow(callable $throw)
             {
                 return $this->value;
             }
@@ -414,6 +435,22 @@ abstract class Option implements IHashable, IteratorAggregate
      * @return T|E
      */
     abstract public function getOrElse($else);
+
+    /**
+     * @template E
+     *
+     * @param callable(): E $else
+     *
+     * @return T|E
+     */
+    abstract public function getOrElseLazy($else);
+
+    /**
+     * @param callable(): Throwable $throw
+     *
+     * @return T
+     */
+    abstract public function getOrThrow(callable $throw);
 
     /** @return TrySafe<T> */
     abstract public function toTrySafe(): TrySafe;
