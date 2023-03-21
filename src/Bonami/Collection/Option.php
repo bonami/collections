@@ -10,6 +10,7 @@ use Bonami\Collection\Hash\IHashable;
 use EmptyIterator;
 use Iterator;
 use IteratorAggregate;
+use Throwable;
 
 /**
  * @template T
@@ -104,6 +105,28 @@ abstract class Option implements IHashable, IteratorAggregate
             public function getOrElse($else)
             {
                 return $else;
+            }
+
+            /**
+             * @template E
+             *
+             * @param callable(): E $else
+             *
+             * @return T|E
+             */
+            public function getOrElseLazy($else)
+            {
+                return $else();
+            }
+
+            /**
+             * @param callable(): Throwable $throw
+             *
+             * @return T
+             */
+            public function getOrThrow(callable $throw)
+            {
+                throw $throw();
             }
 
             public function toTrySafe(): TrySafe
@@ -241,6 +264,28 @@ abstract class Option implements IHashable, IteratorAggregate
              * @phpstan-return V|E
              */
             public function getOrElse($else)
+            {
+                return $this->value;
+            }
+
+            /**
+             * @template E
+             *
+             * @param callable(): E $else
+             *
+             * @return V|E
+             */
+            public function getOrElseLazy($else)
+            {
+                return $this->value;
+            }
+
+            /**
+             * @param callable(): Throwable $throw
+             *
+             * @return V
+             */
+            public function getOrThrow(callable $throw)
             {
                 return $this->value;
             }
@@ -491,6 +536,22 @@ abstract class Option implements IHashable, IteratorAggregate
      * @phpstan-return T|E
      */
     abstract public function getOrElse($else);
+
+    /**
+     * @template E
+     *
+     * @param callable(): E $else
+     *
+     * @return T|E
+     */
+    abstract public function getOrElseLazy($else);
+
+    /**
+     * @param callable(): Throwable $throw
+     *
+     * @return T
+     */
+    abstract public function getOrThrow(callable $throw);
 
     /** @phpstan-return TrySafe<T> */
     abstract public function toTrySafe(): TrySafe;
