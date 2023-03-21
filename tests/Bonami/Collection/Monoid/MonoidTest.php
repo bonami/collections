@@ -26,13 +26,29 @@ class MonoidTest extends TestCase
         self::assertEquals($result, $monoid->concat($a, $b));
     }
 
+    public function testDoubleSumMonoid(): void
+    {
+        $monoid = new DoubleSumMonoid();
+
+        self::assertEqualsWithDelta(1.1, $monoid->concat(1.1, $monoid->getEmpty()), 0.0001);
+        self::assertEqualsWithDelta(1.1, $monoid->concat($monoid->getEmpty(), 1.1), 0.0001);
+        self::assertEqualsWithDelta(3.2, $monoid->concat(1.1, 2.1), 0.0001);
+    }
+
+    public function testDoubleProductMonoid(): void
+    {
+        $monoid = new DoubleProductMonoid();
+
+        self::assertEqualsWithDelta(1.1, $monoid->concat(1.1, $monoid->getEmpty()), 0.0001);
+        self::assertEqualsWithDelta(1.1, $monoid->concat($monoid->getEmpty(), 1.1), 0.0001);
+        self::assertEqualsWithDelta(2.31, $monoid->concat(1.1, 2.1), 0.0001);
+    }
+
     /** @phpstan-return iterable<array{0: mixed, 1: mixed, 2: mixed, 3: mixed}> */
     public function provideFixtures(): iterable
     {
         yield [1, 2, new IntSumMonoid(), 3];
         yield [1, 2, new IntProductMonoid(), 2];
-        yield [1.1, 2.1, new DoubleSumMonoid(), 3.2];
-        yield [1.1, 2.1, new DoubleProductMonoid(), 2.31];
         yield ['foo', 'bar', new StringMonoid(), 'foobar'];
         yield [Option::none(), Option::some(1), new OptionMonoid(new IntSumMonoid()), Option::none()];
         yield [Option::some(1), Option::some(2), new OptionMonoid(new IntSumMonoid()), Option::some(3)];
