@@ -477,9 +477,11 @@ abstract class Option implements IHashable, IteratorAggregate
     }
 
     /**
-     * @param self<T> $else
+     * @template E
      *
-     * @return self<T>
+     * @param self<E> $else
+     *
+     * @return self<T|E>
      */
     abstract public function orElse(self $else): self;
 
