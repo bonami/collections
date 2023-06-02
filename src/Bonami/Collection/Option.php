@@ -578,9 +578,11 @@ abstract class Option implements IHashable, IteratorAggregate
     }
 
     /**
-     * @phpstan-param self<T> $else
+     * @template E
      *
-     * @phpstan-return self<T>
+     * @param self<E> $else
+     *
+     * @return self<T|E>
      */
     abstract public function orElse(self $else): self;
 
