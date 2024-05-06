@@ -157,7 +157,7 @@ trait Iterable1
      * @see find - if you need to get item by predicate
      * @see all - if you need to check if ALL items in List satisfy predicate
      *
-     * @param callable(T, int): bool $predicate
+     * @param callable(T, int=): bool $predicate
      *
      * @return bool
      */
@@ -174,13 +174,15 @@ trait Iterable1
      * @see exists - if you need to check if AT LEAST ONE item in List satisfy predicate
      * @see find - if you need to get item by predicate
      *
-     * @param callable(T, int): bool $predicate
+     * @param callable(T, int=): bool $predicate
      *
      * @return bool
      */
     public function all(callable $predicate): bool
     {
-        return !$this->exists(static fn ($item, int $i) => !$predicate($item, $i));
+        /** @var callable(T, int=): bool */
+        $notPredicate = static fn($item, int $i) => !$predicate($item, $i);
+        return !$this->exists($notPredicate);
     }
 
     /**

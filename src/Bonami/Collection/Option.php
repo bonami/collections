@@ -53,16 +53,6 @@ abstract class Option implements IHashable, IteratorAggregate
                 return true;
             }
 
-            public function map(callable $mapper): Option
-            {
-                return $this;
-            }
-
-            public function flatMap(callable $mapper): Option
-            {
-                return $this;
-            }
-
             public function each(callable $sideEffect): void
             {
             }
@@ -192,18 +182,6 @@ abstract class Option implements IHashable, IteratorAggregate
                 return false;
             }
 
-            public function map(callable $mapper): Option
-            {
-                return self::of($mapper($this->value));
-            }
-
-            public function flatMap(callable $mapper): Option
-            {
-                $option = $mapper($this->value);
-                assert($option instanceof Option);
-                return $option;
-            }
-
             public function each(callable $sideEffect): void
             {
                 $sideEffect($this->value);
@@ -314,7 +292,10 @@ abstract class Option implements IHashable, IteratorAggregate
      *
      * @return self<B>
      */
-    abstract public function map(callable $mapper): self;
+    public function map(callable $mapper): self
+    {
+        return $this->isDefined() ? self::some($mapper($this->getUnsafe())) : $this;
+    }
 
     /**
      * @template V
@@ -365,7 +346,10 @@ abstract class Option implements IHashable, IteratorAggregate
      *
      * @return self<B>
      */
-    abstract public function flatMap(callable $mapper): self;
+    public function flatMap(callable $mapper): self
+    {
+        return $this->isDefined() ? $mapper($this->getUnsafe()) : $this;
+    }
 
     /**
      * @template R

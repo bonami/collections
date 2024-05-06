@@ -60,19 +60,9 @@ abstract class Either implements IHashable, IteratorAggregate
                 return false;
             }
 
-            public function map(callable $mapper): Either
-            {
-                return $this;
-            }
-
             public function mapLeft(callable $mapper): Either
             {
                 return self::left($mapper($this->left));
-            }
-
-            public function flatMap(callable $mapper): Either
-            {
-                return $this;
             }
 
             public function flatMapLeft(callable $mapper): Either
@@ -216,21 +206,9 @@ abstract class Either implements IHashable, IteratorAggregate
                 return true;
             }
 
-            public function map(callable $mapper): Either
-            {
-                return self::of($mapper($this->right));
-            }
-
             public function mapLeft(callable $mapper): Either
             {
                 return $this;
-            }
-
-            public function flatMap(callable $mapper): Either
-            {
-                $either = $mapper($this->right);
-                assert($either instanceof Either);
-                return $either;
             }
 
             public function flatMapLeft(callable $mapper): Either
@@ -348,7 +326,10 @@ abstract class Either implements IHashable, IteratorAggregate
      *
      * @return self<L, A>
      */
-    abstract public function map(callable $mapper): self;
+    public function map(callable $mapper): self
+    {
+        return $this->isRight() ? self::right($mapper($this->getRightUnsafe())) : $this;
+    }
 
     /**
      * @template B
@@ -401,7 +382,10 @@ abstract class Either implements IHashable, IteratorAggregate
      *
      * @return self<L, B>
      */
-    abstract public function flatMap(callable $mapper): self;
+    public function flatMap(callable $mapper): self
+    {
+        return $this->isRight() ? $mapper($this->getRightUnsafe()) : $this;
+    }
 
     /**
      * @template B

@@ -94,27 +94,6 @@ abstract class TrySafe implements IHashable, IteratorAggregate
                 return $this;
             }
 
-            /** @inheritDoc */
-            public function map(callable $mapper): TrySafe
-            {
-                return self::fromCallable(function () use ($mapper) {
-                    return $mapper($this->value);
-                });
-            }
-
-            /** @inheritDoc */
-            public function flatMap(callable $mapper): TrySafe
-            {
-                try {
-                    $trySafe = $mapper($this->value);
-                } catch (Throwable $failure) {
-                    return self::failure($failure);
-                }
-
-                assert($trySafe instanceof TrySafe);
-                return $trySafe;
-            }
-
             public function tapFailure(callable $sideEffect): TrySafe
             {
                 return $this;
@@ -225,16 +204,6 @@ abstract class TrySafe implements IHashable, IteratorAggregate
             public function mapFailure(callable $exceptionMapper): TrySafe
             {
                 return self::failure($exceptionMapper($this->failure));
-            }
-
-            public function map(callable $mapper): TrySafe
-            {
-                return $this;
-            }
-
-            public function flatMap(callable $mapper): TrySafe
-            {
-                return $this;
             }
 
             public function tapFailure(callable $sideEffect): TrySafe
@@ -365,7 +334,10 @@ abstract class TrySafe implements IHashable, IteratorAggregate
      *
      * @return self<B>
      */
-    abstract public function map(callable $mapper): self;
+    public function map(callable $mapper): self
+    {
+        return $this->isSuccess() ? self::fromCallable(fn () => $mapper($this->getUnsafe())) : $this;
+    }
 
     /**
      * @template B
@@ -374,7 +346,18 @@ abstract class TrySafe implements IHashable, IteratorAggregate
      *
      * @return self<B>
      */
-    abstract public function flatMap(callable $mapper): self;
+    public function flatMap(callable $mapper): self
+    {
+        if ($this->isFailure()) {
+            return $this;
+        }
+
+        try {
+            return $mapper($this->getUnsafe());
+        } catch (Throwable $failure) {
+            return self::failure($failure);
+        }
+    }
 
     /**
      * Executes $sideEffect if TrySafe is successful and ignores it otherwise

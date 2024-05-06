@@ -11,13 +11,13 @@ test:
 	$(MAKE) fmt-check
 
 phpstan:
-	docker run -it --rm -v ${PWD}:/app -w /app php:7.4-cli-alpine php -d error_reporting=-1 -d memory_limit=-1 bin/phpstan --ansi analyse
+	docker run -it --rm -v ${PWD}:/app -w /app php:8.2-cli-alpine php -d error_reporting=-1 -d memory_limit=-1 bin/phpstan --ansi analyse
 
 phpunit:
-	docker run -it --rm -v ${PWD}:/app -w /app php:7.4-cli-alpine php -d error_reporting=-1 bin/phpunit --colors=always -c phpunit.xml
+	docker run -it --rm -v ${PWD}:/app -w /app php:8.2-cli-alpine php -d error_reporting=-1 bin/phpunit --colors=always -c phpunit.xml
 
 fmt-check:
-	docker run -it --rm -v ${PWD}:/app -w /app php:7.4-cli-alpine php bin/phpcs --standard=./ruleset.xml --extensions=php --tab-width=4 -sp ./src ./tests
+	docker run -it --rm -v ${PWD}:/app -w /app php:8.2-cli-alpine php bin/phpcs --standard=./ruleset.xml --extensions=php --tab-width=4 -sp ./src ./tests
 
 fmt:
-	docker run -it --rm -v ${PWD}:/app -w /app php:7.4-cli-alpine php bin/phpcbf --standard=./ruleset.xml --extensions=php --tab-width=4 -sp ./src ./tests
+	docker run -it --rm -v ${PWD}:/app -w /app php:8.2-cli-alpine php bin/phpcbf --standard=./ruleset.xml --extensions=php --tab-width=4 -sp ./src ./tests
