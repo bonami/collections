@@ -7,6 +7,8 @@ namespace Bonami\Collection\Monoid;
 use Bonami\Collection\Option;
 
 /**
+ * Wraps monoid into Option monoid. If any value is None, the result is None.
+ *
  * @template T
  *
  * @implements Monoid<Option<T>>
@@ -23,6 +25,8 @@ class OptionMonoid implements Monoid
     }
 
     /**
+     * Concats two options. If any of them is None, the result is None.
+     *
      * @param Option<T> $a
      * @param Option<T> $b
      *
