@@ -1,16 +1,12 @@
 {
-  "name": "bonami/collections",
+  "name": "mdonef/collections",
   "type": "library",
   "description": "Collections library with focus on immutability and functional approach",
   "license": "MIT",
   "authors": [
     {
-      "name": "Jan Machala",
-      "email": "jan.machala125@gmail.com"
-    },
-    {
-      "name": "Honza Trtik",
-      "email": "honza.trtik@gmail.com"
+      "name": "Milan Donef",
+      "email": "info@donef.cz"
     }
   ],
   "require": {
