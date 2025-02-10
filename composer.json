@@ -15,6 +15,12 @@
       "url": "https://github.com/mdonef/phpstan-collections.git"
     }
   ],
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/mdonef/phpstan-collections.git"
+    }
+  ],
   "require": {
     "php": ">=8.0",
     "ext-json": "*"
