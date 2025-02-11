@@ -1,32 +1,37 @@
 {
-  "name": "bonami/collections",
+  "name": "mdonef/collections",
   "type": "library",
   "description": "Collections library with focus on immutability and functional approach",
   "license": "MIT",
   "authors": [
     {
-      "name": "Jan Machala",
-      "email": "jan.machala125@gmail.com"
-    },
+      "name": "Milan Donef",
+      "email": "info@donef.cz"
+    }
+  ],
+  "repositories": [
     {
-      "name": "Honza Trtik",
-      "email": "honza.trtik@gmail.com"
+      "type": "vcs",
+      "url": "https://github.com/mdonef/phpstan-collections.git"
+    }
+  ],
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/mdonef/phpstan-collections.git"
     }
   ],
   "require": {
-    "php": ">=7.4|^8.0",
+    "php": ">=8.0",
     "ext-json": "*"
-  },
-  "suggest": {
-    "bonami/phpstan-collections": "Allow proper type resolving with phpstan"
   },
   "require-dev": {
     "ergebnis/composer-normalize": "^2.0.2",
-    "phpstan/phpstan": "=1.8.2",
+    "phpstan/phpstan": "^2.0",
     "phpunit/phpunit": "^9.4.2",
     "slevomat/coding-standard": "^6.4.1",
     "squizlabs/php_codesniffer": "^3.5.0",
-    "bonami/phpstan-collections": "^0.4.2"
+    "mdonef/phpstan-collections": "^0.2"
   },
   "config": {
     "bin-dir": "bin",
