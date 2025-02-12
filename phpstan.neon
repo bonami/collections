@@ -1,16 +1,19 @@
 includes:
-	- phpstan.baseline.neon
-	- vendor/bonami/phpstan-collections/extension.neon
+    - phpstan.baseline.neon
+    - vendor/bonami/phpstan-collections/extension.neon
 parameters:
-	ignoreErrors:
-	universalObjectCratesClasses:
-		- stdClass
-		- DOMElement
-		- SimpleXMLElement
-	inferPrivatePropertyTypeFromConstructor: true
-	reportUnmatchedIgnoredErrors: false
-	level: 8
-	paths:
-		- src/
-		- tests/
-	tmpDir: /tmp/phpstan
+    treatPhpDocTypesAsCertain: false
+    ignoreErrors:
+        -
+            identifier: function.alreadyNarrowedType
+    universalObjectCratesClasses:
+        - stdClass
+        - DOMElement
+        - SimpleXMLElement
+    inferPrivatePropertyTypeFromConstructor: true
+    reportUnmatchedIgnoredErrors: false
+    level: 8
+    paths:
+        - src/
+        - tests/
+    tmpDir: /tmp/phpstan

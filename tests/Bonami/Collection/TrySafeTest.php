@@ -142,15 +142,14 @@ class TrySafeTest extends TestCase
 
     public function testFlatMap(): void
     {
-        /** @phpstan-var callable(string): TrySafe<string> */
-        $mapperToSuccess = static function (string $s): TrySafe {
+		$mapperToSuccess = static function (string $s): TrySafe {
             return TrySafe::success(sprintf('Hello %s', $s));
         };
-        /** @phpstan-var callable(string): TrySafe<string> */
+
         $mapperToFailure = function (string $s): TrySafe {
             return $this->createFailure();
         };
-        /** @phpstan-var callable(string): TrySafe<string> */
+
         $mapperThatThrows = static function () {
             throw new Exception();
         };
@@ -234,7 +233,7 @@ class TrySafeTest extends TestCase
             throw $exceptionThatRecoveryThrows;
         };
         $exceptionThatRecoveryWraps = new Exception();
-        /** @var callable(Throwable): TrySafe<int> $wrap */
+
         $wrap = static function (Throwable $failure) use ($exceptionThatRecoveryWraps): TrySafe {
             return TrySafe::failure($exceptionThatRecoveryWraps);
         };
@@ -279,7 +278,7 @@ class TrySafeTest extends TestCase
             throw $exceptionThatRecoveryThrows;
         };
         $exceptionThatRecoveryWraps = new Exception();
-        /** @var callable(Throwable): TrySafe<int> $wrap */
+
         $wrap = static function (Throwable $failure) use ($exceptionThatRecoveryWraps) {
             return TrySafe::failure($exceptionThatRecoveryWraps);
         };
@@ -468,7 +467,7 @@ class TrySafeTest extends TestCase
     private function createHashableException(): Throwable
     {
         return new class extends Exception implements IHashable {
-            public function hashCode()
+            public function hashCode(): string
             {
                 return self::class;
             }

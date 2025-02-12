@@ -386,7 +386,7 @@ class LazyList implements IteratorAggregate
          });
     }
 
-    /** @return Option<T> */
+    /** @return Option<T|null> */
     public function last(): Option
     {
          // No first item implies there is also no last item, thus we have to return none

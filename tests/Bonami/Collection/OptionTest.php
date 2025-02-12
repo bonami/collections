@@ -91,12 +91,11 @@ class OptionTest extends TestCase
 
     public function testFlatMap(): void
     {
-        /** @phpstan-var callable(string): Option<string> */
-        $mapperToSome = static function (string $s): Option {
+		$mapperToSome = static function (string $s): Option {
             return Option::some(sprintf('Hello %s', $s));
         };
-        /** @phpstan-var callable(string): Option<string> */
-        $mapperToNone = static function (string $s): Option {
+
+		$mapperToNone = static function (string $s): Option {
             return Option::none();
         };
 
@@ -373,12 +372,10 @@ class OptionTest extends TestCase
 
         $numbersLowerThan10 = [1, 2, 3, 7, 9];
 
-        /** @phpstan-var callable(int): Option<int> */
         $wrapLowerThan10 = static function (int $int): Option {
             return $int < 10 ? Option::some($int) : Option::none();
         };
 
-        /** @phpstan-var callable(int): Option<int> */
         $wrapLowerThan9 = static function (int $int): Option {
             return $int < 9 ? Option::some($int) : Option::none();
         };

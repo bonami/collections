@@ -202,7 +202,7 @@ class MapTest extends TestCase
     {
 
         $hashable = new class implements IHashable {
-            public function hashCode()
+            public function hashCode(): string
             {
                 return 'hash';
             }
@@ -419,7 +419,7 @@ class MapTest extends TestCase
         self::assertEquals([[1, 4], [3, 6], [12, 12], [4, 6], [5, 7]], $merged->getItems());
         try {
             $merged->getUnsafe(7);
-            self::assertTrue(false);
+            self::fail();
         } catch (InvalidArgumentException $e) {
             self::assertTrue(true);
         }

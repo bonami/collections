@@ -419,9 +419,6 @@ class Map implements Countable, IteratorAggregate
         $keys = array_replace($this->keys, $mergeMap->keys);
         $values = array_replace($this->values, $mergeMap->values);
 
-        assert($keys !== null);
-        assert($values !== null);
-
         $map->keys = $keys;
         $map->values = $values;
         return $map;

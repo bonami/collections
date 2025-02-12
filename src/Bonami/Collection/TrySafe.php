@@ -103,9 +103,13 @@ abstract class TrySafe implements IHashable, IteratorAggregate
             }
 
             /** @inheritDoc */
-            public function flatMap(callable $mapper): TrySafe
+            public function flatMap(callable|Throwable $mapper): TrySafe
             {
-                try {
+				if ($mapper instanceof Throwable) {
+					return self::failure($mapper);
+				}
+
+				try {
                     $trySafe = $mapper($this->value);
                 } catch (Throwable $failure) {
                     return self::failure($failure);
@@ -232,7 +236,7 @@ abstract class TrySafe implements IHashable, IteratorAggregate
                 return $this;
             }
 
-            public function flatMap(callable $mapper): TrySafe
+            public function flatMap(callable|Throwable $mapper): TrySafe
             {
                 return $this;
             }
@@ -367,14 +371,14 @@ abstract class TrySafe implements IHashable, IteratorAggregate
      */
     abstract public function map(callable $mapper): self;
 
-    /**
-     * @template B
-     *
-     * @param callable(T): self<B> $mapper
-     *
-     * @return self<B>
-     */
-    abstract public function flatMap(callable $mapper): self;
+	/**
+	 * @template B
+	 *
+	 * @param callable(mixed): B |Throwable $mapper
+	 *
+	 * @return self<B>
+	 */
+    abstract public function flatMap(callable|Throwable $mapper): self;
 
     /**
      * Executes $sideEffect if TrySafe is successful and ignores it otherwise

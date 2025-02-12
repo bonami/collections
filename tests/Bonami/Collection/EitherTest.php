@@ -90,11 +90,10 @@ class EitherTest extends TestCase
 
     public function testFlatMap(): void
     {
-        /** @phpstan-var callable(string): Either<string, string> */
-        $politeGreeter = static function (string $s): Either {
+		$politeGreeter = static function (string $s): Either {
             return Either::right(sprintf('Hello %s', $s));
         };
-        /** @phpstan-var callable(string): Either<string, string> */
+
         $failingGreeter = static function (string $s): Either {
             return Either::left('No manners');
         };
