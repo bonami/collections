@@ -189,7 +189,6 @@ class ArrayListTest extends TestCase
 
     public function testTraverse(): void
     {
-        /** @phpstan-var callable(int): ArrayList<int> $fillAForOdd */
         $fillAForOdd = static function (int $i): ArrayList {
             return $i % 2 === 0 ? ArrayList::of($i) : ArrayList::fromEmpty();
         };

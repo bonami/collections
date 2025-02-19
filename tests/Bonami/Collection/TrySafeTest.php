@@ -142,7 +142,7 @@ class TrySafeTest extends TestCase
 
     public function testFlatMap(): void
     {
-		$mapperToSuccess = static function (string $s): TrySafe {
+        $mapperToSuccess = static function (string $s): TrySafe {
             return TrySafe::success(sprintf('Hello %s', $s));
         };
 

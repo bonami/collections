@@ -91,11 +91,11 @@ class OptionTest extends TestCase
 
     public function testFlatMap(): void
     {
-		$mapperToSome = static function (string $s): Option {
+        $mapperToSome = static function (string $s): Option {
             return Option::some(sprintf('Hello %s', $s));
         };
 
-		$mapperToNone = static function (string $s): Option {
+        $mapperToNone = static function (string $s): Option {
             return Option::none();
         };
 
