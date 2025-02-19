@@ -204,8 +204,8 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
                 return $iterable->items;
             case $iterable instanceof Map:
                 return $iterable->values()->items;
-			default:
-				return iterator_to_array($iterable, false);
+            default:
+                return iterator_to_array($iterable, false);
         }
     }
 
@@ -908,7 +908,9 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      * n = number of items in this list
      * m = number of items to remove.
      *
-     * @param iterable<T> $itemsToRemove
+     * @template T2
+     *
+     * @param iterable<T2> $itemsToRemove
      * @param bool|null $strictComparison
      *
      * @return static<T>
@@ -1001,7 +1003,9 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      *
      * Complexity: o(n)
      *
-     * @param iterable<T> $items
+     * @template T2
+     *
+     * @param iterable<T2> $items
      *
      * @return static<T>
      */

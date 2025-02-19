@@ -20,7 +20,7 @@ trait Monad1
      * @param self<CurriedFunction<A, B>> $closure
      * @param self<A> $argument
      *
-     * @return self<B>
+     * @return self<mixed>
      */
     final public static function ap(self $closure, self $argument): self
     {

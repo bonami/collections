@@ -68,6 +68,7 @@ trait Applicative1
     final public static function lift(callable $callable): callable
     {
         return static function (self ...$arguments) use ($callable): self {
+            // @phpstan-ignore-next-line
             return self::sequence($arguments)->map(static function ($args) use ($callable) {
                 return $callable(...$args);
             });

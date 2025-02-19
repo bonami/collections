@@ -134,8 +134,7 @@ abstract class Option implements IHashable, IteratorAggregate
                 return Either::left($left);
             }
 
-            /** @return int|string */
-            public function hashCode()
+            public function hashCode(): string
             {
                 return spl_object_hash($this); // There should be only one instance of none
             }
@@ -221,13 +220,11 @@ abstract class Option implements IHashable, IteratorAggregate
 
             public function exists(callable $predicate): bool
             {
-                return $predicate($this->value);
+                return $predicate($this->value, 1);
             }
 
             /**
              * Consider calling getOrElse instead
-             *
-             * @throws ValueIsNotPresentException
              *
              * @return V
              */
@@ -275,8 +272,7 @@ abstract class Option implements IHashable, IteratorAggregate
                 return Either::right($this->value);
             }
 
-            /** @return int|string */
-            public function hashCode()
+            public function hashCode(): string
             {
                 $valueHash = $this->value instanceof IHashable
                     ? $this->value->hashCode()
@@ -352,7 +348,7 @@ abstract class Option implements IHashable, IteratorAggregate
     abstract public function filter(callable $predicate): self;
 
     /**
-     * @param callable(T, int=): bool $predicate
+     * @param callable(T, int): bool $predicate
      *
      * @return bool
      */

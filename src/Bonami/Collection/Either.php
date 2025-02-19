@@ -101,8 +101,6 @@ abstract class Either implements IHashable, IteratorAggregate
             /**
              * Consider calling getOrElse instead
              *
-             * @throws ValueIsNotPresentException
-             *
              * @return L
              */
             public function getLeftUnsafe()
@@ -144,9 +142,7 @@ abstract class Either implements IHashable, IteratorAggregate
                 return TrySafe::failure(new ValueIsNotPresentException());
             }
 
-            /** @return int|string */
-            /** @return int|string */
-            public function hashCode()
+            public function hashCode(): string
             {
                 $valueHash = $this->left instanceof IHashable
                     ? $this->left->hashCode()
@@ -268,8 +264,6 @@ abstract class Either implements IHashable, IteratorAggregate
             /**
              * Consider calling getOrElse instead
              *
-             * @throws ValueIsNotPresentException
-             *
              * @return V
              */
             public function getRightUnsafe()
@@ -299,8 +293,7 @@ abstract class Either implements IHashable, IteratorAggregate
                 return TrySafe::success($this->right);
             }
 
-            /** @return int|string */
-            public function hashCode()
+            public function hashCode(): string
             {
                 $valueHash = $this->right instanceof IHashable
                     ? $this->right->hashCode()

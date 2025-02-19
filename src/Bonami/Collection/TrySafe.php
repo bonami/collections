@@ -105,11 +105,11 @@ abstract class TrySafe implements IHashable, IteratorAggregate
             /** @inheritDoc */
             public function flatMap(callable|Throwable $mapper): TrySafe
             {
-				if ($mapper instanceof Throwable) {
-					return self::failure($mapper);
-				}
+                if ($mapper instanceof Throwable) {
+                    return self::failure($mapper);
+                }
 
-				try {
+                try {
                     $trySafe = $mapper($this->value);
                 } catch (Throwable $failure) {
                     return self::failure($failure);
@@ -193,8 +193,7 @@ abstract class TrySafe implements IHashable, IteratorAggregate
                 return new ArrayIterator([$this->value]);
             }
 
-            /** @return int|string */
-            public function hashCode()
+            public function hashCode(): string
             {
                 $valueHash = $this->value instanceof IHashable
                     ? $this->value->hashCode()
@@ -272,7 +271,6 @@ abstract class TrySafe implements IHashable, IteratorAggregate
              */
             public function recoverWith(callable $callable): TrySafe
             {
-                /** @var callable(TrySafe<T>): TrySafe<T> $id */
                 $id = static function ($x) {
                     return $x;
                 };
@@ -341,8 +339,7 @@ abstract class TrySafe implements IHashable, IteratorAggregate
                 return new EmptyIterator();
             }
 
-            /** @return int|string */
-            public function hashCode()
+            public function hashCode(): string
             {
                 $failureHash = $this->failure instanceof IHashable
                     ? $this->failure->hashCode()
@@ -371,13 +368,13 @@ abstract class TrySafe implements IHashable, IteratorAggregate
      */
     abstract public function map(callable $mapper): self;
 
-	/**
-	 * @template B
-	 *
-	 * @param callable(mixed): B |Throwable $mapper
-	 *
-	 * @return self<B>
-	 */
+    /**
+     * @template B
+     *
+     * @param callable(mixed): B |Throwable $mapper
+     *
+     * @return self<B>
+     */
     abstract public function flatMap(callable|Throwable $mapper): self;
 
     /**

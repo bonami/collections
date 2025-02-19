@@ -149,6 +149,7 @@ class Map implements Countable, IteratorAggregate
                 $stringKey = get_class($key) . ' keyhash:' . $keyHash;
                 break;
             case is_object($key) && (new ReflectionClass($key))->hasMethod('__toString'):
+                //@phpstan-ignore-next-line
                 $stringKey = (string)$key;
                 break;
             case is_object($key):
@@ -793,10 +794,10 @@ class Map implements Countable, IteratorAggregate
     public function getByKeys(iterable $keys)
     {
         $hashes = ArrayList::fromIterable($keys)
-            ->map(static function ($key) {
-                return hashKey($key);
-            })
-            ->filter(function ($keyHash) {
+            ->map(
+                /** @param K $key */
+                static fn($key) => hashKey($key)
+            )->filter(function ($keyHash) {
                 return array_key_exists($keyHash, $this->keys);
             });
 
