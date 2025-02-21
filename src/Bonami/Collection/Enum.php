@@ -73,10 +73,8 @@ abstract class Enum implements IHashable, JsonSerializable
 
         /** @var iterable<int, array{0: int|string, 1: static}> $pairs */
         $pairs = array_map(
-            static function ($value) {
-                return [$value, new static($value)];
-            },
-            self::getClassConstants()
+            static fn ($value) => [$value, new static($value)],
+            self::getClassConstants(),
         );
 
         return self::$instances[$class] = Map::fromIterable($pairs);

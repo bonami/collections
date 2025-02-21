@@ -22,9 +22,7 @@ class LazyListTest extends TestCase
     public function testInfinityRange(): void
     {
         $range = LazyList::range(1)
-            ->filter(static function (int $number): bool {
-                return $number % 3 === 0;
-            })
+            ->filter(static fn (int $number): bool => $number % 3 === 0)
             ->take(10)
             ->toArray();
         self::assertEquals(range(3, 30, 3), $range);
@@ -59,9 +57,7 @@ class LazyListTest extends TestCase
     public function testMap(): void
     {
         $lazyList = new LazyList(new ArrayIterator(range(1, 10)));
-        $mapped = $lazyList->map(static function ($item) {
-            return $item * 10;
-        });
+        $mapped = $lazyList->map(static fn ($item) => $item * 10);
 
         self::assertEquals(range(10, 100, 10), iterator_to_array($mapped));
     }
@@ -69,9 +65,7 @@ class LazyListTest extends TestCase
     public function testMapWithKey(): void
     {
         $lazyList = new LazyList(new ArrayIterator(range(1, 10, 2)));
-        $mapped = $lazyList->map(static function ($item, $index) {
-            return $index;
-        });
+        $mapped = $lazyList->map(static fn ($item, $index) => $index);
 
         self::assertEquals(range(0, 4), iterator_to_array($mapped));
     }
@@ -80,12 +74,8 @@ class LazyListTest extends TestCase
     {
         /** @var LazyList<CurriedFunction<string, CurriedFunction<string, string|array<string>>>> */
         $callbacks = LazyList::fromIterable([
-            CurriedFunction::curry2(static function ($a, $b) {
-                return $a . $b;
-            }),
-            CurriedFunction::curry2(static function ($a, $b) {
-                return [$a, $b];
-            }),
+            CurriedFunction::curry2(static fn ($a, $b) => $a . $b),
+            CurriedFunction::curry2(static fn ($a, $b) => [$a, $b]),
         ]);
         $numbersApplied = LazyList::ap($callbacks, LazyList::of('1', '2'));
         $lettersApplied = LazyList::ap($numbersApplied, LazyList::of('a', 'b'));
@@ -108,12 +98,8 @@ class LazyListTest extends TestCase
     {
         /** @var LazyList<CurriedFunction<string, CurriedFunction<string, string|array<string>>>> */
         $callbacks = LazyList::fromIterable([
-            CurriedFunction::curry2(static function ($a, $b) {
-                return $a . $b;
-            }),
-            CurriedFunction::curry2(static function ($a, $b) {
-                return [$a, $b];
-            }),
+            CurriedFunction::curry2(static fn ($a, $b) => $a . $b),
+            CurriedFunction::curry2(static fn ($a, $b) => [$a, $b]),
         ]);
         /** @var LazyList<string> $empty */
         $empty = LazyList::fromEmpty();
@@ -124,9 +110,7 @@ class LazyListTest extends TestCase
 
     public function testLift(): void
     {
-        $lifted = LazyList::lift(static function ($a, $b) {
-            return $a . $b;
-        });
+        $lifted = LazyList::lift(static fn ($a, $b) => $a . $b);
 
         $mapped = $lifted(LazyList::of(1, 2), LazyList::of('a', 'b'));
 
@@ -137,17 +121,17 @@ class LazyListTest extends TestCase
     {
         self::assertEquals(
             [ArrayList::of(1, 2)],
-            LazyList::sequence([LazyList::of(1), LazyList::of(2)])->toArray()
+            LazyList::sequence([LazyList::of(1), LazyList::of(2)])->toArray(),
         );
         self::assertEquals(
             [],
-            LazyList::sequence([LazyList::of(1), LazyList::fromEmpty()])->toArray()
+            LazyList::sequence([LazyList::of(1), LazyList::fromEmpty()])->toArray(),
         );
         /** @phpstan-var array<LazyList<int>> $empty */
         $empty = [];
         self::assertEquals(
             [ArrayList::fromEmpty()],
-            LazyList::sequence($empty)->toArray()
+            LazyList::sequence($empty)->toArray(),
         );
     }
 
@@ -162,16 +146,14 @@ class LazyListTest extends TestCase
                 ArrayList::fromIterable([2, 'a']),
                 ArrayList::fromIterable([2, 'b']),
             ],
-            LazyList::sequence($iterable)->toArray()
+            LazyList::sequence($iterable)->toArray(),
         );
     }
 
     public function testFlatMap(): void
     {
         $lazyList = new LazyList([1, 2, 3]);
-        $mapped = $lazyList->flatMap(static function (int $item): array {
-            return [$item, [$item * 2]];
-        });
+        $mapped = $lazyList->flatMap(static fn (int $item): array => [$item, [$item * 2]]);
         self::assertEquals([1, [2], 2, [4], 3, [6]], $mapped->toArray());
     }
 
@@ -217,9 +199,7 @@ class LazyListTest extends TestCase
 
         $materialized = $lazyList
             ->tap($acumulate)
-            ->map(static function (int $x): string {
-                return (string)$x;
-            })
+            ->map(static fn (int $x): string => (string)$x)
             ->tap($concat)
             ->toArray();
 
@@ -232,9 +212,7 @@ class LazyListTest extends TestCase
     {
         $lazyList = new LazyList(range(1, 3));
 
-        $sum = $lazyList->reduce(static function ($sum, $item) {
-            return $sum + $item;
-        }, 0);
+        $sum = $lazyList->reduce(static fn ($sum, $item) => $sum + $item, 0);
         self::assertEquals(6, $sum);
     }
 
@@ -248,9 +226,7 @@ class LazyListTest extends TestCase
     public function testSum(): void
     {
         $list = LazyList::of((object)['a' => 1], (object)['a' => 2], (object)['a' => 3]);
-        $sum = $list->sum(static function (stdClass $o): int {
-            return $o->a;
-        });
+        $sum = $list->sum(static fn (stdClass $o): int => $o->a);
         self::assertEquals(6, $sum);
     }
 
@@ -258,21 +234,15 @@ class LazyListTest extends TestCase
     {
         $lazyList = LazyList::fill(1);
 
-        $sum = $lazyList->scan(static function ($sum, $item) {
-            return $sum + $item;
-        }, 0);
+        $sum = $lazyList->scan(static fn ($sum, $item) => $sum + $item, 0);
         self::assertEquals([1, 2, 3], $sum->take(3)->toArray());
     }
 
     public function testMapRepeatedCall(): void
     {
         $lazyList = new LazyList(new ArrayIterator(range(1, 10)));
-        $mapped1 = $lazyList->map(static function ($item) {
-            return $item * 10;
-        });
-        $mapped2 = $lazyList->map(static function ($item) {
-            return $item * 100;
-        });
+        $mapped1 = $lazyList->map(static fn ($item) => $item * 10);
+        $mapped2 = $lazyList->map(static fn ($item) => $item * 100);
 
         self::assertEquals(range(10, 100, 10), iterator_to_array($mapped1));
         self::assertEquals(range(100, 1000, 100), iterator_to_array($mapped2));
@@ -286,9 +256,7 @@ class LazyListTest extends TestCase
             ->tap(static function (int $i) use (&$taken): void {
                 $taken[] = $i;
             })
-            ->doWhile(static function (int $i): bool {
-                return $i <= 3;
-            });
+            ->doWhile(static fn (int $i): bool => $i <= 3);
 
         self::assertEquals(range(1, 4), $taken);
     }
@@ -309,9 +277,7 @@ class LazyListTest extends TestCase
     public function testTakeWhile(): void
     {
         $lazyList = new LazyList(new ArrayIterator(range(1, 10)));
-        $taken = $lazyList->takeWhile(static function (int $i): bool {
-            return $i <= 3;
-        });
+        $taken = $lazyList->takeWhile(static fn (int $i): bool => $i <= 3);
 
         self::assertEquals(range(1, 3), iterator_to_array($taken));
     }
@@ -327,11 +293,7 @@ class LazyListTest extends TestCase
     public function testTakeFilteredInfiniteLazyList(): void
     {
         $lazyList = LazyList::range(1);
-        $taken = $lazyList->filter(static function ($x) {
-            return $x < 10;
-        })->filter(static function ($x) {
-            return $x >= 5;
-        })->take(5);
+        $taken = $lazyList->filter(static fn ($x) => $x < 10)->filter(static fn ($x) => $x >= 5)->take(5);
 
         self::assertEquals(5, iterator_count($taken));
     }
@@ -348,9 +310,7 @@ class LazyListTest extends TestCase
                 [7, 8, 9],
                 [10],
             ],
-            $chunked->map(static function ($chunk) {
-                return iterator_to_array($chunk);
-            })->toArray()
+            $chunked->map(static fn ($chunk) => iterator_to_array($chunk))->toArray(),
         );
     }
 
@@ -391,9 +351,7 @@ class LazyListTest extends TestCase
     public function testFilter(): void
     {
         $lazyList = new LazyList(new ArrayIterator(range(1, 10)));
-        $filtered = $lazyList->filter(static function (int $item) {
-            return $item % 2 === 0;
-        });
+        $filtered = $lazyList->filter(static fn (int $item) => $item % 2 === 0);
 
         self::assertEquals(range(2, 10, 2), iterator_to_array($filtered));
     }
@@ -401,9 +359,7 @@ class LazyListTest extends TestCase
     public function testFindWhenItemExists(): void
     {
         $lazyList = new LazyList(new ArrayIterator(range(1, 10)));
-        $found = $lazyList->find(static function (int $item) {
-            return $item % 2 === 0;
-        });
+        $found = $lazyList->find(static fn (int $item) => $item % 2 === 0);
 
         self::assertTrue($found->isDefined());
         self::assertEquals(2, $found->getUnsafe());
@@ -412,9 +368,7 @@ class LazyListTest extends TestCase
     public function testFindWhenItemDoesNotExist(): void
     {
         $lazyList = new LazyList(new ArrayIterator(range(1, 10)));
-        $found = $lazyList->find(static function (int $item) {
-            return $item === 666;
-        });
+        $found = $lazyList->find(static fn (int $item) => $item === 666);
 
         self::assertFalse($found->isDefined());
     }
@@ -422,9 +376,7 @@ class LazyListTest extends TestCase
     public function testDropWhile(): void
     {
         $lazyList = LazyList::range(1, 9)->concat(LazyList::range(0, 5));
-        $rest = $lazyList->dropWhile(static function (int $item) {
-            return $item < 5;
-        });
+        $rest = $lazyList->dropWhile(static fn (int $item) => $item < 5);
 
         self::assertEquals(array_merge(range(5, 9), range(0, 5)), $rest->toArray());
     }
@@ -441,27 +393,17 @@ class LazyListTest extends TestCase
     {
         $lazyList = new LazyList(new ArrayIterator(range(1, 10)));
 
-        self::assertTrue($lazyList->exists(static function (int $item) {
-            return $item > 5;
-        }));
-        self::assertFalse($lazyList->exists(static function (int $item) {
-            return $item > 10;
-        }));
+        self::assertTrue($lazyList->exists(static fn (int $item) => $item > 5));
+        self::assertFalse($lazyList->exists(static fn (int $item) => $item > 10));
     }
 
     public function testAll(): void
     {
         $lazyList = new LazyList(new ArrayIterator(range(2, 10, 2)));
 
-        self::assertTrue($lazyList->all(static function (int $item) {
-            return $item < 11;
-        }));
-        self::assertTrue($lazyList->all(static function (int $item) {
-            return $item % 2 === 0;
-        }));
-        self::assertFalse($lazyList->all(static function (int $item) {
-            return $item < 10;
-        }));
+        self::assertTrue($lazyList->all(static fn (int $item) => $item < 11));
+        self::assertTrue($lazyList->all(static fn (int $item) => $item % 2 === 0));
+        self::assertFalse($lazyList->all(static fn (int $item) => $item < 10));
     }
 
     public function testZip(): void
@@ -486,9 +428,7 @@ class LazyListTest extends TestCase
     public function testZipMap(): void
     {
         $ints = LazyList::range(0, 2);
-        $map = $ints->zipMap(static function (int $i): string {
-            return chr(ord('a') + $i);
-        });
+        $map = $ints->zipMap(static fn (int $i): string => chr(ord('a') + $i));
         self::assertEquals(Map::fromIterable([[0, 'a'], [1, 'b'], [2, 'c']]), $map);
     }
 
@@ -526,7 +466,7 @@ class LazyListTest extends TestCase
         } catch (InvalidArgumentException $exception) {
             self::assertEquals(
                 'Tried to insert collection to position 7, but only 3 items were found',
-                $exception->getMessage()
+                $exception->getMessage(),
             );
         }
     }

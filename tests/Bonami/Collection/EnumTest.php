@@ -46,11 +46,11 @@ class EnumTest extends TestCase
     {
         self::assertEquals(
             EnumList::fromIterable([TestEnum::create(TestEnum::B), TestEnum::create(TestEnum::C)]),
-            TestEnum::getListComplement(TestEnum::create(TestEnum::A))
+            TestEnum::getListComplement(TestEnum::create(TestEnum::A)),
         );
         self::assertEquals(
             EnumList::fromIterable([TestEnum::create(TestEnum::B)]),
-            TestEnum::getListComplement(TestEnum::create(TestEnum::A), TestEnum::create(TestEnum::C))
+            TestEnum::getListComplement(TestEnum::create(TestEnum::A), TestEnum::create(TestEnum::C)),
         );
     }
 
@@ -58,7 +58,7 @@ class EnumTest extends TestCase
     {
         self::assertJson(
             '{"foo": "A"}',
-            json_encode(['foo' => TestEnum::create(TestEnum::A)], JSON_THROW_ON_ERROR)
+            json_encode(['foo' => TestEnum::create(TestEnum::A)], JSON_THROW_ON_ERROR),
         );
     }
 }

@@ -36,7 +36,9 @@ abstract class Option implements IHashable, IteratorAggregate
      */
     final public static function fromNullable($value): self
     {
-        return $value === null ? self::none() : self::some($value);
+        return $value === null
+            ? self::none()
+            : self::some($value);
     }
 
     /** @return self<mixed> */
@@ -188,7 +190,9 @@ abstract class Option implements IHashable, IteratorAggregate
 
             public function filter(callable $predicate): Option
             {
-                return $predicate($this->value) ? $this : self::none();
+                return $predicate($this->value)
+                    ? $this
+                    : self::none();
             }
 
             /**
@@ -280,7 +284,9 @@ abstract class Option implements IHashable, IteratorAggregate
      */
     public function map(callable $mapper): self
     {
-        return $this->isEmpty() ? $this : self::some($mapper($this->getUnsafe()));
+        return $this->isEmpty()
+            ? $this
+            : self::some($mapper($this->getUnsafe()));
     }
 
     /**
@@ -327,7 +333,9 @@ abstract class Option implements IHashable, IteratorAggregate
      */
     public function flatMap(callable $mapper): self
     {
-        return $this->isEmpty() ? self::none() : $mapper($this->getUnsafe());
+        return $this->isEmpty()
+            ? self::none()
+            : $mapper($this->getUnsafe());
     }
 
     /**

@@ -95,9 +95,7 @@ class ArrayListTest extends TestCase
 
     public function testMap(): void
     {
-        $mapped = ArrayList::of(3, 2, 1, 0)->map(static function ($i, $key) {
-            return $i + $key;
-        });
+        $mapped = ArrayList::of(3, 2, 1, 0)->map(static fn ($i, $key) => $i + $key);
         self::assertEquals(ArrayList::of(3, 3, 3, 3), $mapped);
     }
 
@@ -105,12 +103,8 @@ class ArrayListTest extends TestCase
     {
         /** @var ArrayList<CurriedFunction<string, CurriedFunction<string, string|array<string>>>> */
         $callbacks = ArrayList::fromIterable([
-            CurriedFunction::curry2(static function ($a, $b) {
-                return $a . $b;
-            }),
-            CurriedFunction::curry2(static function ($a, $b) {
-                return [$a, $b];
-            }),
+            CurriedFunction::curry2(static fn ($a, $b) => $a . $b),
+            CurriedFunction::curry2(static fn ($a, $b) => [$a, $b]),
         ]);
         $mapped = ArrayList::ap(ArrayList::ap($callbacks, ArrayList::of('1', '2')), ArrayList::of('a', 'b'));
 
@@ -132,12 +126,8 @@ class ArrayListTest extends TestCase
     {
         /** @var ArrayList<CurriedFunction<string, CurriedFunction<string, string|array<string>>>> */
         $callbacks = ArrayList::fromIterable([
-            CurriedFunction::curry2(static function ($a, $b) {
-                return $a . $b;
-            }),
-            CurriedFunction::curry2(static function ($a, $b) {
-                return [$a, $b];
-            }),
+            CurriedFunction::curry2(static fn ($a, $b) => $a . $b),
+            CurriedFunction::curry2(static fn ($a, $b) => [$a, $b]),
         ]);
         /** @var ArrayList<string> */
         $strings = ArrayList::fromEmpty();
@@ -167,15 +157,13 @@ class ArrayListTest extends TestCase
     {
         self::assertEquals(
             [],
-            ArrayList::product(ArrayList::of(5), ArrayList::fromEmpty())->toArray()
+            ArrayList::product(ArrayList::of(5), ArrayList::fromEmpty())->toArray(),
         );
     }
 
     public function testLift(): void
     {
-        $lifted = ArrayList::lift(static function ($a, $b): string {
-            return $a . $b;
-        });
+        $lifted = ArrayList::lift(static fn ($a, $b): string => $a . $b);
 
         $mapped = $lifted(ArrayList::of(1, 2), ArrayList::of('a', 'b'));
 
@@ -184,21 +172,21 @@ class ArrayListTest extends TestCase
 
     public function testTraverse(): void
     {
-        $fillAForOdd = static function (int $i): ArrayList {
-            return $i % 2 === 0 ? ArrayList::of($i) : ArrayList::fromEmpty();
-        };
+        $fillAForOdd = static fn (int $i): ArrayList => $i % 2 === 0
+            ? ArrayList::of($i)
+            : ArrayList::fromEmpty();
 
         self::assertEquals(
             ArrayList::of(ArrayList::of(4, 2)),
-            ArrayList::traverse([4, 2], $fillAForOdd)
+            ArrayList::traverse([4, 2], $fillAForOdd),
         );
         self::assertEquals(
             ArrayList::fromEmpty(),
-            ArrayList::traverse([1, 2], $fillAForOdd)
+            ArrayList::traverse([1, 2], $fillAForOdd),
         );
         self::assertEquals(
             ArrayList::of(ArrayList::fromEmpty()),
-            ArrayList::traverse([], $fillAForOdd)
+            ArrayList::traverse([], $fillAForOdd),
         );
     }
 
@@ -215,7 +203,7 @@ class ArrayListTest extends TestCase
                 ArrayList::fromIterable([2, 'a']),
                 ArrayList::fromIterable([2, 'b']),
             ),
-            ArrayList::sequence([$a, $b])
+            ArrayList::sequence([$a, $b]),
         );
     }
 
@@ -223,9 +211,7 @@ class ArrayListTest extends TestCase
     {
         self::assertEquals(
             ArrayList::of([0], [1]),
-            ArrayList::of(0, 1)->flatMap(static function (int $i): array {
-                return [[$i]];
-            })
+            ArrayList::of(0, 1)->flatMap(static fn (int $i): array => [[$i]]),
         );
     }
 
@@ -233,7 +219,7 @@ class ArrayListTest extends TestCase
     {
         self::assertEquals(
             ArrayList::of([0], [1], [2], [3]),
-            ArrayList::of([[0], [1]], [[2], [3]])->flatten()
+            ArrayList::of([[0], [1]], [[2], [3]])->flatten(),
         );
     }
 
@@ -251,18 +237,14 @@ class ArrayListTest extends TestCase
 
         self::assertEquals(
             ArrayList::of(2, 6, 10),
-            $a->uniqueMap(static function ($item): int {
-                return $item * 2;
-            })
+            $a->uniqueMap(static fn ($item): int => $item * 2),
         );
     }
 
     public function testUniqueBy(): void
     {
         $a = new ArrayList([['a' => 1, 'b' => 2], ['a' => 3, 'b' => 4], ['a' => 1, 'b' => 6]]);
-        $unique = $a->uniqueBy(static function ($v) {
-            return $v['a'];
-        });
+        $unique = $a->uniqueBy(static fn ($v) => $v['a']);
         self::assertEquals(2, $unique->count());
         self::assertEquals(6, $unique->head()->getUnsafe()['b']);
         self::assertEquals(4, $unique->last()->getUnsafe()['b']);
@@ -282,9 +264,7 @@ class ArrayListTest extends TestCase
             (object)['a' => $two, 'b' => $one],
         ]);
 
-        self::assertEquals($expected, $objects->uniqueBy(static function (stdClass $object) {
-            return $object->a;
-        }));
+        self::assertEquals($expected, $objects->uniqueBy(static fn (stdClass $object) => $object->a));
     }
 
     public function testUnique(): void
@@ -297,7 +277,7 @@ class ArrayListTest extends TestCase
     {
         self::assertEquals(
             ArrayList::of(1, 2, 3),
-            ArrayList::of(1, 2)->union(ArrayList::of(2, 3))
+            ArrayList::of(1, 2)->union(ArrayList::of(2, 3)),
         );
     }
 
@@ -305,9 +285,7 @@ class ArrayListTest extends TestCase
     {
         self::assertEquals(
             ArrayList::of(1, 3),
-            ArrayList::of(1, 2, 3)->filter(static function ($i): bool {
-                return $i % 2 !== 0;
-            })
+            ArrayList::of(1, 2, 3)->filter(static fn ($i): bool => $i % 2 !== 0),
         );
     }
 
@@ -315,9 +293,7 @@ class ArrayListTest extends TestCase
     {
         self::assertEquals(
             Option::some(2),
-            ArrayList::of(1, 2)->find(static function ($value): bool {
-                return $value === 2;
-            })
+            ArrayList::of(1, 2)->find(static fn ($value): bool => $value === 2),
         );
     }
 
@@ -325,9 +301,7 @@ class ArrayListTest extends TestCase
     {
         self::assertEquals(
             Option::none(),
-            ArrayList::of(1, 2)->find(static function ($value): bool {
-                return $value === 3;
-            })
+            ArrayList::of(1, 2)->find(static fn ($value): bool => $value === 3),
         );
     }
 
@@ -335,7 +309,7 @@ class ArrayListTest extends TestCase
     {
         self::assertEquals(
             Option::none(),
-            ArrayList::fromEmpty()->find(tautology())
+            ArrayList::fromEmpty()->find(tautology()),
         );
     }
 
@@ -343,9 +317,7 @@ class ArrayListTest extends TestCase
     {
         self::assertEquals(
             Option::some(1),
-            ArrayList::of(1, 2)->findKey(static function ($value) {
-                return $value === 2;
-            })
+            ArrayList::of(1, 2)->findKey(static fn ($value) => $value === 2),
         );
     }
 
@@ -353,9 +325,7 @@ class ArrayListTest extends TestCase
     {
         self::assertEquals(
             Option::none(),
-            ArrayList::of(1, 2)->findKey(static function ($value) {
-                return $value === 3;
-            })
+            ArrayList::of(1, 2)->findKey(static fn ($value) => $value === 3),
         );
     }
 
@@ -363,24 +333,20 @@ class ArrayListTest extends TestCase
     {
         self::assertEquals(
             Option::none(),
-            ArrayList::fromEmpty()->findKey(tautology())
+            ArrayList::fromEmpty()->findKey(tautology()),
         );
     }
 
     public function testExists(): void
     {
         $integers = ArrayList::of(1, 2, 3);
-        self::assertTrue($integers->exists(static function ($value): bool {
-            return $value === 2;
-        }));
+        self::assertTrue($integers->exists(static fn ($value): bool => $value === 2));
     }
 
     public function testNotExists(): void
     {
         $integers = ArrayList::of(1, 2, 3);
-        self::assertFalse($integers->exists(static function ($value): bool {
-            return $value === 4;
-        }));
+        self::assertFalse($integers->exists(static fn ($value): bool => $value === 4));
     }
 
     public function testNotExistsEmpty(): void
@@ -414,7 +380,7 @@ class ArrayListTest extends TestCase
     {
         self::assertEquals(
             ArrayList::of('a', 'b', 'c'),
-            ArrayList::of('b', 'a', 'c')->sort(comparator())
+            ArrayList::of('b', 'a', 'c')->sort(comparator()),
         );
     }
 
@@ -422,11 +388,11 @@ class ArrayListTest extends TestCase
     {
         self::assertEquals(
             ArrayList::of('a', 'b', 'c'),
-            ArrayList::of('b', 'a', 'c')->sort()
+            ArrayList::of('b', 'a', 'c')->sort(),
         );
         self::assertEquals(
             ArrayList::of(2, 3, 5),
-            ArrayList::of(3, 2, 5)->sort()
+            ArrayList::of(3, 2, 5)->sort(),
         );
     }
 
@@ -437,9 +403,7 @@ class ArrayListTest extends TestCase
                 [10, 1],
                 [20, 2],
             ]),
-            ArrayList::of(1, 2)->index(static function ($value) {
-                return $value * 10;
-            })
+            ArrayList::of(1, 2)->index(static fn ($value) => $value * 10),
         );
     }
 
@@ -451,9 +415,7 @@ class ArrayListTest extends TestCase
     public function testReduce(): void
     {
         $list = ArrayList::of(1, 2, 3);
-        $sum = $list->reduce(static function ($reduction, $value) {
-            return $reduction + $value;
-        }, 0);
+        $sum = $list->reduce(static fn ($reduction, $value) => $reduction + $value, 0);
         self::assertEquals(6, $sum);
     }
 
@@ -467,9 +429,7 @@ class ArrayListTest extends TestCase
     public function testSum(): void
     {
         $list = ArrayList::of((object)['a' => 1], (object)['a' => 2], (object)['a' => 3]);
-        $sum = $list->sum(static function (stdClass $o): int {
-            return $o->a;
-        });
+        $sum = $list->sum(static fn (stdClass $o): int => $o->a);
         self::assertEquals(6, $sum);
     }
 
@@ -560,7 +520,7 @@ class ArrayListTest extends TestCase
     {
         self::assertEquals(
             ArrayList::of(1),
-            ArrayList::fromIterable([null, 1, null])->withoutNulls()
+            ArrayList::fromIterable([null, 1, null])->withoutNulls(),
         );
     }
 
@@ -589,7 +549,7 @@ class ArrayListTest extends TestCase
         $list1 = ArrayList::of((object)['foo' => 'a'], (object)['foo' => 'b']);
         self::assertEquals(
             ArrayList::of((object)['foo' => 'a'], (object)['foo' => 'b']),
-            $list1->minus([(object)['foo' => 'b']])
+            $list1->minus([(object)['foo' => 'b']]),
         );
     }
 
@@ -598,7 +558,7 @@ class ArrayListTest extends TestCase
         $list1 = ArrayList::of((object)['foo' => 'a'], (object)['foo' => 'b']);
         self::assertEquals(
             ArrayList::of((object)['foo' => 'a']),
-            $list1->minus([(object)['foo' => 'b']], false)
+            $list1->minus([(object)['foo' => 'b']], false),
         );
     }
 
@@ -641,9 +601,7 @@ class ArrayListTest extends TestCase
         $o2 = (object)['a' => 2, 'b' => 1];
         $o3 = (object)['a' => 3, 'b' => 2];
 
-        $grouped = ArrayList::of($o1, $o2, $o3)->groupBy(static function ($o) {
-            return $o->b;
-        });
+        $grouped = ArrayList::of($o1, $o2, $o3)->groupBy(static fn ($o) => $o->b);
 
         self::assertEquals(Map::fromIterable([
             [1, ArrayList::of($o1, $o2)],
@@ -659,7 +617,7 @@ class ArrayListTest extends TestCase
             ArrayList::of(1, 2, 3),
             ArrayList::of(4, 5, 6),
             ArrayList::of(7, 8, 9),
-            ArrayList::of(10)
+            ArrayList::of(10),
         ), $a->chunk(3));
     }
 
@@ -683,16 +641,14 @@ class ArrayListTest extends TestCase
             [8, 'Of'],
             [10, 'Emergency'],
             [12, 'Broadcast'],
-            [14, 'System']
+            [14, 'System'],
         ), $integers->zip($strings));
     }
 
     public function testZipMap(): void
     {
         $ints = ArrayList::range(0, 2);
-        $map = $ints->zipMap(static function (int $i): string {
-            return chr(ord('a') + $i);
-        });
+        $map = $ints->zipMap(static fn (int $i): string => chr(ord('a') + $i));
         self::assertEquals(Map::fromIterable([[0, 'a'], [1, 'b'], [2, 'c']]), $map);
     }
 
@@ -709,9 +665,7 @@ class ArrayListTest extends TestCase
 
     public function testNestedJsonSerialize(): void
     {
-        $nestedList = (new ArrayList(range(0, 2)))->map(static function () {
-            return ArrayList::of(0, 1);
-        });
+        $nestedList = (new ArrayList(range(0, 2)))->map(static fn () => ArrayList::of(0, 1));
         self::assertEquals('[[0,1],[0,1],[0,1]]', json_encode($nestedList));
     }
 

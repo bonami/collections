@@ -10,9 +10,7 @@ class CurriedFunctionTest extends TestCase
 {
     public function testCurry(): void
     {
-        $curried = CurriedFunction::curry2(static function (int $a, int $b): int {
-            return $a + $b;
-        });
+        $curried = CurriedFunction::curry2(static fn (int $a, int $b): int => $a + $b);
 
         $plus5 = $curried(5);
 
@@ -21,9 +19,7 @@ class CurriedFunctionTest extends TestCase
 
     public function testCurryN(): void
     {
-        $curried = CurriedFunction::curry3(static function (string $greeting, string $name, int $times): string {
-            return str_repeat(sprintf('%s %s,', $greeting, $name), $times);
-        });
+        $curried = CurriedFunction::curry3(static fn (string $greeting, string $name, int $times): string => str_repeat(sprintf('%s %s,', $greeting, $name), $times));
 
         self::assertEquals('Hello World,Hello World,', $curried('Hello')('World')(2));
     }
@@ -38,9 +34,7 @@ class CurriedFunctionTest extends TestCase
 
     public function testItShouldNotRewrapAlreadyWrapped(): void
     {
-        $curried = CurriedFunction::curry2(static function (int $a, int $b): int {
-            return $a + $b;
-        });
+        $curried = CurriedFunction::curry2(static fn (int $a, int $b): int => $a + $b);
 
         $plus5 = $curried(5);
         self::assertSame($plus5, CurriedFunction::of($plus5));

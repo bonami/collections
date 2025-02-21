@@ -409,9 +409,7 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
     {
         return $this
             ->map($mapper)
-            ->index(static function ($a) {
-                return $a;
-            })
+            ->index(static fn ($a) => $a)
             ->values();
     }
 
@@ -444,9 +442,7 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
     public function uniqueBy(callable $discriminator)
     {
         return static::fromIterable($this
-            ->index(static function ($value, $key) use ($discriminator) {
-                return $discriminator($value, $key);
-            })
+            ->index(static fn ($value, $key) => $discriminator($value, $key))
             ->values());
     }
 
@@ -474,9 +470,7 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      */
     public function unique()
     {
-        return static::fromIterable($this->uniqueMap(static function ($a) {
-            return $a;
-        }));
+        return static::fromIterable($this->uniqueMap(static fn ($a) => $a));
     }
 
     /**
@@ -657,9 +651,7 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      */
     public function index(callable $indexCallback): Map
     {
-        return Map::fromIterable($this->map(static function ($item, $key) use ($indexCallback) {
-            return [$indexCallback($item, $key), $item];
-        }));
+        return Map::fromIterable($this->map(static fn ($item, $key) => [$indexCallback($item, $key), $item]));
     }
 
     /**
@@ -688,9 +680,7 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      */
     public function reduce(callable $reducer, $initialReduction)
     {
-        return array_reduce(array_keys($this->items), function ($carry, $key) use ($reducer) {
-            return $reducer($carry, $this->items[$key], $key);
-        }, $initialReduction);
+        return array_reduce(array_keys($this->items), fn ($carry, $key) => $reducer($carry, $this->items[$key], $key), $initialReduction);
     }
 
     /**
@@ -706,9 +696,7 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      */
     public function mfold(Monoid $monoid)
     {
-        return array_reduce($this->items, static function ($carry, $next) use ($monoid) {
-            return $monoid->concat($carry, $next);
-        }, $monoid->getEmpty());
+        return array_reduce($this->items, static fn ($carry, $next) => $monoid->concat($carry, $next), $monoid->getEmpty());
     }
 
     /**
@@ -724,9 +712,7 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      */
     public function sum(callable $itemToNumber)
     {
-        return array_reduce($this->items, static function ($carry, $next) use ($itemToNumber) {
-            return $carry + $itemToNumber($next);
-        }, 0);
+        return array_reduce($this->items, static fn ($carry, $next) => $carry + $itemToNumber($next), 0);
     }
 
     /**
@@ -830,7 +816,9 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      */
     public function head(): Option
     {
-        return array_key_exists(0, $this->items) ? Option::some($this->items[0]) : Option::none();
+        return array_key_exists(0, $this->items)
+            ? Option::some($this->items[0])
+            : Option::none();
     }
 
     /**
@@ -887,9 +875,7 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      */
     public function withoutNulls()
     {
-        return $this->filter(static function ($item): bool {
-            return $item !== null;
-        });
+        return $this->filter(static fn ($item): bool => $item !== null);
     }
 
     /**
@@ -923,21 +909,15 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
 
         if ($strictComparison) {
             /** @var array<array{0: T, 1: bool}> */
-            $pairs = array_map(static function ($item): array {
-                return [$item, true];
-            }, $itemsToRemoveArray);
+            $pairs = array_map(static fn ($item): array => [$item, true], $itemsToRemoveArray);
             $itemsToRemoveIndex = Map::fromIterable($pairs);
             return $this->filter(
-                static function ($item) use ($itemsToRemoveIndex): bool {
-                    return !$itemsToRemoveIndex->has($item);
-                }
+                static fn ($item): bool => !$itemsToRemoveIndex->has($item),
             );
         }
 
         return $this->filter(
-            static function ($item) use ($itemsToRemoveArray): bool {
-                return !in_array($item, $itemsToRemoveArray, false);
-            }
+            static fn ($item): bool => !in_array($item, $itemsToRemoveArray, false),
         );
     }
 
@@ -954,14 +934,8 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
     public function minusOne($itemToRemove, ?bool $strictComparison = true)
     {
         return $strictComparison
-            ? $this->filter(static function ($item) use ($itemToRemove): bool {
-                return $item !== $itemToRemove;
-            })
-            : $this->filter(static function ($item) use ($itemToRemove): bool {
-                // phpcs:disable SlevomatCodingStandard.Operators.DisallowEqualOperators.DisallowedNotEqualOperator
-                return $item != $itemToRemove;
-                // phpcs:enable SlevomatCodingStandard.Operators.DisallowEqualOperators.DisallowedNotEqualOperator
-            });
+            ? $this->filter(static fn ($item): bool => $item !== $itemToRemove)
+            : $this->filter(static fn ($item): bool => $item !== $itemToRemove);
     }
 
     /**
@@ -1007,9 +981,7 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      */
     public function intersect(iterable $items)
     {
-        $identity = static function ($a) {
-            return $a;
-        };
+        $identity = static fn ($a) => $a;
         return static::fromIterable($this->index($identity)->getByKeys($items)->keys());
     }
 
@@ -1053,8 +1025,8 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
                     $chunkList = new static($chunk);
                     return $chunkList;
                 },
-                array_chunk($this->items, $size)
-            )
+                array_chunk($this->items, $size),
+            ),
         );
     }
 
@@ -1214,9 +1186,7 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
     public function __toString(): string
     {
         return '[' . $this
-                ->map(function ($item): string {
-                    return $this->itemToString($item);
-                })
+                ->map(fn ($item): string => $this->itemToString($item))
                 ->join(', ') . ']';
     }
 }

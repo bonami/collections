@@ -34,9 +34,7 @@ class OptionMonoid implements Monoid
      */
     public function concat($a, $b): Option
     {
-        return Option::lift(function ($a, $b) {
-            return $this->monoid->concat($a, $b);
-        })($a, $b);
+        return Option::lift(fn ($a, $b) => $this->monoid->concat($a, $b))($a, $b);
     }
 
     /** @return Option<T> */

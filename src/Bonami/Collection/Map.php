@@ -305,9 +305,7 @@ class Map implements Countable, IteratorAggregate
         $map = self::fromEmpty();
 
         $keysValues = array_map($mapper, $this->keys, $this->values);
-        $keyHashes = array_map(static function ($key) {
-            return hashKey($key);
-        }, $keysValues);
+        $keyHashes = array_map(static fn ($key) => hashKey($key), $keysValues);
 
         $keys = array_combine($keyHashes, $keysValues);
         $values = array_combine($keyHashes, $this->values);
@@ -352,7 +350,7 @@ class Map implements Countable, IteratorAggregate
         $map->keys = $this->keys;
         $values = array_combine(
             array_keys($this->keys),
-            array_map($mapper, $this->values, $this->keys)
+            array_map($mapper, $this->values, $this->keys),
         );
 
         $map->values = $values;
@@ -377,7 +375,7 @@ class Map implements Countable, IteratorAggregate
     {
         return array_combine(
             array_map(static fn($key) => (string)$key, $this->keys),
-            $this->values
+            $this->values,
         );
     }
 
@@ -571,7 +569,7 @@ class Map implements Countable, IteratorAggregate
         $zipped = array_map(
             null,
             array_slice($this->keys, 0, $size, true),
-            array_slice($this->values, 0, $size, true)
+            array_slice($this->values, 0, $size, true),
         );
 
         return static::fromIterable($zipped);
@@ -677,9 +675,7 @@ class Map implements Countable, IteratorAggregate
      */
     public function withoutNulls()
     {
-        return $this->filter(static function ($item, $_): bool {
-            return $item !== null;
-        });
+        return $this->filter(static fn ($item, $_): bool => $item !== null);
     }
 
     /**
@@ -696,17 +692,11 @@ class Map implements Countable, IteratorAggregate
     {
 
         $hashes = ArrayList::fromIterable(array_keys($this->keys))
-            ->minus(LazyList::fromIterable($keys)->map(static function ($key) {
-                return hashKey($key);
-            }));
+            ->minus(LazyList::fromIterable($keys)->map(static fn ($key) => hashKey($key)));
 
         $hashesArray = $hashes->toArray();
-        $newKeys = array_combine($hashesArray, $hashes->map(function ($keyHash) {
-            return $this->keys[$keyHash];
-        })->toArray());
-        $newValues = array_combine($hashesArray, $hashes->map(function ($keyHash) {
-            return $this->values[$keyHash];
-        })->toArray());
+        $newKeys = array_combine($hashesArray, $hashes->map(fn ($keyHash) => $this->keys[$keyHash])->toArray());
+        $newValues = array_combine($hashesArray, $hashes->map(fn ($keyHash) => $this->values[$keyHash])->toArray());
 
         $map = static::fromEmpty();
         $map->keys = $newKeys;
@@ -779,12 +769,8 @@ class Map implements Countable, IteratorAggregate
             ->filter(fn($keyHash) => array_key_exists($keyHash, $this->keys));
 
         $hashesArray = $hashes->toArray();
-        $newKeys = array_combine($hashesArray, $hashes->map(function ($keyHash) {
-            return $this->keys[$keyHash];
-        })->toArray());
-        $newValues = array_combine($hashesArray, $hashes->map(function ($keyHash) {
-            return $this->values[$keyHash];
-        })->toArray());
+        $newKeys = array_combine($hashesArray, $hashes->map(fn ($keyHash) => $this->keys[$keyHash])->toArray());
+        $newValues = array_combine($hashesArray, $hashes->map(fn ($keyHash) => $this->values[$keyHash])->toArray());
 
         $map = static::fromEmpty();
         $map->keys = $newKeys;
@@ -823,9 +809,7 @@ class Map implements Countable, IteratorAggregate
     {
         $comparator = $comparator ?? comparator();
         return static::fromIterable(
-            $this->pairs()->sort(static function (array $a, array $b) use ($comparator) {
-                return $comparator($a[1], $b[1]);
-            })
+            $this->pairs()->sort(static fn (array $a, array $b) => $comparator($a[1], $b[1])),
         );
     }
 
@@ -858,9 +842,7 @@ class Map implements Countable, IteratorAggregate
      */
     public function reduce(callable $reducer, $initialReduction)
     {
-        return array_reduce(array_keys($this->keys), function ($reduction, $keyHash) use ($reducer) {
-            return $reducer($reduction, $this->values[$keyHash], $this->keys[$keyHash]);
-        }, $initialReduction);
+        return array_reduce(array_keys($this->keys), fn ($reduction, $keyHash) => $reducer($reduction, $this->values[$keyHash], $this->keys[$keyHash]), $initialReduction);
     }
 
     /**
@@ -901,9 +883,7 @@ class Map implements Countable, IteratorAggregate
      */
     public function __toString(): string
     {
-        return '{' . $this->map(static function ($value, $key): string {
-            return sprintf('%s: %s', $key, $value);
-        })->join(', ') . '}';
+        return '{' . $this->map(static fn ($value, $key): string => sprintf('%s: %s', $key, $value))->join(', ') . '}';
     }
 
     /**

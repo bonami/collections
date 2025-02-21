@@ -381,9 +381,7 @@ class LazyList implements IteratorAggregate
     /** @return Option<T> */
     public function head(): Option
     {
-         return $this->find(static function ($_): bool {
-            return true;
-         });
+         return $this->find(static fn ($_): bool => true);
     }
 
     /** @return Option<T> */
@@ -396,7 +394,9 @@ class LazyList implements IteratorAggregate
             $last = $item;
         }
 
-        return $isEmpty ? Option::none() : Option::some($last);
+        return $isEmpty
+            ? Option::none()
+            : Option::some($last);
     }
 
     /**
@@ -512,9 +512,7 @@ class LazyList implements IteratorAggregate
         $rewind = static function (Iterator $iterator): void {
             $iterator->rewind();
         };
-        $isValid = static function (Iterator $iterator): bool {
-            return $iterator->valid();
-        };
+        $isValid = static fn (Iterator $iterator): bool => $iterator->valid();
         $moveNext = static function (Iterator $iterator): void {
             $iterator->next();
         };
@@ -523,9 +521,7 @@ class LazyList implements IteratorAggregate
 
             $traversables->each($rewind);
             while ($traversables->all($isValid)) {
-                yield $traversables->map(static function (Iterator $iterator) {
-                    return $iterator->current();
-                })->toArray();
+                yield $traversables->map(static fn (Iterator $iterator) => $iterator->current())->toArray();
                 $traversables->each($moveNext);
             }
         };
@@ -548,9 +544,7 @@ class LazyList implements IteratorAggregate
     public function zipMap(callable $mapper): Map
     {
          return $this
-         ->map(static function ($value, $key) use ($mapper): array {
-             return [$value, $mapper($value, $key)];
-         })
+         ->map(static fn ($value, $key): array => [$value, $mapper($value, $key)])
          ->toMap();
     }
 
@@ -603,7 +597,7 @@ class LazyList implements IteratorAggregate
                 throw new InvalidArgumentException(sprintf(
                     'Tried to insert collection to position %d, but only %d items were found',
                     $position,
-                    $index
+                    $index,
                 ));
             }
          };

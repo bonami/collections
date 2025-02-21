@@ -26,30 +26,22 @@ function identity(): callable
 
 function comparator(): callable
 {
-    return static function ($a, $b): int {
-        return $a <=> $b;
-    };
+    return static fn ($a, $b): int => $a <=> $b;
 }
 
 function descendingComparator(): callable
 {
-    return static function ($a, $b): int {
-        return $b <=> $a;
-    };
+    return static fn ($a, $b): int => $b <=> $a;
 }
 
 function tautology(): callable
 {
-    return static function (): bool {
-        return true;
-    };
+    return static fn (): bool => true;
 }
 
 function falsy(): callable
 {
-    return static function (): bool {
-        return false;
-    };
+    return static fn (): bool => false;
 }
 
 /**
@@ -63,9 +55,7 @@ function falsy(): callable
  */
 function applicator1($arg): callable
 {
-    return static function (callable $callable) use ($arg) {
-        return $callable($arg);
-    };
+    return static fn (callable $callable) => $callable($arg);
 }
 
 /**
@@ -80,20 +70,18 @@ function applicator1($arg): callable
  */
 function compose(callable $f, callable $g): callable
 {
-    return static function (...$args) use ($f, $g) {
-        return $f($g(...$args));
-    };
+    return static fn (...$args) => $f($g(...$args));
 }
 
 function hashKey(mixed $key): int|string
 {
     if ($key === (object)$key) {
-        return $key instanceof IHashable ? $key->hashCode() : spl_object_hash($key);
+        return $key instanceof IHashable
+            ? $key->hashCode()
+            : spl_object_hash($key);
     }
     if (is_array($key)) {
-         return serialize(array_map(static function ($value) {
-             return hashKey($value);
-         }, $key));
+         return serialize(array_map(static fn ($value) => hashKey($value), $key));
     }
     if (is_null($key)) {
          return "";

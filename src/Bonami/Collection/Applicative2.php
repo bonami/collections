@@ -974,9 +974,9 @@ trait Applicative2
         return LazyList::fromIterable($iterable)
             ->reduce(
                 static fn(self $list, $x): self => self::product($list, $x)->map(
-                    static fn (array $pair) => $pair[0]->add($pair[1])
+                    static fn (array $pair) => $pair[0]->add($pair[1]),
                 ),
-                self::pure(ArrayList::fromEmpty())
+                self::pure(ArrayList::fromEmpty()),
             );
     }
 
@@ -999,9 +999,9 @@ trait Applicative2
         return LazyList::fromIterable($iterable)
             ->reduce(
                 static fn(self $list, $x): self => self::product($list, $mapperToApplicative($x))->map(
-                    static fn (array $pair) => $pair[0]->add($pair[1])
+                    static fn (array $pair) => $pair[0]->add($pair[1]),
                 ),
-                self::pure(ArrayList::fromEmpty())
+                self::pure(ArrayList::fromEmpty()),
             );
     }
 }

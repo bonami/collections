@@ -14,9 +14,7 @@ class EnumList extends ArrayList
     /** @return ArrayList<int|string> */
     public function getValueList(): ArrayList
     {
-        return $this->map(static function (Enum $enum) {
-            return $enum->getValue();
-        });
+        return $this->map(static fn (Enum $enum) => $enum->getValue());
     }
 
     /** @return array<int, int|string> */

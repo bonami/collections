@@ -27,11 +27,7 @@ trait Monad2
      */
     final public static function ap(self $closure, self $argument): self
     {
-        return $closure->flatMap(static function ($c) use ($argument) {
-            return $argument->map(static function ($a) use ($c) {
-                return $c($a);
-            });
-        });
+        return $closure->flatMap(static fn ($c) => $argument->map(static fn ($a) => $c($a)));
     }
 
     /**

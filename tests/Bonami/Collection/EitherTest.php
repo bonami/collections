@@ -29,17 +29,15 @@ class EitherTest extends TestCase
         $one = Either::right(1);
         $four = Either::right(4);
 
-        $plus = static function (int $x, int $y): int {
-            return $x + $y;
-        };
+        $plus = static fn (int $x, int $y): int => $x + $y;
 
         $this->equals(
             Either::right(5),
-            Either::lift($plus)($one, $four)
+            Either::lift($plus)($one, $four),
         );
         $this->equals(
             $left,
-            Either::lift($plus)($one, $left)
+            Either::lift($plus)($one, $left),
         );
     }
 
@@ -48,67 +46,59 @@ class EitherTest extends TestCase
         self::assertEquals(Either::right(42), Either::lift1(static fn (int $a): int => $a)(Either::right(42)));
         self::assertEquals(
             Either::right(708),
-            Either::lift2(static fn (int $a, int $b): int => $a + $b)(Either::right(42), Either::right(666))
+            Either::lift2(static fn (int $a, int $b): int => $a + $b)(Either::right(42), Either::right(666)),
         );
         self::assertEquals(
             Either::left("fail"),
-            Either::lift2(static fn (int $a, int $b): int => $a + $b)(Either::right(42), Either::left("fail"))
+            Either::lift2(static fn (int $a, int $b): int => $a + $b)(Either::right(42), Either::left("fail")),
         );
     }
 
     public function testMap(): void
     {
-        $greeter = static function (string $s): string {
-            return sprintf('Hello %s', $s);
-        };
+        $greeter = static fn (string $s): string => sprintf('Hello %s', $s);
 
         $this->equals(
             Either::right('Hello world'),
-            Either::right('world')->map($greeter)
+            Either::right('world')->map($greeter),
         );
         $this->equals(
             Either::left('error'),
-            Either::left('error')->map($greeter)
+            Either::left('error')->map($greeter),
         );
     }
 
     public function testMapLeft(): void
     {
-        $greeter = static function (string $s): string {
-            return sprintf('Hello %s', $s);
-        };
+        $greeter = static fn (string $s): string => sprintf('Hello %s', $s);
 
         $this->equals(
             Either::right('world'),
-            Either::right('world')->mapLeft($greeter)
+            Either::right('world')->mapLeft($greeter),
         );
         $this->equals(
             Either::left('Hello error'),
-            Either::left('error')->mapLeft($greeter)
+            Either::left('error')->mapLeft($greeter),
         );
     }
 
     public function testFlatMap(): void
     {
-        $politeGreeter = static function (string $s): Either {
-            return Either::right(sprintf('Hello %s', $s));
-        };
+        $politeGreeter = static fn (string $s): Either => Either::right(sprintf('Hello %s', $s));
 
-        $failingGreeter = static function (string $s): Either {
-            return Either::left('No manners');
-        };
+        $failingGreeter = static fn (string $s): Either => Either::left('No manners');
 
         $this->equals(
             Either::right('Hello world'),
-            Either::right('world')->flatMap($politeGreeter)
+            Either::right('world')->flatMap($politeGreeter),
         );
         $this->equals(
             Either::left('No manners'),
-            Either::right('world')->flatMap($failingGreeter)
+            Either::right('world')->flatMap($failingGreeter),
         );
         $this->equals(
             Either::left('error'),
-            Either::left('error')->flatMap($politeGreeter)
+            Either::left('error')->flatMap($politeGreeter),
         );
     }
 
@@ -116,15 +106,15 @@ class EitherTest extends TestCase
     {
         $this->equals(
             Either::right('world'),
-            Either::right('world')->flatMapLeft(static fn ($s) => Either::right("will not be called"))
+            Either::right('world')->flatMapLeft(static fn ($s) => Either::right("will not be called")),
         );
         $this->equals(
             Either::left('Fail'),
-            Either::left('error')->flatMapLeft(static fn ($s): Either => Either::left('Fail'))
+            Either::left('error')->flatMapLeft(static fn ($s): Either => Either::left('Fail')),
         );
         $this->equals(
             Either::right('Hello error'),
-            Either::left('error')->flatMapLeft(static fn ($s): Either => Either::right(sprintf('Hello %s', $s)))
+            Either::left('error')->flatMapLeft(static fn ($s): Either => Either::right(sprintf('Hello %s', $s))),
         );
     }
 
@@ -133,25 +123,23 @@ class EitherTest extends TestCase
         $right = Either::right('Hello world');
         $left = Either::left('error');
 
-        $falsyPredicate = static function (): bool {
-            return false;
-        };
+        $falsyPredicate = static fn (): bool => false;
 
         $this->equals(
             true,
-            $right->exists(tautology())
+            $right->exists(tautology()),
         );
         $this->equals(
             false,
-            $left->exists(tautology())
+            $left->exists(tautology()),
         );
         $this->equals(
             false,
-            $right->exists($falsyPredicate)
+            $right->exists($falsyPredicate),
         );
         $this->equals(
             false,
-            $left->exists($falsyPredicate)
+            $left->exists($falsyPredicate),
         );
     }
 
@@ -211,18 +199,16 @@ class EitherTest extends TestCase
 
     public function testReduce(): void
     {
-        $sum = static function (int $a, int $b): int {
-            return $a + $b;
-        };
+        $sum = static fn (int $a, int $b): int => $a + $b;
         $init = 4;
 
         self::assertEquals(
             42,
-            Either::right(38)->reduce($sum, $init)
+            Either::right(38)->reduce($sum, $init),
         );
         self::assertEquals(
             $init,
-            Either::left(666)->reduce($sum, $init)
+            Either::left(666)->reduce($sum, $init),
         );
     }
 
@@ -280,9 +266,7 @@ class EitherTest extends TestCase
 
     public function testAp(): void
     {
-        $plus = CurriedFunction::curry2(static function (int $x, int $y): int {
-            return $x + $y;
-        });
+        $plus = CurriedFunction::curry2(static fn (int $x, int $y): int => $x + $y);
         /** @var Either<string, CurriedFunction<int, CurriedFunction<int, int>>> */
         $leftOp = Either::left('undefined operation');
 
@@ -331,21 +315,21 @@ class EitherTest extends TestCase
 
         $numbersLowerThan10 = [1, 2, 3, 7, 9];
 
-        $wrapLowerThan10 = static function (int $int): Either {
-            return $int < 10 ? Either::right($int) : Either::left('higher then ten');
-        };
+        $wrapLowerThan10 = static fn (int $int): Either => $int < 10
+            ? Either::right($int)
+            : Either::left('higher then ten');
 
-        $wrapLowerThan9 = static function (int $int): Either {
-            return $int < 9 ? Either::right($int) : Either::left('higher then nine');
-        };
+        $wrapLowerThan9 = static fn (int $int): Either => $int < 9
+            ? Either::right($int)
+            : Either::left('higher then nine');
 
         self::assertEquals(
             $numbersLowerThan10,
-            Either::traverse($numbersLowerThan10, $wrapLowerThan10)->getRightUnsafe()->toArray()
+            Either::traverse($numbersLowerThan10, $wrapLowerThan10)->getRightUnsafe()->toArray(),
         );
         self::assertEquals(
             Either::left('higher then nine'),
-            Either::traverse($numbersLowerThan10, $wrapLowerThan9)
+            Either::traverse($numbersLowerThan10, $wrapLowerThan9),
         );
     }
 
@@ -411,9 +395,7 @@ class EitherTest extends TestCase
         $assertEquals = function ($a, $b): void {
             $this->equals($a, $b);
         };
-        $eitherEquals = static function (Either $a, Either $b): bool {
-            return $a->equals($b);
-        };
+        $eitherEquals = static fn (Either $a, Either $b): bool => $a->equals($b);
         $ap = Either::ap(...);
         $pure = Either::pure(...);
 
@@ -422,12 +404,8 @@ class EitherTest extends TestCase
         $rightThree = Either::right(3);
         $error = Either::left('error');
 
-        $plus2 = CurriedFunction::of(static function (int $x): int {
-            return $x + 2;
-        });
-        $multiple2 = CurriedFunction::of(static function (int $x): int {
-            return $x * 2;
-        });
+        $plus2 = CurriedFunction::of(static fn (int $x): int => $x + 2);
+        $multiple2 = CurriedFunction::of(static fn (int $x): int => $x * 2);
 
         testEqualsReflexivity($assertEquals, $eitherEquals, $rightOne);
         testEqualsReflexivity($assertEquals, $eitherEquals, $error);

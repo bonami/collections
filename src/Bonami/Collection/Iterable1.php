@@ -40,9 +40,7 @@ trait Iterable1
      */
     public function mfold(Monoid $monoid)
     {
-        return $this->reduce(static function ($carry, $next) use ($monoid) {
-            return $monoid->concat($carry, $next);
-        }, $monoid->getEmpty());
+        return $this->reduce(static fn ($carry, $next) => $monoid->concat($carry, $next), $monoid->getEmpty());
     }
 
     /**
@@ -58,9 +56,7 @@ trait Iterable1
      */
     public function sum(callable $itemToNumber)
     {
-        return $this->reduce(static function ($carry, $next) use ($itemToNumber) {
-            return $carry + $itemToNumber($next);
-        }, 0);
+        return $this->reduce(static fn ($carry, $next) => $carry + $itemToNumber($next), 0);
     }
 
     /**
@@ -125,7 +121,7 @@ trait Iterable1
         $min = Option::lift2(static fn ($a, $b) => $comparator($a, $b) <= 0 ? $a : $b);
         return $this->reduce(
             static fn ($next, $carry) => $min($next, Option::of($carry)),
-            $this->head()
+            $this->head(),
         );
     }
 
@@ -145,7 +141,7 @@ trait Iterable1
         $max = Option::lift2(static fn ($a, $b) => $comparator($a, $b) > 0 ? $a : $b);
         return $this->reduce(
             static fn ($next, $carry) => $max($next, Option::of($carry)),
-            $this->head()
+            $this->head(),
         );
     }
 

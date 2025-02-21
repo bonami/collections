@@ -10,12 +10,8 @@ class HelpersTest extends TestCase
 {
     public function testCompose(): void
     {
-        $multiplyBy3 = static function (int $x): int {
-            return $x * 3;
-        };
-        $add2 = static function (int $x): int {
-            return $x + 2;
-        };
+        $multiplyBy3 = static fn (int $x): int => $x * 3;
+        $add2 = static fn (int $x): int => $x + 2;
 
         self::assertEquals(9, compose($multiplyBy3, $add2)(1));
         self::assertEquals(5, compose($add2, $multiplyBy3)(1));

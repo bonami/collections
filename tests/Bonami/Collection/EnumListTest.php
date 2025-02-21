@@ -14,7 +14,7 @@ class EnumListTest extends TestCase
 
         self::assertEquals(
             new EnumList([$item]),
-            EnumList::of($item)
+            EnumList::of($item),
         );
     }
 }

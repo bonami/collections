@@ -38,17 +38,15 @@ class OptionTest extends TestCase
         $xOpt = Option::some(1);
         $yOpt = Option::some(4);
 
-        $plus = static function (int $x, int $y): int {
-            return $x + $y;
-        };
+        $plus = static fn (int $x, int $y): int => $x + $y;
 
         $this->equals(
             Option::some(5),
-            Option::lift($plus)($xOpt, $yOpt)
+            Option::lift($plus)($xOpt, $yOpt),
         );
         $this->equals(
             $none,
-            Option::lift($plus)($xOpt, $none)
+            Option::lift($plus)($xOpt, $none),
         );
     }
 
@@ -57,63 +55,55 @@ class OptionTest extends TestCase
         self::assertEquals(Option::some(42), Option::lift1(static fn (int $a): int => $a)(Option::some(42)));
         self::assertEquals(
             Option::some(708),
-            Option::lift2(static fn (int $a, int $b): int => $a + $b)(Option::some(42), Option::some(666))
+            Option::lift2(static fn (int $a, int $b): int => $a + $b)(Option::some(42), Option::some(666)),
         );
     }
 
     public function testMap(): void
     {
-        $mapper = static function (string $s): string {
-            return sprintf('Hello %s', $s);
-        };
-        $mapperToNull = static function (string $s) {
-            return null;
-        };
+        $mapper = static fn (string $s): string => sprintf('Hello %s', $s);
+        $mapperToNull = static fn (string $s) => null;
 
         $this->equals(
             Option::some('Hello world'),
-            Option::some('world')->map($mapper)
+            Option::some('world')->map($mapper),
         );
         $this->equals(
             Option::none(),
-            Option::none()->map($mapper)
+            Option::none()->map($mapper),
         );
 
         $this->equals(
             Option::some(null),
-            Option::some('world')->map($mapperToNull)
+            Option::some('world')->map($mapperToNull),
         );
         $this->equals(
             Option::none(),
-            Option::none()->map($mapperToNull)
+            Option::none()->map($mapperToNull),
         );
     }
 
     public function testFlatMap(): void
     {
-        $mapperToSome = static function (string $s): Option {
-            return Option::some(sprintf('Hello %s', $s));
-        };
+        $mapperToSome = static fn (string $s): Option => Option::some(sprintf('Hello %s', $s));
 
-        $mapperToNone = static function (string $s): Option {
-            return Option::none();
-        };
+        $mapperToNone = static fn (string $s): Option => Option::none();
 
         $this->equals(
             Option::some('Hello world'),
-            Option::some('world')->flatMap($mapperToSome)
+            Option::some('world')->flatMap($mapperToSome),
         );
         $this->equals(
             Option::none(),
-            Option::none()->flatMap($mapperToSome)
+            Option::none()->flatMap($mapperToSome),
         );
         $this->equals(
             Option::none(),
-            Option::some('world')->flatMap($mapperToNone)
+            Option::some('world')->flatMap($mapperToNone),
         );
         $this->equals(
             Option::none(),
-            Option::none()->flatMap($mapperToNone)
+            Option::none()->flatMap($mapperToNone),
         );
     }
 
@@ -121,25 +111,23 @@ class OptionTest extends TestCase
     {
         $some = Option::some('Hello world');
 
-        $falsyPredicate = static function (): bool {
-            return false;
-        };
+        $falsyPredicate = static fn (): bool => false;
 
         $this->equals(
             $some,
-            $some->filter(tautology())
+            $some->filter(tautology()),
         );
         $this->equals(
             Option::none(),
-            Option::none()->filter(tautology())
+            Option::none()->filter(tautology()),
         );
         $this->equals(
             Option::none(),
-            $some->filter($falsyPredicate)
+            $some->filter($falsyPredicate),
         );
         $this->equals(
             Option::none(),
-            Option::none()->filter($falsyPredicate)
+            Option::none()->filter($falsyPredicate),
         );
     }
 
@@ -147,25 +135,23 @@ class OptionTest extends TestCase
     {
         $some = Option::some('Hello world');
 
-        $falsyPredicate = static function (): bool {
-            return false;
-        };
+        $falsyPredicate = static fn (): bool => false;
 
         $this->equals(
             true,
-            $some->exists(tautology())
+            $some->exists(tautology()),
         );
         $this->equals(
             false,
-            Option::none()->exists(tautology())
+            Option::none()->exists(tautology()),
         );
         $this->equals(
             false,
-            $some->exists($falsyPredicate)
+            $some->exists($falsyPredicate),
         );
         $this->equals(
             false,
-            Option::none()->exists($falsyPredicate)
+            Option::none()->exists($falsyPredicate),
         );
     }
 
@@ -261,18 +247,16 @@ class OptionTest extends TestCase
 
     public function testReduce(): void
     {
-        $reducer = static function (int $reduction, int $val): int {
-            return $reduction + $val;
-        };
+        $reducer = static fn (int $reduction, int $val): int => $reduction + $val;
         $initialReduction = 4;
 
         self::assertEquals(
             670,
-            Option::some(666)->reduce($reducer, $initialReduction)
+            Option::some(666)->reduce($reducer, $initialReduction),
         );
         self::assertEquals(
             $initialReduction,
-            Option::none()->reduce($reducer, $initialReduction)
+            Option::none()->reduce($reducer, $initialReduction),
         );
     }
 
@@ -326,9 +310,7 @@ class OptionTest extends TestCase
 
     public function testAp(): void
     {
-        $purePlus = Option::of(CurriedFunction::curry2(static function (int $x, int $y): int {
-            return $x + $y;
-        }));
+        $purePlus = Option::of(CurriedFunction::curry2(static fn (int $x, int $y): int => $x + $y));
         /** @var Option<int> $noneInt */
         $noneInt = Option::none();
         $one = Option::some(1);
@@ -372,21 +354,21 @@ class OptionTest extends TestCase
 
         $numbersLowerThan10 = [1, 2, 3, 7, 9];
 
-        $wrapLowerThan10 = static function (int $int): Option {
-            return $int < 10 ? Option::some($int) : Option::none();
-        };
+        $wrapLowerThan10 = static fn (int $int): Option => $int < 10
+            ? Option::some($int)
+            : Option::none();
 
-        $wrapLowerThan9 = static function (int $int): Option {
-            return $int < 9 ? Option::some($int) : Option::none();
-        };
+        $wrapLowerThan9 = static fn (int $int): Option => $int < 9
+            ? Option::some($int)
+            : Option::none();
 
         self::assertEquals(
             $numbersLowerThan10,
-            Option::traverse($numbersLowerThan10, $wrapLowerThan10)->getUnsafe()->toArray()
+            Option::traverse($numbersLowerThan10, $wrapLowerThan10)->getUnsafe()->toArray(),
         );
         self::assertSame(
             Option::none(),
-            Option::traverse($numbersLowerThan10, $wrapLowerThan9)
+            Option::traverse($numbersLowerThan10, $wrapLowerThan9),
         );
     }
 
@@ -452,9 +434,7 @@ class OptionTest extends TestCase
         $assertEquals = function ($a, $b): void {
             $this->equals($a, $b);
         };
-        $optionEquals = static function (Option $a, Option $b): bool {
-            return $a->equals($b);
-        };
+        $optionEquals = static fn (Option $a, Option $b): bool => $a->equals($b);
         $ap = Option::ap(...);
         $pure = Option::pure(...);
 
@@ -463,12 +443,8 @@ class OptionTest extends TestCase
         $someThree = Option::some(3);
         $none = Option::none();
 
-        $plus2 = CurriedFunction::of(static function (int $x): int {
-            return $x + 2;
-        });
-        $multiple2 = CurriedFunction::of(static function (int $x): int {
-            return $x * 2;
-        });
+        $plus2 = CurriedFunction::of(static fn (int $x): int => $x + 2);
+        $multiple2 = CurriedFunction::of(static fn (int $x): int => $x * 2);
 
         testEqualsReflexivity($assertEquals, $optionEquals, $someOne);
         testEqualsReflexivity($assertEquals, $optionEquals, $none);

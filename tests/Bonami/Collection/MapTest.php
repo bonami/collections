@@ -73,9 +73,7 @@ class MapTest extends TestCase
             [1, 'a'],
             [2, 'b'],
         ]);
-        $mapped = $map->map(static function ($value, $key) {
-            return sprintf('%s:%s', $value, $key);
-        });
+        $mapped = $map->map(static fn ($value, $key) => sprintf('%s:%s', $value, $key));
         self::assertEquals(ArrayList::fromIterable(['a:1', 'b:2']), $mapped);
     }
 
@@ -85,9 +83,7 @@ class MapTest extends TestCase
             [1, 'a'],
             [2, 'b'],
         ]);
-        $mapped = $map->flatMap(static function (string $value, int $key) {
-            return ArrayList::fill(sprintf('%s:%s', $value, $key), $key);
-        });
+        $mapped = $map->flatMap(static fn (string $value, int $key) => ArrayList::fill(sprintf('%s:%s', $value, $key), $key));
         self::assertEquals(ArrayList::fromIterable(['a:1', 'b:2', 'b:2']), $mapped);
     }
 
@@ -98,9 +94,7 @@ class MapTest extends TestCase
             [2, 'b'],
         ]);
 
-        $mapped = $map->mapKeys(static function ($key) {
-            return $key + 1;
-        });
+        $mapped = $map->mapKeys(static fn ($key) => $key + 1);
         self::assertEquals(new Map([
             [2, 'a'],
             [3, 'b'],
@@ -114,9 +108,7 @@ class MapTest extends TestCase
             [2, 'b'],
         ]);
 
-        $mapped = $map->mapValues(static function ($value, $key) {
-            return str_repeat($value, $key);
-        });
+        $mapped = $map->mapValues(static fn ($value, $key) => str_repeat($value, $key));
         self::assertEquals(new Map([
             [1, 'a'],
             [2, 'bb'],
@@ -131,9 +123,7 @@ class MapTest extends TestCase
             [3, 'c'],
             [4, 'd'],
         ]);
-        $filtered = $map->filter(static function ($value, $key) {
-            return $key % 2 === 0 || $value === 'c';
-        });
+        $filtered = $map->filter(static fn ($value, $key) => $key % 2 === 0 || $value === 'c');
         self::assertEquals(new Map([
             [2, 'b'],
             [3, 'c'],
@@ -168,9 +158,7 @@ class MapTest extends TestCase
         self::assertSame(Option::none(), Map::fromEmpty()->find(tautology()));
         self::assertEquals(
             'b',
-            Map::fromIterable([[1, 'a'], [2, 'b']])->find(static function ($value, $key): bool {
-                return $key === 2 && $value !== 'a';
-            })->getUnsafe()
+            Map::fromIterable([[1, 'a'], [2, 'b']])->find(static fn ($value, $key): bool => $key === 2 && $value !== 'a')->getUnsafe(),
         );
     }
 
@@ -179,9 +167,7 @@ class MapTest extends TestCase
         self::assertSame(Option::none(), Map::fromEmpty()->findKey(tautology()));
         self::assertEquals(
             2,
-            Map::fromIterable([[1, 'a'], [2, 'b']])->findKey(static function ($key, $value): bool {
-                return $key === 2 && $value !== 'a';
-            })->getUnsafe()
+            Map::fromIterable([[1, 'a'], [2, 'b']])->findKey(static fn ($key, $value): bool => $key === 2 && $value !== 'a')->getUnsafe(),
         );
     }
 
@@ -221,7 +207,7 @@ class MapTest extends TestCase
         self::assertEquals(Map::fromEmpty(), Map::fromEmpty()->take(1));
         self::assertEquals(
             Map::fromIterable([['a', 1], ['b', 2]]),
-            Map::fromIterable([['a', 1], ['b', 2], ['c', 3]])->take(2)
+            Map::fromIterable([['a', 1], ['b', 2], ['c', 3]])->take(2),
         );
     }
 
@@ -252,7 +238,7 @@ class MapTest extends TestCase
 
         self::assertEquals(
             ArrayList::fromIterable([(object)[1985, 1, 29], (object)[1984, 7, 11], (object)[1985, 1, 30]]),
-            $map->keys()
+            $map->keys(),
         );
     }
 
@@ -266,7 +252,7 @@ class MapTest extends TestCase
 
         self::assertEquals(
             ArrayList::fromIterable(['Isabel Lucas', 'Rachael Taylor', 'Elaine Cassidy']),
-            $map->values()
+            $map->values(),
         );
     }
 
@@ -284,9 +270,7 @@ class MapTest extends TestCase
         $two = $this->createObject(2);
         $seven = $this->createObject(7);
         $map = new Map([[$three, 5], [$two, 6], [$seven, 8]]);
-        $result = $map->sortKeys(static function ($key1, $key2) {
-            return $key1->prop <=> $key2->prop;
-        });
+        $result = $map->sortKeys(static fn ($key1, $key2) => $key1->prop <=> $key2->prop);
 
         self::assertEquals(new Map([[$two, 6], [$three, 5], [$seven, 8]]), $result);
     }
@@ -342,25 +326,17 @@ class MapTest extends TestCase
             5,
         ]);
 
-        self::assertEquals(87, $map->reduce(static function (int $total, int $value) {
-            return $total + $value;
-        }, 0));
+        self::assertEquals(87, $map->reduce(static fn (int $total, int $value) => $total + $value, 0));
 
-        self::assertEquals(115, $map->reduce(static function (int $total, int $value, int $key) {
-            return $total + $value + $key;
-        }, 0));
+        self::assertEquals(115, $map->reduce(static fn (int $total, int $value, int $key) => $total + $value + $key, 0));
 
-        self::assertEquals(28, $map->reduce(static function (int $total, int $value, int $key) {
-            return $total + $key;
-        }, 0));
+        self::assertEquals(28, $map->reduce(static fn (int $total, int $value, int $key) => $total + $key, 0));
     }
 
     public function testFilterKeys(): void
     {
         $map = new Map([[1, 2], [3, 4], [5, 6]]);
-        $filtered = $map->filterKeys(static function ($key) {
-            return $key > 2;
-        });
+        $filtered = $map->filterKeys(static fn ($key) => $key > 2);
         self::assertEquals(new Map([[3, 4], [5, 6]]), $filtered);
     }
 
@@ -429,9 +405,7 @@ class MapTest extends TestCase
 
     public function testMinus(): void
     {
-        $objects = Map::fromIterable(LazyList::range(1, 14)->zipMap(static function ($i) {
-            return (object)['prop' => $i];
-        }));
+        $objects = Map::fromIterable(LazyList::range(1, 14)->zipMap(static fn ($i) => (object)['prop' => $i]));
 
         $oneToTen = $objects->getByKeys(range(1, 10));
         $fiveToFourteen = $objects->getByKeys(range(5, 14));
@@ -441,11 +415,11 @@ class MapTest extends TestCase
 
         self::assertEquals(
             $oneToFour->getItems(),
-            $oneToTen->minus($fiveToFourteen)->getItems()
+            $oneToTen->minus($fiveToFourteen)->getItems(),
         ); // 1-10 minus 5-14 = 1-4
         self::assertEquals(
             $elevenToFourteen->getItems(),
-            $fiveToFourteen->minus($oneToTen)->getItems()
+            $fiveToFourteen->minus($oneToTen)->getItems(),
         ); // 5-14 minus 1-10 = 11-14
     }
 
@@ -462,7 +436,7 @@ class MapTest extends TestCase
                 ['b', 2],
                 ['c', 3],
             ]),
-            $map->pairs()
+            $map->pairs(),
         );
     }
 
@@ -504,13 +478,13 @@ class MapTest extends TestCase
                         [
                             12 => ['run', 'go', 'walk'],
                             18 => ['home', 'land', 'country'],
-                        ]
+                        ],
                     ),
                     Map::fromAssociativeArray(
                         [
                             15 => ['meat', 'food', 'eat'],
                             61 => ['sun', 'moon', 'comet'],
-                        ]
+                        ],
                     ),
                 ],
             ],
@@ -609,12 +583,8 @@ class MapTest extends TestCase
             [2, 'B'],
             [3, 'C'],
         ]);
-        self::assertTrue($map->exists(static function ($value) {
-            return $value === 'C';
-        }));
-        self::assertFalse($map->exists(static function ($value) {
-            return $value === 'D';
-        }));
+        self::assertTrue($map->exists(static fn ($value) => $value === 'C'));
+        self::assertFalse($map->exists(static fn ($value) => $value === 'D'));
     }
 
     public function testExistsWithKey(): void
@@ -625,19 +595,13 @@ class MapTest extends TestCase
             [3, 3],
             [4, 4],
         ]);
-        self::assertTrue($map->exists(static function ($value, $key) {
-            return $value === $key;
-        }));
-        self::assertFalse($map->exists(static function ($value, $key) {
-            return $value !== $key;
-        }));
+        self::assertTrue($map->exists(static fn ($value, $key) => $value === $key));
+        self::assertFalse($map->exists(static fn ($value, $key) => $value !== $key));
     }
 
     public function testAll(): void
     {
-        $keySameAsValue = static function ($value, $key) {
-            return $value === $key;
-        };
+        $keySameAsValue = static fn ($value, $key) => $value === $key;
         self::assertTrue(Map::fromIterable([[1, 1], [2, 2]])->all($keySameAsValue));
         self::assertFalse(Map::fromIterable([[1, 2], [2, 2]])->all($keySameAsValue));
     }
@@ -651,24 +615,12 @@ class MapTest extends TestCase
             [4, 0],
             [5, ''],
         ]);
-        self::assertTrue($map->exists(static function ($value) {
-            return $value === 'A';
-        }));
-        self::assertTrue($map->exists(static function ($value) {
-            return $value === null;
-        }));
-        self::assertTrue($map->exists(static function ($value) {
-            return $value === false;
-        }));
-        self::assertTrue($map->exists(static function ($value) {
-            return $value === 0;
-        }));
-        self::assertTrue($map->exists(static function ($value) {
-            return $value === '';
-        }));
-        self::assertFalse($map->exists(static function ($value) {
-            return $value === 'X';
-        }));
+        self::assertTrue($map->exists(static fn ($value) => $value === 'A'));
+        self::assertTrue($map->exists(static fn ($value) => $value === null));
+        self::assertTrue($map->exists(static fn ($value) => $value === false));
+        self::assertTrue($map->exists(static fn ($value) => $value === 0));
+        self::assertTrue($map->exists(static fn ($value) => $value === ''));
+        self::assertFalse($map->exists(static fn ($value) => $value === 'X'));
     }
 
     public function testToString(): void

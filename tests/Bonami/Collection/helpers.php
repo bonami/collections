@@ -30,7 +30,7 @@ function testEqualsSymmetry(callable $assertEquals, callable $equals, $a, $b): v
 {
     $assertEquals(
         $equals($a, $b),
-        $equals($b, $a)
+        $equals($b, $a),
     );
 }
 
@@ -49,7 +49,7 @@ function testEqualsTransitivity(callable $assertEquals, callable $equals, $a, $b
 {
     $assertEquals(
         $equals($a, $b) && $equals($b, $c),
-        $equals($a, $c)
+        $equals($a, $c),
     );
 }
 
@@ -65,12 +65,10 @@ function testEqualsTransitivity(callable $assertEquals, callable $equals, $a, $b
  */
 function testFunctorIdentity(callable $assertEquals, $functor): void
 {
-    $id = static function ($a) {
-        return $a;
-    };
+    $id = static fn ($a) => $a;
     $assertEquals(
         $functor,
-        $functor->map($id)
+        $functor->map($id),
     );
 }
 
@@ -86,7 +84,7 @@ function testFunctorComposition(callable $assertEquals, $functor, CurriedFunctio
 {
     $assertEquals(
         $functor->map($g)->map($f),
-        $functor->map($g->map($f))
+        $functor->map($g->map($f)),
     );
 }
 
@@ -104,7 +102,7 @@ function testApplicativeIdentity(callable $assertEquals, callable $ap, callable 
 {
     $assertEquals(
         $ap($pure(CurriedFunction::of(id(...))), $applicative),
-        $applicative
+        $applicative,
     );
 }
 
@@ -122,11 +120,11 @@ function testApplicativeHomomorphism(
     callable $ap,
     callable $pure,
     $value,
-    CurriedFunction $f
+    CurriedFunction $f,
 ): void {
     $assertEquals(
         $ap($pure($f), $pure($value)),
-        $pure($f($value))
+        $pure($f($value)),
     );
 }
 
@@ -163,11 +161,9 @@ function testApplicativeComposition(
     callable $pure,
     $applicative,
     $applicativeF,
-    $applicativeG
+    $applicativeG,
 ): void {
-    $curriedComposition = CurriedFunction::curry2(static function (CurriedFunction $f, CurriedFunction $g): callable {
-        return $g->map($f);
-    });
+    $curriedComposition = CurriedFunction::curry2(static fn (CurriedFunction $f, CurriedFunction $g): callable => $g->map($f));
 
     $assertEquals(
         $ap($ap($ap($pure($curriedComposition), $applicativeF), $applicativeG), $applicative),

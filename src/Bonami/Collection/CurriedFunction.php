@@ -38,7 +38,7 @@ final class CurriedFunction
         if ($numberOfArgs !== $expectedNumberOfArgs) {
             throw new InvalidStateException(sprintf(
                 'Passed function must accept exactly %s arguments',
-                $expectedNumberOfArgs
+                $expectedNumberOfArgs,
             ));
         }
 
@@ -82,7 +82,9 @@ final class CurriedFunction
      */
     public static function curry1(callable $callable): self
     {
-        return $callable instanceof self ? $callable : new self($callable, 1);
+        return $callable instanceof self
+            ? $callable
+            : new self($callable, 1);
     }
 
     /**
@@ -102,7 +104,9 @@ final class CurriedFunction
      */
     public static function curry2(callable $callable): self
     {
-        return $callable instanceof self ? $callable : new self($callable, 2);
+        return $callable instanceof self
+            ? $callable
+            : new self($callable, 2);
     }
 
     /**
@@ -123,7 +127,9 @@ final class CurriedFunction
      */
     public static function curry3(callable $callable): self
     {
-        return $callable instanceof self ? $callable : new self($callable, 3);
+        return $callable instanceof self
+            ? $callable
+            : new self($callable, 3);
     }
 
     /**
@@ -145,7 +151,9 @@ final class CurriedFunction
      */
     public static function curry4(callable $callable): self
     {
-        return $callable instanceof self ? $callable : new self($callable, 4);
+        return $callable instanceof self
+            ? $callable
+            : new self($callable, 4);
     }
 
     /**
@@ -168,7 +176,9 @@ final class CurriedFunction
      */
     public static function curry5(callable $callable): self
     {
-        return $callable instanceof self ? $callable : new self($callable, 5);
+        return $callable instanceof self
+            ? $callable
+            : new self($callable, 5);
     }
 
     /**
@@ -192,7 +202,9 @@ final class CurriedFunction
      */
     public static function curry6(callable $callable): self
     {
-        return $callable instanceof self ? $callable : new self($callable, 6);
+        return $callable instanceof self
+            ? $callable
+            : new self($callable, 6);
     }
 
     /**
@@ -217,7 +229,9 @@ final class CurriedFunction
      */
     public static function curry7(callable $callable): self
     {
-        return $callable instanceof self ? $callable : new self($callable, 7);
+        return $callable instanceof self
+            ? $callable
+            : new self($callable, 7);
     }
 
     /**
@@ -243,7 +257,9 @@ final class CurriedFunction
      */
     public static function curry8(callable $callable): self
     {
-        return $callable instanceof self ? $callable : new self($callable, 8);
+        return $callable instanceof self
+            ? $callable
+            : new self($callable, 8);
     }
 
     /**
@@ -270,7 +286,9 @@ final class CurriedFunction
      */
     public static function curry9(callable $callable): self
     {
-        return $callable instanceof self ? $callable : new self($callable, 9);
+        return $callable instanceof self
+            ? $callable
+            : new self($callable, 9);
     }
 
     /**
@@ -298,7 +316,9 @@ final class CurriedFunction
      */
     public static function curry10(callable $callable): self
     {
-        return $callable instanceof self ? $callable : new self($callable, 10);
+        return $callable instanceof self
+            ? $callable
+            : new self($callable, 10);
     }
 
     /**
@@ -327,7 +347,9 @@ final class CurriedFunction
      */
     public static function curry11(callable $callable): self
     {
-        return $callable instanceof self ? $callable : new self($callable, 11);
+        return $callable instanceof self
+            ? $callable
+            : new self($callable, 11);
     }
 
     /**
@@ -357,7 +379,9 @@ final class CurriedFunction
      */
     public static function curry12(callable $callable): self
     {
-        return $callable instanceof self ? $callable : new self($callable, 12);
+        return $callable instanceof self
+            ? $callable
+            : new self($callable, 12);
     }
 
     /**
@@ -388,7 +412,9 @@ final class CurriedFunction
      */
     public static function curry13(callable $callable): self
     {
-        return $callable instanceof self ? $callable : new self($callable, 13);
+        return $callable instanceof self
+            ? $callable
+            : new self($callable, 13);
     }
 
     /**
@@ -420,7 +446,9 @@ final class CurriedFunction
      */
     public static function curry14(callable $callable): self
     {
-        return $callable instanceof self ? $callable : new self($callable, 14);
+        return $callable instanceof self
+            ? $callable
+            : new self($callable, 14);
     }
 
     /**
@@ -453,7 +481,9 @@ final class CurriedFunction
      */
     public static function curry15(callable $callable): self
     {
-        return $callable instanceof self ? $callable : new self($callable, 15);
+        return $callable instanceof self
+            ? $callable
+            : new self($callable, 15);
     }
 
     /**
@@ -487,7 +517,9 @@ final class CurriedFunction
      */
     public static function curry16(callable $callable): self
     {
-        return $callable instanceof self ? $callable : new self($callable, 16);
+        return $callable instanceof self
+            ? $callable
+            : new self($callable, 16);
     }
 
     /**
@@ -522,7 +554,9 @@ final class CurriedFunction
      */
     public static function curry17(callable $callable): self
     {
-        return $callable instanceof self ? $callable : new self($callable, 17);
+        return $callable instanceof self
+            ? $callable
+            : new self($callable, 17);
     }
 
     /**
@@ -558,7 +592,9 @@ final class CurriedFunction
      */
     public static function curry18(callable $callable): self
     {
-        return $callable instanceof self ? $callable : new self($callable, 18);
+        return $callable instanceof self
+            ? $callable
+            : new self($callable, 18);
     }
 
     /**
@@ -595,7 +631,9 @@ final class CurriedFunction
      */
     public static function curry19(callable $callable): self
     {
-        return $callable instanceof self ? $callable : new self($callable, 19);
+        return $callable instanceof self
+            ? $callable
+            : new self($callable, 19);
     }
 
     /**
@@ -633,7 +671,9 @@ final class CurriedFunction
      */
     public static function curry20(callable $callable): self
     {
-        return $callable instanceof self ? $callable : new self($callable, 20);
+        return $callable instanceof self
+            ? $callable
+            : new self($callable, 20);
     }
 
     /**
@@ -672,7 +712,9 @@ final class CurriedFunction
      */
     public static function curry21(callable $callable): self
     {
-        return $callable instanceof self ? $callable : new self($callable, 21);
+        return $callable instanceof self
+            ? $callable
+            : new self($callable, 21);
     }
 
     /**
@@ -712,7 +754,9 @@ final class CurriedFunction
      */
     public static function curry22(callable $callable): self
     {
-        return $callable instanceof self ? $callable : new self($callable, 22);
+        return $callable instanceof self
+            ? $callable
+            : new self($callable, 22);
     }
 
     /**
@@ -753,7 +797,9 @@ final class CurriedFunction
      */
     public static function curry23(callable $callable): self
     {
-        return $callable instanceof self ? $callable : new self($callable, 23);
+        return $callable instanceof self
+            ? $callable
+            : new self($callable, 23);
     }
 
     /**
@@ -795,7 +841,9 @@ final class CurriedFunction
      */
     public static function curry24(callable $callable): self
     {
-        return $callable instanceof self ? $callable : new self($callable, 24);
+        return $callable instanceof self
+            ? $callable
+            : new self($callable, 24);
     }
 
     /**
@@ -838,7 +886,9 @@ final class CurriedFunction
      */
     public static function curry25(callable $callable): self
     {
-        return $callable instanceof self ? $callable : new self($callable, 25);
+        return $callable instanceof self
+            ? $callable
+            : new self($callable, 25);
     }
 
     /**
@@ -882,7 +932,9 @@ final class CurriedFunction
      */
     public static function curry26(callable $callable): self
     {
-        return $callable instanceof self ? $callable : new self($callable, 26);
+        return $callable instanceof self
+            ? $callable
+            : new self($callable, 26);
     }
 
     /**
@@ -927,7 +979,9 @@ final class CurriedFunction
      */
     public static function curry27(callable $callable): self
     {
-        return $callable instanceof self ? $callable : new self($callable, 27);
+        return $callable instanceof self
+            ? $callable
+            : new self($callable, 27);
     }
 
     /**
@@ -973,7 +1027,9 @@ final class CurriedFunction
      */
     public static function curry28(callable $callable): self
     {
-        return $callable instanceof self ? $callable : new self($callable, 28);
+        return $callable instanceof self
+            ? $callable
+            : new self($callable, 28);
     }
 
     /**
@@ -1020,7 +1076,9 @@ final class CurriedFunction
      */
     public static function curry29(callable $callable): self
     {
-        return $callable instanceof self ? $callable : new self($callable, 29);
+        return $callable instanceof self
+            ? $callable
+            : new self($callable, 29);
     }
 
     /**
@@ -1068,7 +1126,9 @@ final class CurriedFunction
      */
     public static function curry30(callable $callable): self
     {
-        return $callable instanceof self ? $callable : new self($callable, 30);
+        return $callable instanceof self
+            ? $callable
+            : new self($callable, 30);
     }
 
     /**
@@ -1084,9 +1144,7 @@ final class CurriedFunction
      */
     public function map(CurriedFunction $then): CurriedFunction
     {
-        return self::of(function ($arg) use ($then) {
-            return $then($this($arg));
-        });
+        return self::of(fn ($arg) => $then($this($arg)));
     }
 
     /**
@@ -1098,7 +1156,7 @@ final class CurriedFunction
     {
         if ($this->numberOfArgs === null) {
             $this->numberOfArgs = (new ReflectionFunction(
-                Closure::fromCallable($this->callable)
+                Closure::fromCallable($this->callable),
             ))->getNumberOfParameters();
         }
         $newApplied = $this->applied;

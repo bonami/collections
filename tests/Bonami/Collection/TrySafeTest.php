@@ -23,9 +23,7 @@ class TrySafeTest extends TestCase
 
     public function testCreateFromCallable(): void
     {
-        $returnValueCallable = static function () {
-            return 666;
-        };
+        $returnValueCallable = static fn () => 666;
         $throwCallable = static function () {
             throw new Exception();
         };
@@ -40,17 +38,15 @@ class TrySafeTest extends TestCase
         $xSuccess = TrySafe::success(1);
         $ySuccess = TrySafe::success(4);
 
-        $plus = static function (int $x, int $y): int {
-            return $x + $y;
-        };
+        $plus = static fn (int $x, int $y): int => $x + $y;
 
         $this->equals(
             TrySafe::success(5),
-            TrySafe::lift($plus)($xSuccess, $ySuccess)
+            TrySafe::lift($plus)($xSuccess, $ySuccess),
         );
         $this->equals(
             $failure,
-            TrySafe::lift($plus)($xSuccess, $failure)
+            TrySafe::lift($plus)($xSuccess, $failure),
         );
     }
 
@@ -62,22 +58,20 @@ class TrySafeTest extends TestCase
         $failure = TrySafe::failure(new Exception('No towel'));
         self::assertSame(
             'oops',
-            $failure->mapFailure(static fn (Throwable $ex) => new Exception('oops'))->getFailureUnsafe()->getMessage()
+            $failure->mapFailure(static fn (Throwable $ex) => new Exception('oops'))->getFailureUnsafe()->getMessage(),
         );
     }
 
     public function testMap(): void
     {
-        $mapper = static function (string $s): string {
-            return sprintf('Hello %s', $s);
-        };
+        $mapper = static fn (string $s): string => sprintf('Hello %s', $s);
         $mapperThatThrows = static function () {
             throw new Exception();
         };
 
         $this->equals(
             TrySafe::success('Hello world'),
-            TrySafe::success('world')->map($mapper)
+            TrySafe::success('world')->map($mapper),
         );
 
         self::assertTrue(TrySafe::success('Hello world')->map($mapperThatThrows)->isFailure());
@@ -151,7 +145,7 @@ class TrySafeTest extends TestCase
 
         $this->equals(
             TrySafe::success('Hello world'),
-            TrySafe::success('world')->flatMap($mapper(true))
+            TrySafe::success('world')->flatMap($mapper(true)),
         );
 
         /** @var TrySafe<string> $trySafe */
@@ -167,9 +161,7 @@ class TrySafeTest extends TestCase
         $failure = new Exception();
 
         $recoveredFailure = TrySafe::failure($failure)
-            ->recover(static function (Throwable $failure): int {
-                return 666;
-            });
+            ->recover(static fn (Throwable $failure): int => 666);
         self::assertTrue($recoveredFailure->isSuccess());
 
         $exceptionThatRecoveryThrows = new Exception();
@@ -189,18 +181,14 @@ class TrySafeTest extends TestCase
         self::assertTrue(TrySafe::failure($failure)
             ->recoverIf(
                 tautology(),
-                static function (Throwable $failure): int {
-                    return 666;
-                }
+                static fn (Throwable $failure): int => 666,
             )
             ->isSuccess());
 
         self::assertTrue(TrySafe::failure($failure)
             ->recoverIf(
                 falsy(),
-                static function (Throwable $failure): int {
-                    return 666;
-                }
+                static fn (Throwable $failure): int => 666,
             )
             ->isFailure());
 
@@ -220,18 +208,14 @@ class TrySafeTest extends TestCase
         /** @var TrySafe<int> $failure */
         $failure = TrySafe::failure(new Exception());
 
-        $recover = static function (Throwable $ex): TrySafe {
-            return TrySafe::success(666);
-        };
+        $recover = static fn (Throwable $ex): TrySafe => TrySafe::success(666);
         $exceptionThatRecoveryThrows = new Exception();
         $throw = static function (Throwable $ex) use ($exceptionThatRecoveryThrows) {
             throw $exceptionThatRecoveryThrows;
         };
         $exceptionThatRecoveryWraps = new Exception();
 
-        $wrap = static function (Throwable $failure) use ($exceptionThatRecoveryWraps): TrySafe {
-            return TrySafe::failure($exceptionThatRecoveryWraps);
-        };
+        $wrap = static fn (Throwable $failure): TrySafe => TrySafe::failure($exceptionThatRecoveryWraps);
 
         self::assertSame(42, $success->recoverWith($recover)->getUnsafe());
         self::assertTrue($success->recoverWith($recover)->isSuccess());
@@ -259,24 +243,16 @@ class TrySafeTest extends TestCase
         /** @var TrySafe<int> $failure */
         $failure = TrySafe::failure($originalException);
 
-        $recover = static function (Throwable $ex): TrySafe {
-            return TrySafe::success(666);
-        };
-        $matchRuntimeException = static function (Throwable $throwable): bool {
-            return $throwable instanceof RuntimeException;
-        };
-        $matchAll = static function (Throwable $throwable): bool {
-            return true;
-        };
+        $recover = static fn (Throwable $ex): TrySafe => TrySafe::success(666);
+        $matchRuntimeException = static fn (Throwable $throwable): bool => $throwable instanceof RuntimeException;
+        $matchAll = static fn (Throwable $throwable): bool => true;
         $exceptionThatRecoveryThrows = new Exception();
         $throw = static function (Throwable $ex) use ($exceptionThatRecoveryThrows) {
             throw $exceptionThatRecoveryThrows;
         };
         $exceptionThatRecoveryWraps = new Exception();
 
-        $wrap = static function (Throwable $failure) use ($exceptionThatRecoveryWraps) {
-            return TrySafe::failure($exceptionThatRecoveryWraps);
-        };
+        $wrap = static fn (Throwable $failure) => TrySafe::failure($exceptionThatRecoveryWraps);
 
         self::assertSame(42, $success->recoverWithIf($matchRuntimeException, $recover)->getUnsafe());
         self::assertTrue($success->recoverWithIf($matchRuntimeException, $recover)->isSuccess());
@@ -295,7 +271,7 @@ class TrySafeTest extends TestCase
         self::assertSame($exceptionThatRecoveryThrows, $failure->recoverWithIf($matchAll, $throw)->getFailureUnsafe());
         self::assertSame(
             $originalException,
-            $failure->recoverWithIf($matchRuntimeException, $throw)->getFailureUnsafe()
+            $failure->recoverWithIf($matchRuntimeException, $throw)->getFailureUnsafe(),
         );
 
         self::assertTrue($failure->recoverWithIf($matchRuntimeException, $wrap)->isFailure());
@@ -349,18 +325,16 @@ class TrySafeTest extends TestCase
 
     public function testReduce(): void
     {
-        $reducer = static function (int $reduction, int $val): int {
-            return $reduction + $val;
-        };
+        $reducer = static fn (int $reduction, int $val): int => $reduction + $val;
         $initialReduction = 4;
 
         self::assertEquals(
             670,
-            TrySafe::success(666)->reduce($reducer, $initialReduction)
+            TrySafe::success(666)->reduce($reducer, $initialReduction),
         );
         self::assertEquals(
             $initialReduction,
-            $this->createFailure()->reduce($reducer, $initialReduction)
+            $this->createFailure()->reduce($reducer, $initialReduction),
         );
     }
 
@@ -369,9 +343,7 @@ class TrySafeTest extends TestCase
         $assertEquals = function ($a, $b): void {
             $this->equals($a, $b);
         };
-        $tryEquals = static function (TrySafe $a, TrySafe $b): bool {
-            return $a->equals($b);
-        };
+        $tryEquals = static fn (TrySafe $a, TrySafe $b): bool => $a->equals($b);
         $ap = TrySafe::ap(...);
         $pure = TrySafe::pure(...);
 
@@ -380,12 +352,8 @@ class TrySafeTest extends TestCase
         $successThree = TrySafe::success(3);
         $failure = $this->createFailure();
 
-        $plus2 = CurriedFunction::of(static function (int $x): int {
-            return $x + 2;
-        });
-        $multiple2 = CurriedFunction::of(static function (int $x): int {
-            return $x * 2;
-        });
+        $plus2 = CurriedFunction::of(static fn (int $x): int => $x + 2);
+        $multiple2 = CurriedFunction::of(static fn (int $x): int => $x * 2);
         $throws = CurriedFunction::of(function (int $_) {
             throw $this->createHashableException();
         });
