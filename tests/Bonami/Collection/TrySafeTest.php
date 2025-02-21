@@ -142,30 +142,24 @@ class TrySafeTest extends TestCase
 
     public function testFlatMap(): void
     {
-        /** @phpstan-var callable(string): TrySafe<string> */
-        $mapperToSuccess = static function (string $s): TrySafe {
-            return TrySafe::success(sprintf('Hello %s', $s));
-        };
-        /** @phpstan-var callable(string): TrySafe<string> */
-        $mapperToFailure = function (string $s): TrySafe {
-            return $this->createFailure();
-        };
-        /** @phpstan-var callable(string): TrySafe<string> */
-        $mapperThatThrows = static function () {
-            throw new Exception();
-        };
+
+        $mapperToFailure = fn(string $s): TrySafe => $this->createFailure();
+
+        $mapper = static fn (bool $shouldSucceed) => static fn (string $s) => $shouldSucceed
+            ? TrySafe::success(sprintf('Hello %s', $s))
+            : throw new Exception();
 
         $this->equals(
             TrySafe::success('Hello world'),
-            TrySafe::success('world')->flatMap($mapperToSuccess)
+            TrySafe::success('world')->flatMap($mapper(true))
         );
 
         /** @var TrySafe<string> $trySafe */
         $trySafe = $this->createFailure();
-        self::assertTrue($trySafe->flatMap($mapperToSuccess)->isFailure());
+        self::assertTrue($trySafe->flatMap($mapper(true))->isFailure());
         self::assertTrue(TrySafe::success('world')->flatMap($mapperToFailure)->isFailure());
         self::assertTrue($trySafe->flatMap($mapperToFailure)->isFailure());
-        self::assertTrue(TrySafe::success('world')->flatMap($mapperThatThrows)->isFailure());
+        self::assertTrue(TrySafe::success('world')->flatMap($mapper(false))->isFailure());
     }
 
     public function testRecover(): void
