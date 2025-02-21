@@ -532,7 +532,7 @@ abstract class Either implements IHashable, IteratorAggregate
      *
      * @return bool
      */
-    abstract public function equals($other): bool;
+    abstract public function equals(self $other): bool;
 
     /**
      * Switches left and right. This can be useful when you need to operate with

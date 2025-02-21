@@ -498,9 +498,8 @@ abstract class Option implements IHashable, IteratorAggregate
      *
      * @return bool
      */
-    final public function equals($value): bool
+    final public function equals(self $value): bool
     {
-        return $value instanceof self
-            && $value->hashCode() === $this->hashCode();
+        return $value->hashCode() === $this->hashCode();
     }
 }
