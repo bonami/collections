@@ -903,7 +903,7 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      *
      * If strict comparison is used, the complexity is o(n + m).
      *
-     * If non strict comparison is used, the complexity is o(n * m).
+     * If non-strict comparison is used, the complexity is o(n * m).
      *
      * n = number of items in this list
      * m = number of items to remove.

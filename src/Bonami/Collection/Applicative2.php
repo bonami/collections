@@ -78,7 +78,7 @@ trait Applicative2
     }
 
     /**
-     * Upgrades callable with 1 arguments to accept and return `self` as arguments.
+     * Upgrades callable with 1 argument to accept and return `self` as arguments.
      *
      * @template I1
      * @template O
