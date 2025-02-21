@@ -1,5 +1,3 @@
-includes:
-    - vendor/bonami/phpstan-collections/extension.neon
 parameters:
     ignoreErrors:
     universalObjectCratesClasses:
