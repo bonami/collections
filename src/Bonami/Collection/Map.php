@@ -775,12 +775,8 @@ class Map implements Countable, IteratorAggregate
     public function getByKeys(iterable $keys)
     {
         $hashes = ArrayList::fromIterable($keys)
-            ->map(static function ($key) {
-                return hashKey($key);
-            })
-            ->filter(function ($keyHash) {
-                return array_key_exists($keyHash, $this->keys);
-            });
+            ->map(static fn($key) => hashKey($key))
+            ->filter(fn($keyHash) => array_key_exists($keyHash, $this->keys));
 
         $hashesArray = $hashes->toArray();
         $newKeys = array_combine($hashesArray, $hashes->map(function ($keyHash) {

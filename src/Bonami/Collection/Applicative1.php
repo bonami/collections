@@ -67,9 +67,8 @@ trait Applicative1
      */
     final public static function lift(callable $callable): callable
     {
-        return static function (self ...$arguments) use ($callable): self {
-            return self::sequence($arguments)->map(static fn($args) => $callable(...$args));
-        };
+        return static fn(self ...$arguments): self => self::sequence($arguments)
+            ->map(static fn($args) => $callable(...$args));
     }
 
     /**
