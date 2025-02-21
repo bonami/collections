@@ -138,25 +138,14 @@ class Map implements Countable, IteratorAggregate
             return $this->values[$keyHash];
         }
 
-        switch (true) {
-            case is_scalar($key):
-                $stringKey = $key;
-                break;
-            case $key instanceof Enum:
-                $stringKey = get_class($key) . '::' . $key->getValue();
-                break;
-            case $key instanceof IHashable:
-                $stringKey = get_class($key) . ' keyhash:' . $keyHash;
-                break;
-            case is_object($key) && (new ReflectionClass($key))->hasMethod('__toString'):
-                $stringKey = (string)$key;
-                break;
-            case is_object($key):
-                $stringKey = get_class($key);
-                break;
-            default:
-                $stringKey = 'unknown';
-        }
+        $stringKey = match (true) {
+            is_scalar($key) => $key,
+            $key instanceof Enum => get_class($key) . '::' . $key->getValue(),
+            $key instanceof IHashable => get_class($key) . ' keyhash:' . $keyHash,
+            is_object($key) && (new ReflectionClass($key))->hasMethod('__toString') => (string)$key,
+            is_object($key) => get_class($key),
+            default => 'unknown',
+        };
 
         throw new OutOfBoundsException(sprintf('Key (%s) does not exist', $stringKey));
     }

@@ -197,16 +197,12 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      */
     private static function convertIterableToArray(iterable $iterable): array
     {
-        switch (true) {
-            case is_array($iterable):
-                return $iterable;
-            case $iterable instanceof self:
-                return $iterable->items;
-            case $iterable instanceof Map:
-                return $iterable->values()->items;
-            default:
-                return iterator_to_array($iterable, false);
-        }
+        return match (true) {
+            is_array($iterable) => $iterable,
+            $iterable instanceof self => $iterable->items,
+            $iterable instanceof Map => $iterable->values()->items,
+            default => iterator_to_array($iterable, false),
+        };
     }
 
     /**
