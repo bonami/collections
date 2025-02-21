@@ -1190,13 +1190,10 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
     {
         switch (true) {
             case is_array($item):
-                $stringifiedArray = implode(
-                    ', ',
-                    array_map(function ($i, $k) {
-                        return sprintf('%s => %s', $k, $this->itemToString($i));
-                    }, $item, array_keys($item))
-                );
-                return '[' . $stringifiedArray . ']';
+                return '[' . ArrayList::fromIterable($item)
+                    ->map(fn($v, $k) => sprintf('%s => %s', $k, $this->itemToString($v)))
+                    ->join(', ')
+                . ']';
             case !is_object($item):
             case method_exists($item, '__toString'):
                 return (string) $item;
