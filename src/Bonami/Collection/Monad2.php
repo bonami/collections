@@ -48,7 +48,6 @@ trait Monad2
      */
     public static function product(self $a, self $b): self
     {
-        // @phpstan-ignore-next-line
         return $a->flatMap(static fn ($x) => $b->map(static fn ($y) => [$x, $y]));
     }
 
