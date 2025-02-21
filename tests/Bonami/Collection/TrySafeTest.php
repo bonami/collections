@@ -228,7 +228,7 @@ class TrySafeTest extends TestCase
             throw $exceptionThatRecoveryThrows;
         };
         $exceptionThatRecoveryWraps = new Exception();
-        /** @var callable(Throwable): TrySafe<int> $wrap */
+
         $wrap = static function (Throwable $failure) use ($exceptionThatRecoveryWraps): TrySafe {
             return TrySafe::failure($exceptionThatRecoveryWraps);
         };
@@ -273,7 +273,7 @@ class TrySafeTest extends TestCase
             throw $exceptionThatRecoveryThrows;
         };
         $exceptionThatRecoveryWraps = new Exception();
-        /** @var callable(Throwable): TrySafe<int> $wrap */
+
         $wrap = static function (Throwable $failure) use ($exceptionThatRecoveryWraps) {
             return TrySafe::failure($exceptionThatRecoveryWraps);
         };

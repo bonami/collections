@@ -90,11 +90,10 @@ class EitherTest extends TestCase
 
     public function testFlatMap(): void
     {
-        /** @phpstan-var callable(string): Either<string, string> */
         $politeGreeter = static function (string $s): Either {
             return Either::right(sprintf('Hello %s', $s));
         };
-        /** @phpstan-var callable(string): Either<string, string> */
+
         $failingGreeter = static function (string $s): Either {
             return Either::left('No manners');
         };
@@ -115,11 +114,10 @@ class EitherTest extends TestCase
 
     public function testFlatMapLeft(): void
     {
-        /** @phpstan-var callable(string): Either<string, string> */
         $politeGreeter = static function (string $s): Either {
             return Either::right(sprintf('Hello %s', $s));
         };
-        /** @phpstan-var callable(string): Either<string, string> */
+
         $failingGreeter = static function (string $s): Either {
             return Either::left('Fail');
         };
@@ -341,12 +339,10 @@ class EitherTest extends TestCase
 
         $numbersLowerThan10 = [1, 2, 3, 7, 9];
 
-        /** @phpstan-var callable(int): Either<string, int> */
         $wrapLowerThan10 = static function (int $int): Either {
             return $int < 10 ? Either::right($int) : Either::left('higher then ten');
         };
 
-        /** @phpstan-var callable(int): Either<string, int> */
         $wrapLowerThan9 = static function (int $int): Either {
             return $int < 9 ? Either::right($int) : Either::left('higher then nine');
         };
