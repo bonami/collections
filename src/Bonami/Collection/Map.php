@@ -138,12 +138,15 @@ class Map implements Countable, IteratorAggregate
             return $this->values[$keyHash];
         }
 
+        $objectToString = static fn (object $key): string => method_exists($key, '__toString')
+            ? $key->__toString()
+            : get_class($key);
+
         $stringKey = match (true) {
             is_scalar($key) => $key,
             $key instanceof Enum => get_class($key) . '::' . $key->getValue(),
             $key instanceof IHashable => get_class($key) . ' keyhash:' . $keyHash,
-            is_object($key) && (new ReflectionClass($key))->hasMethod('__toString') => (string)$key,
-            is_object($key) => get_class($key),
+            is_object($key) => $objectToString($key),
             default => 'unknown',
         };
 
