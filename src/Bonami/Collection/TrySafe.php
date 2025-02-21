@@ -267,13 +267,8 @@ abstract class TrySafe implements IHashable, IteratorAggregate
              */
             public function recoverWith(callable $callable): TrySafe
             {
-                /** @var callable(TrySafe<T>): TrySafe<T> $id */
-                $id = static function ($x) {
-                    return $x;
-                };
-                return self::fromCallable(function () use ($callable) {
-                    return $callable($this->failure);
-                })->flatMap($id);
+                return self::fromCallable(fn() => $callable($this->failure))
+                    ->flatMap(static fn($x) => $x);
             }
 
             /** @inheritDoc */
