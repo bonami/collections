@@ -103,7 +103,7 @@ function testFunctorComposition(callable $assertEquals, $functor, CurriedFunctio
 function testApplicativeIdentity(callable $assertEquals, callable $ap, callable $pure, $applicative): void
 {
     $assertEquals(
-        $ap($pure(CurriedFunction::of(identity())), $applicative),
+        $ap($pure(CurriedFunction::of(id(...))), $applicative),
         $applicative
     );
 }

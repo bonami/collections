@@ -6,11 +6,22 @@ namespace Bonami\Collection;
 
 use Bonami\Collection\Hash\IHashable;
 
+/**
+ * @template A
+ *
+ * @param A $x
+ *
+ * @return A
+ */
+function id($x)
+{
+    return $x;
+}
+
+/** @deprecated use id with function reference instead */
 function identity(): callable
 {
-    return static function ($argument) {
-        return $argument;
-    };
+    return id(...);
 }
 
 function comparator(): callable

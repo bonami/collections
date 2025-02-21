@@ -189,7 +189,6 @@ class ArrayListTest extends TestCase
 
     public function testTraverse(): void
     {
-        /** @phpstan-var callable(int): ArrayList<int> $fillAForOdd */
         $fillAForOdd = static function (int $i): ArrayList {
             return $i % 2 === 0 ? ArrayList::of($i) : ArrayList::fromEmpty();
         };
@@ -411,9 +410,9 @@ class ArrayListTest extends TestCase
 
     public function testAllMatchCondition(): void
     {
-        self::assertTrue(ArrayList::of(true, true)->all(identity()));
-        self::assertFalse(ArrayList::of(true, false)->all(identity()));
-        self::assertTrue(ArrayList::fromEmpty()->all(identity()));
+        self::assertTrue(ArrayList::of(true, true)->all(id(...)));
+        self::assertFalse(ArrayList::of(true, false)->all(id(...)));
+        self::assertTrue(ArrayList::fromEmpty()->all(id(...)));
     }
 
     public function testSort(): void

@@ -81,13 +81,13 @@ $coloredObjects = ArrayList::lift2($concat)($colors, $objects);
 ```php
 use Bonami\Collection\ArrayList;
 use Bonami\Collection\Map;
-use function Bonami\Collection\identity;
+use function Bonami\Collection\id;
 use function Bonami\Collection\descendingComparator;
 
 function frequencyAnalysis(string $text): Map {
 	$chars = preg_split('//u', $text, -1, PREG_SPLIT_NO_EMPTY);
 	return ArrayList::fromIterable($chars)
-		->groupBy(identity())
+		->groupBy(id(...))
 		->mapValues(fn (ArrayList $group): int => $group->count());
 }
 
