@@ -78,11 +78,6 @@ abstract class Option implements IHashable, IteratorAggregate
                 return $this;
             }
 
-            public function exists(callable $predicate): bool
-            {
-                return false;
-            }
-
             /**
              * Consider calling getOrElse instead
              *
@@ -218,11 +213,6 @@ abstract class Option implements IHashable, IteratorAggregate
                 return $predicate($this->value) ? $this : self::none();
             }
 
-            public function exists(callable $predicate): bool
-            {
-                return $predicate($this->value);
-            }
-
             /**
              * Consider calling getOrElse instead
              *
@@ -348,13 +338,6 @@ abstract class Option implements IHashable, IteratorAggregate
      * @return self<T>
      */
     abstract public function filter(callable $predicate): self;
-
-    /**
-     * @param callable(T, int=): bool $predicate
-     *
-     * @return bool
-     */
-    abstract public function exists(callable $predicate): bool;
 
     /**
      * @template B
