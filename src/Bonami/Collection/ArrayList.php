@@ -204,10 +204,8 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
                 return $iterable->items;
             case $iterable instanceof Map:
                 return $iterable->values()->items;
-            case $iterable instanceof Traversable:
-                return iterator_to_array($iterable, false);
             default:
-                throw new NotImplementedException('Unimplemented iterable argument');
+                return iterator_to_array($iterable, false);
         }
     }
 
