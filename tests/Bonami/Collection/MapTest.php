@@ -11,6 +11,8 @@ use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 
+use function PHPUnit\Framework\assertEquals;
+
 class MapTest extends TestCase
 {
     public function testFromIterable(): void
@@ -419,9 +421,9 @@ class MapTest extends TestCase
         self::assertEquals([[1, 4], [3, 6], [12, 12], [4, 6], [5, 7]], $merged->getItems());
         try {
             $merged->getUnsafe(7);
-            self::assertTrue(false);
+            self::fail();
         } catch (InvalidArgumentException $e) {
-            self::assertTrue(true);
+            assertEquals('Key (7) does not exist', $e->getMessage());
         }
     }
 
@@ -538,6 +540,7 @@ class MapTest extends TestCase
         $e = new stdClass();
         $map = new Map([
             [1, 'a'],
+            [2, 'b'],
             [3, 'c'],
             [4, 'd'],
             [5, $e],
@@ -548,6 +551,9 @@ class MapTest extends TestCase
             [7, false],
             [8, null],
         ]);
+
+        $map = $map->withoutKey(2);
+
         self::assertTrue($map->contains('a'));
         self::assertFalse($map->contains('b'));
         self::assertTrue($map->contains('c'));
@@ -566,8 +572,10 @@ class MapTest extends TestCase
         $five = new stdClass();
         $map = new Map([
             [1, 'a'],
+            [2, 'b'],
             [3, 'c'],
             [4, 'd'],
+            [5, ''],
             [$five, 'e'],
             [0, 'f'],
             [false, 'g'],
@@ -576,6 +584,9 @@ class MapTest extends TestCase
             [7, false],
             [8, null],
         ]);
+
+        $map = $map->withoutKeys([2, 5]);
+
         self::assertTrue($map->has(1));
         self::assertFalse($map->has(2));
         self::assertTrue($map->has(3));
