@@ -74,12 +74,7 @@ function compose(callable $f, callable $g): callable
     };
 }
 
-/**
- * @param mixed $key
- *
- * @return int|string
- */
-function hashKey($key)
+function hashKey(mixed $key): int|string
 {
     if ($key === (object)$key) {
         return $key instanceof IHashable ? $key->hashCode() : spl_object_hash($key);
@@ -88,6 +83,9 @@ function hashKey($key)
          return serialize(array_map(static function ($value) {
              return hashKey($value);
          }, $key));
+    }
+    if (is_null($key)) {
+         return "";
     }
     if (is_bool($key)) {
          return (int)$key;

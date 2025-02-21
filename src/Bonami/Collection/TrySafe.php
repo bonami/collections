@@ -189,8 +189,7 @@ abstract class TrySafe implements IHashable, IteratorAggregate
                 return new ArrayIterator([$this->value]);
             }
 
-            /** @return int|string */
-            public function hashCode()
+            public function hashCode(): string
             {
                 $valueHash = $this->value instanceof IHashable
                     ? $this->value->hashCode()
@@ -337,8 +336,7 @@ abstract class TrySafe implements IHashable, IteratorAggregate
                 return new EmptyIterator();
             }
 
-            /** @return int|string */
-            public function hashCode()
+            public function hashCode(): string
             {
                 $failureHash = $this->failure instanceof IHashable
                     ? $this->failure->hashCode()

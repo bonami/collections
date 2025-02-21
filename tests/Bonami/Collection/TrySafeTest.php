@@ -468,7 +468,7 @@ class TrySafeTest extends TestCase
     private function createHashableException(): Throwable
     {
         return new class extends Exception implements IHashable {
-            public function hashCode()
+            public function hashCode(): string
             {
                 return self::class;
             }

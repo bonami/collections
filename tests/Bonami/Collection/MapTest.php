@@ -202,7 +202,7 @@ class MapTest extends TestCase
     {
 
         $hashable = new class implements IHashable {
-            public function hashCode()
+            public function hashCode(): string
             {
                 return 'hash';
             }

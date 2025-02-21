@@ -143,7 +143,7 @@ abstract class Enum implements IHashable, JsonSerializable
         return $this->value;
     }
 
-    public function hashCode()
+    public function hashCode(): int|string
     {
         return $this->getValue();
     }
