@@ -1202,7 +1202,7 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
             case method_exists($item, '__toString'):
                 return (string) $item;
             default:
-                return sprintf('(%s) %s', get_class($item), spl_object_hash($item));
+                return sprintf('(%s) %s', $item::class, spl_object_hash($item));
         }
     }
 

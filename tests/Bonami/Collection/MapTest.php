@@ -211,7 +211,7 @@ class MapTest extends TestCase
         };
 
         yield 'string key' => ['missing', 'Key (missing) does not exist'];
-        yield 'hashable key' => [$hashable, 'Key (' . get_class($hashable) . ' keyhash:hash) does not exist'];
+        yield 'hashable key' => [$hashable, 'Key (' . $hashable::class . ' keyhash:hash) does not exist'];
         yield 'stringable key' => [ArrayList::of(42), 'Key ([42]) does not exist'];
         yield 'generic object key' => [new stdClass(), 'Key (stdClass) does not exist'];
     }
