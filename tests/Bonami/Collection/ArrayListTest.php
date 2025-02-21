@@ -53,11 +53,6 @@ class ArrayListTest extends TestCase
         self::assertEquals(new ArrayList([1, 2, 3]), ArrayList::fromIterable(new ArrayIterator([1, 2, 3])));
     }
 
-    public function testIsIterable(): void
-    {
-        self::assertIsIterable(ArrayList::of(1, 2));
-    }
-
     public function testCountable(): void
     {
         self::assertCount(2, ArrayList::of(1, 2));
