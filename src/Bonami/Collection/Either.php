@@ -84,8 +84,6 @@ abstract class Either implements IHashable, IteratorAggregate
             /**
              * Consider calling getOrElse instead
              *
-             * @throws ValueIsNotPresentException
-             *
              * @return L
              */
             public function getLeftUnsafe()
@@ -231,8 +229,6 @@ abstract class Either implements IHashable, IteratorAggregate
 
             /**
              * Consider calling getOrElse instead
-             *
-             * @throws ValueIsNotPresentException
              *
              * @return V
              */

@@ -194,8 +194,6 @@ abstract class Option implements IHashable, IteratorAggregate
             /**
              * Consider calling getOrElse instead
              *
-             * @throws ValueIsNotPresentException
-             *
              * @return V
              */
             public function getUnsafe()
