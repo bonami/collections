@@ -11,8 +11,9 @@ use ReflectionFunction;
 /**
  * Represents single argument function
  *
- * @template I
- * @template O
+ * @template-contravariant I
+ *
+ * @template-covariant O
  */
 final class CurriedFunction
 {

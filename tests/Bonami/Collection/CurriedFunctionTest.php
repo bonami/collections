@@ -16,7 +16,6 @@ class CurriedFunctionTest extends TestCase
 
         $plus5 = $curried(5);
 
-        self::assertIsCallable($plus5);
         self::assertEquals(42, $plus5(37));
     }
 
@@ -26,20 +25,13 @@ class CurriedFunctionTest extends TestCase
             return str_repeat(sprintf('%s %s,', $greeting, $name), $times);
         });
 
-        self::assertIsCallable($curried);
-        self::assertIsCallable($curried('Hello'));
-        self::assertIsCallable($curried('Hello')('World'));
         self::assertEquals('Hello World,Hello World,', $curried('Hello')('World')(2));
     }
 
     public function testMap(): void
     {
-        $greeter = CurriedFunction::of(static function (string $name) {
-            return sprintf('Hello %s', $name);
-        });
-        $countChars = CurriedFunction::of(static function (string $string): int {
-            return strlen($string);
-        });
+        $greeter = CurriedFunction::of(static fn(string $name): string => sprintf('Hello %s', $name));
+        $countChars = CurriedFunction::of(strlen(...));
 
         self::assertEquals(11, CurriedFunction::of($greeter)->map($countChars)('World'));
     }
