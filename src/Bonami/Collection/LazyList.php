@@ -389,12 +389,14 @@ class LazyList implements IteratorAggregate
     /** @return Option<T> */
     public function last(): Option
     {
-         // No first item implies there is also no last item, thus we have to return none
-         return $this->head()->isDefined()
-         ? Option::some($this->reduce(static function ($_, $item) {
-             return $item;
-         }, null))
-         : Option::none();
+        $isEmpty = true;
+        $last = null;
+        foreach ($this->items as $item) {
+            $isEmpty = false;
+            $last = $item;
+        }
+
+        return $isEmpty ? Option::none() : Option::some($last);
     }
 
     /**
