@@ -46,7 +46,6 @@ abstract class Enum implements IHashable, JsonSerializable
         if (!isset(self::$instanceIndex[$class])) {
             $instances = self::instanceList();
             $combined = array_combine($instances->getValues(), $instances->toArray());
-            assert(is_array($combined));
             self::$instanceIndex[$class] = $combined;
         }
         if (!isset(self::$instanceIndex[$class][$value])) {
