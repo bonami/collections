@@ -458,13 +458,8 @@ class OptionTest extends TestCase
         $optionEquals = static function (Option $a, Option $b): bool {
             return $a->equals($b);
         };
-        $ap = static function (Option $a, Option $b): Option {
-            // @phpstan-ignore-next-line
-            return Option::ap($a, $b);
-        };
-        $pure = static function ($value): Option {
-            return Option::of($value);
-        };
+        $ap = Option::ap(...);
+        $pure = Option::pure(...);
 
         $someOne = Option::some(1);
         $someTwo = Option::some(2);

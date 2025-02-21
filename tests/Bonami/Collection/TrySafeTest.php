@@ -372,14 +372,8 @@ class TrySafeTest extends TestCase
         $tryEquals = static function (TrySafe $a, TrySafe $b): bool {
             return $a->equals($b);
         };
-
-        $ap = static function (TrySafe $a, TrySafe $b): TrySafe {
-            // @phpstan-ignore-next-line
-            return TrySafe::ap($a, $b);
-        };
-        $pure = static function ($value): TrySafe {
-            return TrySafe::of($value);
-        };
+        $ap = TrySafe::ap(...);
+        $pure = TrySafe::pure(...);
 
         $successOne = TrySafe::success(1);
         $successTwo = TrySafe::success(2);

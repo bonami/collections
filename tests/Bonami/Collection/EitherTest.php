@@ -426,13 +426,8 @@ class EitherTest extends TestCase
         $eitherEquals = static function (Either $a, Either $b): bool {
             return $a->equals($b);
         };
-        $ap = static function (Either $a, Either $b): Either {
-            // @phpstan-ignore-next-line
-            return Either::ap($a, $b);
-        };
-        $pure = static function ($value): Either {
-            return Either::of($value);
-        };
+        $ap = Either::ap(...);
+        $pure = Either::pure(...);
 
         $rightOne = Either::right(1);
         $rightTwo = Either::right(2);
