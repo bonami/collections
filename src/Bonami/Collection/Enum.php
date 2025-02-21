@@ -58,6 +58,7 @@ abstract class Enum implements IHashable, JsonSerializable
     /** @return EnumList<static> */
     public static function instanceList(): EnumList
     {
+        // @phpstan-ignore-next-line
         return EnumList::fromIterable(self::instanceMap()->values());
     }
 
@@ -94,6 +95,7 @@ abstract class Enum implements IHashable, JsonSerializable
      */
     public static function getListComplement(self ...$enums)
     {
+        // @phpstan-ignore-next-line
         return self::instanceList()->minus($enums);
     }
 
