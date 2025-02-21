@@ -974,8 +974,13 @@ trait Applicative2
      */
     final public static function sequence(iterable $iterable): self
     {
-        // @phpstan-ignore-next-line
-        return self::traverse($iterable, identity());
+        return LazyList::fromIterable($iterable)
+            ->reduce(
+                static fn(self $list, $x): self => self::product($list, $x)->map(
+                    static fn (array $pair) => $pair[0]->add($pair[1])
+                ),
+                self::pure(ArrayList::fromEmpty())
+            );
     }
 
     /**
@@ -994,7 +999,6 @@ trait Applicative2
      */
     final public static function traverse(iterable $iterable, callable $mapperToApplicative): self
     {
-        // @phpstan-ignore-next-line
         return LazyList::fromIterable($iterable)
             ->reduce(
                 static fn(self $list, $x): self => self::product($list, $mapperToApplicative($x))->map(
