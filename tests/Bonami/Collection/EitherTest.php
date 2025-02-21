@@ -114,25 +114,17 @@ class EitherTest extends TestCase
 
     public function testFlatMapLeft(): void
     {
-        $politeGreeter = static function (string $s): Either {
-            return Either::right(sprintf('Hello %s', $s));
-        };
-
-        $failingGreeter = static function (string $s): Either {
-            return Either::left('Fail');
-        };
-
         $this->equals(
             Either::right('world'),
-            Either::right('world')->flatMapLeft($politeGreeter)
+            Either::right('world')->flatMapLeft(static fn ($s) => Either::right("will not be called"))
         );
         $this->equals(
             Either::left('Fail'),
-            Either::left('error')->flatMapLeft($failingGreeter)
+            Either::left('error')->flatMapLeft(static fn ($s): Either => Either::left('Fail'))
         );
         $this->equals(
             Either::right('Hello error'),
-            Either::left('error')->flatMapLeft($politeGreeter)
+            Either::left('error')->flatMapLeft(static fn ($s): Either => Either::right(sprintf('Hello %s', $s)))
         );
     }
 
