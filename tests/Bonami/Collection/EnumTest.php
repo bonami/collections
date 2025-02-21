@@ -56,9 +56,10 @@ class EnumTest extends TestCase
 
     public function testJsonSerializable(): void
     {
-        $serialized = json_encode(['foo' => TestEnum::create(TestEnum::A)], JSON_THROW_ON_ERROR);
-        assert(is_string($serialized));
-        self::assertJson('{"foo": "A"}', $serialized);
+        self::assertJson(
+            '{"foo": "A"}',
+            json_encode(['foo' => TestEnum::create(TestEnum::A)], JSON_THROW_ON_ERROR)
+        );
     }
 }
 
