@@ -311,8 +311,6 @@ class Map implements Countable, IteratorAggregate
 
         $keys = array_combine($keyHashes, $keysValues);
         $values = array_combine($keyHashes, $this->values);
-        assert(is_array($keys));
-        assert(is_array($values));
 
         $map->keys = $keys;
         $map->values = $values;
@@ -356,7 +354,7 @@ class Map implements Countable, IteratorAggregate
             array_keys($this->keys),
             array_map($mapper, $this->values, $this->keys)
         );
-        assert(is_array($values));
+
         $map->values = $values;
 
         return $map;
@@ -377,16 +375,10 @@ class Map implements Countable, IteratorAggregate
      */
     public function toAssociativeArray(): array
     {
-        /** @var array<string, V> */
-        $assoc = array_combine(
-            array_map(static function ($key) {
-                return (string)$key;
-            }, $this->keys),
+        return array_combine(
+            array_map(static fn($key) => (string)$key, $this->keys),
             $this->values
         );
-        assert(is_array($assoc));
-
-        return $assoc;
     }
 
     /**
@@ -410,9 +402,6 @@ class Map implements Countable, IteratorAggregate
         $map = static::fromEmpty();
         $keys = array_replace($this->keys, $mergeMap->keys);
         $values = array_replace($this->values, $mergeMap->values);
-
-        assert($keys !== null);
-        assert($values !== null);
 
         $map->keys = $keys;
         $map->values = $values;
@@ -718,8 +707,6 @@ class Map implements Countable, IteratorAggregate
         $newValues = array_combine($hashesArray, $hashes->map(function ($keyHash) {
             return $this->values[$keyHash];
         })->toArray());
-        assert(is_array($newKeys));
-        assert(is_array($newValues));
 
         $map = static::fromEmpty();
         $map->keys = $newKeys;
@@ -802,8 +789,6 @@ class Map implements Countable, IteratorAggregate
         $newValues = array_combine($hashesArray, $hashes->map(function ($keyHash) {
             return $this->values[$keyHash];
         })->toArray());
-        assert(is_array($newKeys));
-        assert(is_array($newValues));
 
         $map = static::fromEmpty();
         $map->keys = $newKeys;
