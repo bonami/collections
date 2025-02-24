@@ -842,7 +842,11 @@ class Map implements Countable, IteratorAggregate
      */
     public function reduce(callable $reducer, $initialReduction)
     {
-        return array_reduce(array_keys($this->keys), fn ($reduction, $keyHash) => $reducer($reduction, $this->values[$keyHash], $this->keys[$keyHash]), $initialReduction);
+        return array_reduce(
+            array_keys($this->keys),
+            fn ($reduction, $keyHash) => $reducer($reduction, $this->values[$keyHash], $this->keys[$keyHash]),
+            $initialReduction,
+        );
     }
 
     /**

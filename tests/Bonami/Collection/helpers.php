@@ -163,7 +163,9 @@ function testApplicativeComposition(
     $applicativeF,
     $applicativeG,
 ): void {
-    $curriedComposition = CurriedFunction::curry2(static fn (CurriedFunction $f, CurriedFunction $g): callable => $g->map($f));
+    $curriedComposition = CurriedFunction::curry2(
+        static fn (CurriedFunction $f, CurriedFunction $g): callable => $g->map($f),
+    );
 
     $assertEquals(
         $ap($ap($ap($pure($curriedComposition), $applicativeF), $applicativeG), $applicative),

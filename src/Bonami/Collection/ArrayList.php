@@ -680,7 +680,11 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      */
     public function reduce(callable $reducer, $initialReduction)
     {
-        return array_reduce(array_keys($this->items), fn ($carry, $key) => $reducer($carry, $this->items[$key], $key), $initialReduction);
+        return array_reduce(
+            array_keys($this->items),
+            fn ($carry, $key) => $reducer($carry, $this->items[$key], $key),
+            $initialReduction,
+        );
     }
 
     /**
@@ -696,7 +700,11 @@ class ArrayList implements Countable, IteratorAggregate, JsonSerializable
      */
     public function mfold(Monoid $monoid)
     {
-        return array_reduce($this->items, static fn ($carry, $next) => $monoid->concat($carry, $next), $monoid->getEmpty());
+        return array_reduce(
+            $this->items,
+            static fn ($carry, $next) => $monoid->concat($carry, $next),
+            $monoid->getEmpty(),
+        );
     }
 
     /**

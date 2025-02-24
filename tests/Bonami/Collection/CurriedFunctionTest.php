@@ -19,7 +19,8 @@ class CurriedFunctionTest extends TestCase
 
     public function testCurryN(): void
     {
-        $curried = CurriedFunction::curry3(static fn (string $greeting, string $name, int $times): string => str_repeat(sprintf('%s %s,', $greeting, $name), $times));
+        $curried = CurriedFunction::curry3(static fn (string $greeting, string $name, int $times): string =>
+            str_repeat(sprintf('%s %s,', $greeting, $name), $times));
 
         self::assertEquals('Hello World,Hello World,', $curried('Hello')('World')(2));
     }

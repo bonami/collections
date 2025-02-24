@@ -83,7 +83,9 @@ class MapTest extends TestCase
             [1, 'a'],
             [2, 'b'],
         ]);
-        $mapped = $map->flatMap(static fn (string $value, int $key) => ArrayList::fill(sprintf('%s:%s', $value, $key), $key));
+        $mapped = $map->flatMap(
+            static fn (string $value, int $key) => ArrayList::fill(sprintf('%s:%s', $value, $key), $key),
+        );
         self::assertEquals(ArrayList::fromIterable(['a:1', 'b:2', 'b:2']), $mapped);
     }
 
@@ -158,7 +160,9 @@ class MapTest extends TestCase
         self::assertSame(Option::none(), Map::fromEmpty()->find(tautology()));
         self::assertEquals(
             'b',
-            Map::fromIterable([[1, 'a'], [2, 'b']])->find(static fn ($value, $key): bool => $key === 2 && $value !== 'a')->getUnsafe(),
+            Map::fromIterable([[1, 'a'], [2, 'b']])
+                ->find(static fn ($value, $key): bool => $key === 2 && $value !== 'a')
+                ->getUnsafe(),
         );
     }
 
@@ -167,7 +171,9 @@ class MapTest extends TestCase
         self::assertSame(Option::none(), Map::fromEmpty()->findKey(tautology()));
         self::assertEquals(
             2,
-            Map::fromIterable([[1, 'a'], [2, 'b']])->findKey(static fn ($key, $value): bool => $key === 2 && $value !== 'a')->getUnsafe(),
+            Map::fromIterable([[1, 'a'], [2, 'b']])
+                ->findKey(static fn ($key, $value): bool => $key === 2 && $value !== 'a')
+                ->getUnsafe(),
         );
     }
 
@@ -328,7 +334,10 @@ class MapTest extends TestCase
 
         self::assertEquals(87, $map->reduce(static fn (int $total, int $value) => $total + $value, 0));
 
-        self::assertEquals(115, $map->reduce(static fn (int $total, int $value, int $key) => $total + $value + $key, 0));
+        self::assertEquals(115, $map->reduce(
+            static fn (int $total, int $value, int $key) => $total + $value + $key,
+            0,
+        ));
 
         self::assertEquals(28, $map->reduce(static fn (int $total, int $value, int $key) => $total + $key, 0));
     }
