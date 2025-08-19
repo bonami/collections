@@ -373,19 +373,24 @@ class LinkedList implements Countable, IteratorAggregate, JsonSerializable
      */
     public function filter(callable $predicate): self
     {
-        $result = [];
+        /** @var Node<T>|null $newHead */
+        $newHead = null;
+        $newSize = 0;
         $current = $this->head;
         $index = 0;
         
         while ($current !== null) {
             if ($predicate($current->getValue(), $index)) {
-                $result[] = $current->getValue();
+                $newHead = new Node($current->getValue(), $newHead);
+                $newSize++;
             }
             $current = $current->getNext();
             $index++;
         }
         
-        return self::of(...$result);
+        /** @var static<T> $result */
+        $result = (new static($newHead, $newSize))->reverse();
+        return $result;
     }
 
     /**
