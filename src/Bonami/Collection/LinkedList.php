@@ -793,17 +793,20 @@ class LinkedList implements Countable, IteratorAggregate, JsonSerializable
             return $this;
         }
         
-        $result = [];
         $current = $this->head;
         $count = 0;
+        /** @var Node<T>|null $newHead */
+        $newHead = null;
         
         while ($current !== null && $count < $size) {
-            $result[] = $current->getValue();
+            $newHead = new Node($current->getValue(), $newHead);
             $current = $current->getNext();
             $count++;
         }
         
-        return self::of(...$result);
+        /** @var static<T> $result */
+        $result = new static($newHead, $count);
+        return $result->reverse();
     }
 
     /**
