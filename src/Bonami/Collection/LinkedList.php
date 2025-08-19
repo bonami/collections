@@ -912,15 +912,15 @@ class LinkedList implements Countable, IteratorAggregate, JsonSerializable
      */
     public function reverse(): self
     {
-        $result = [];
         $current = $this->head;
+        $newHead = null;
         
         while ($current !== null) {
-            $result[] = $current->getValue();
+            $newHead = new Node($current->getValue(), $newHead);
             $current = $current->getNext();
         }
         
-        return self::of(...array_reverse($result));
+        return new static($newHead, $this->size);
     }
 
     /**
