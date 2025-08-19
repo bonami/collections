@@ -13,6 +13,7 @@ use Countable;
 use Iterator;
 use IteratorAggregate;
 use JsonSerializable;
+use RuntimeException;
 use Traversable;
 
 use function array_values;
@@ -319,27 +320,32 @@ class LinkedList implements Countable, IteratorAggregate, JsonSerializable
     /**
      * Flattens LinkedList of iterables into LinkedList
      *
-     * Complexity: O(m) - where m is a number of resulting items
+     * Complexity: O(m) - where m is a number of resulting items (sum of nested array sizes)
      *
      * @return static<mixed>
      */
     public function flatten(): self
     {
-        $result = [];
+        // Build the LinkedList in reverse order (for efficient prepend)
+        $newHead = null;
+        $newSize = 0;
         $current = $this->head;
         
         while ($current !== null) {
-            if (is_iterable($current->getValue())) {
-                foreach ($current->getValue() as $item) {
-                    $result[] = $item;
-                }
-            } else {
-                $result[] = $current->getValue();
+            $nested = $current->getValue();
+            if (!is_iterable($nested)) {
+                throw new RuntimeException('Some item cannot be flattened because it is not iterable');
+            }
+
+            foreach ($nested as $item) {
+                $newHead = new Node($item, $newHead);
+                $newSize++;
             }
             $current = $current->getNext();
         }
         
-        return self::of(...$result);
+        // Reverse to get correct order
+        return (new static($newHead, $newSize))->reverse();
     }
 
     /**
