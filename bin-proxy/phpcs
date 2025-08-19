@@ -1,0 +1,18 @@
+#!/bin/bash
+
+# PHP Container Proxy Script
+# This script serves as a proxy to run PHP commands through the PHP 8.3 container.
+# From outside it should look like normal php executable.
+
+# Get the directory of the script
+DIR=$(dirname "$0")
+
+# Get the root directory of the project
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+CURSOR_HOME_DIR=$(realpath "${HOME}/.cursor")
+
+# Build the docker command
+DOCKER_CMD="docker run -i --rm -v ${ROOT}:/app -v ${CURSOR_HOME_DIR}:/${CURSOR_HOME_DIR} -w /app php:8.3-cli-alpine php bin/phpcs"
+
+# Execute the command with all arguments passed through
+exec $DOCKER_CMD "$@"
