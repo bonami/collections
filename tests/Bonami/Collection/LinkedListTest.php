@@ -495,4 +495,15 @@ class LinkedListTest extends TestCase
         $mapped = $list->map(static fn ($obj) => $obj->value);
         self::assertEquals(LinkedList::of('test1', 'test2'), $mapped);
     }
+
+    public function testContainsStrictVsNonStrict(): void
+    {
+        $list = LinkedList::of(1, '2', 3);
+        // non-strict: string '3' matches int 3, and int 2 matches string '2'
+        self::assertTrue($list->contains('3', false));
+        self::assertTrue($list->contains(2, false));
+        // strict: types must match
+        self::assertFalse($list->contains('3', true));
+        self::assertFalse($list->contains(2, true));
+    }
 }

@@ -483,13 +483,22 @@ class LinkedList implements Countable, IteratorAggregate, JsonSerializable
     public function contains($item, ?bool $strictComparison = true): bool
     {
         $current = $this->head;
+        $useStrict = $strictComparison ?? true;
+        
+        if ($useStrict) {
+            while ($current !== null) {
+                if ($current->getValue() === $item) {
+                    return true;
+                }
+                $current = $current->getNext();
+            }
+            return false;
+        }
         
         while ($current !== null) {
-            if ($strictComparison && $current->getValue() === $item) {
-                return true;
-            }
-            
-            if (!$strictComparison && $current->getValue() === $item) {
+            // non-strict comparison
+            // phpcs:ignore SlevomatCodingStandard.Operators.DisallowEqualOperators
+            if ($current->getValue() == $item) {
                 return true;
             }
             $current = $current->getNext();
