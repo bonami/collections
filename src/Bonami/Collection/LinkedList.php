@@ -825,7 +825,6 @@ class LinkedList implements Countable, IteratorAggregate, JsonSerializable
             return self::fromEmpty();
         }
         
-        $result = [];
         $current = $this->head;
         $index = 0;
         
@@ -835,15 +834,20 @@ class LinkedList implements Countable, IteratorAggregate, JsonSerializable
             $index++;
         }
         
-        // Collect items up to limit
-        $count = 0;
-        while ($current !== null && ($limit === null || $count < $limit)) {
-            $result[] = $current->getValue();
+        // Collect items up to limit (or to the end when limit is null)
+        /** @var Node<T>|null $newHead */
+        $newHead = null;
+        $newSize = 0;
+        
+        while ($current !== null && ($limit === null || $newSize < $limit)) {
+            $newHead = new Node($current->getValue(), $newHead);
+            $newSize++;
             $current = $current->getNext();
-            $count++;
         }
         
-        return self::of(...$result);
+        /** @var static<T> $result */
+        $result = (new static($newHead, $newSize))->reverse();
+        return $result;
     }
 
     /**
