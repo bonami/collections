@@ -301,20 +301,27 @@ class LinkedList implements Countable, IteratorAggregate, JsonSerializable
      */
     public function flatMap(callable $mapper): self
     {
-        $result = [];
+        /** @var Node<B>|null $newHead */
+        $newHead = null;
+        $newSize = 0;
         $current = $this->head;
         $index = 0;
-        
+
         while ($current !== null) {
+            /** @var iterable<B> $mapped */
             $mapped = $mapper($current->getValue(), $index);
             foreach ($mapped as $item) {
-                $result[] = $item;
+                /** @var B $item */
+                $newHead = new Node($item, $newHead);
+                $newSize++;
             }
             $current = $current->getNext();
             $index++;
         }
-        
-        return self::of(...$result);
+
+        /** @var static<B> $result */
+        $result = (new static($newHead, $newSize))->reverse();
+        return $result;
     }
 
     /**
