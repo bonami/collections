@@ -36,7 +36,7 @@ final class LinkedListIterator implements Iterator
             throw new \RuntimeException('Iterator is not valid');
         }
         
-        return $this->current->value;
+        return $this->current->getValue();
     }
 
     public function key(): int
@@ -47,7 +47,7 @@ final class LinkedListIterator implements Iterator
     public function next(): void
     {
         if ($this->current !== null) {
-            $this->current = $this->current->next;
+            $this->current = $this->current->getNext();
             $this->index++;
         }
     }

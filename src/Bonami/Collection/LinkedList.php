@@ -121,6 +121,10 @@ class LinkedList implements Countable, IteratorAggregate, JsonSerializable
      */
     public static function fromIterable(iterable $iterable)
     {
+        if ($iterable instanceof self) {
+            return $iterable;
+        }
+
         $items = self::convertIterableToArray($iterable);
         return self::of(...$items);
     }
@@ -210,11 +214,11 @@ class LinkedList implements Countable, IteratorAggregate, JsonSerializable
 
         $current = $this->head;
         for ($i = 0; $i < $key && $current !== null; $i++) {
-            $current = $current->next;
+            $current = $current->getNext();
         }
 
         if ($current !== null) {
-            return Option::some($current->value);
+            return Option::some($current->getValue());
         }
         
         return Option::none();
@@ -275,8 +279,8 @@ class LinkedList implements Countable, IteratorAggregate, JsonSerializable
         $index = 0;
         
         while ($current !== null) {
-            $result[] = $mapper($current->value, $index);
-            $current = $current->next;
+            $result[] = $mapper($current->getValue(), $index);
+            $current = $current->getNext();
             $index++;
         }
         
@@ -301,11 +305,11 @@ class LinkedList implements Countable, IteratorAggregate, JsonSerializable
         $index = 0;
         
         while ($current !== null) {
-            $mapped = $mapper($current->value, $index);
+            $mapped = $mapper($current->getValue(), $index);
             foreach ($mapped as $item) {
                 $result[] = $item;
             }
-            $current = $current->next;
+            $current = $current->getNext();
             $index++;
         }
         
@@ -325,14 +329,14 @@ class LinkedList implements Countable, IteratorAggregate, JsonSerializable
         $current = $this->head;
         
         while ($current !== null) {
-            if (is_iterable($current->value)) {
-                foreach ($current->value as $item) {
+            if (is_iterable($current->getValue())) {
+                foreach ($current->getValue() as $item) {
                     $result[] = $item;
                 }
             } else {
-                $result[] = $current->value;
+                $result[] = $current->getValue();
             }
-            $current = $current->next;
+            $current = $current->getNext();
         }
         
         return self::of(...$result);
@@ -354,10 +358,10 @@ class LinkedList implements Countable, IteratorAggregate, JsonSerializable
         $index = 0;
         
         while ($current !== null) {
-            if ($predicate($current->value, $index)) {
-                $result[] = $current->value;
+            if ($predicate($current->getValue(), $index)) {
+                $result[] = $current->getValue();
             }
-            $current = $current->next;
+            $current = $current->getNext();
             $index++;
         }
         
@@ -379,10 +383,10 @@ class LinkedList implements Countable, IteratorAggregate, JsonSerializable
         $index = 0;
         
         while ($current !== null) {
-            if ($predicate($current->value, $index)) {
-                return Option::some($current->value);
+            if ($predicate($current->getValue(), $index)) {
+                return Option::some($current->getValue());
             }
-            $current = $current->next;
+            $current = $current->getNext();
             $index++;
         }
         
@@ -404,12 +408,12 @@ class LinkedList implements Countable, IteratorAggregate, JsonSerializable
         $index = 0;
         
         while ($current !== null) {
-            if ($predicate($current->value, $index)) {
+            if ($predicate($current->getValue(), $index)) {
                 /** @var Option<int> $result */
                 $result = Option::some($index);
                 return $result;
             }
-            $current = $current->next;
+            $current = $current->getNext();
             $index++;
         }
         
@@ -431,10 +435,10 @@ class LinkedList implements Countable, IteratorAggregate, JsonSerializable
         $index = 0;
         
         while ($current !== null) {
-            if ($predicate($current->value, $index)) {
+            if ($predicate($current->getValue(), $index)) {
                 return true;
             }
-            $current = $current->next;
+            $current = $current->getNext();
             $index++;
         }
         
@@ -456,14 +460,14 @@ class LinkedList implements Countable, IteratorAggregate, JsonSerializable
         $current = $this->head;
         
         while ($current !== null) {
-            if ($strictComparison && $current->value === $item) {
+            if ($strictComparison && $current->getValue() === $item) {
                 return true;
             }
             
-            if (!$strictComparison && $current->value === $item) {
+            if (!$strictComparison && $current->getValue() === $item) {
                 return true;
             }
-            $current = $current->next;
+            $current = $current->getNext();
         }
         
         return false;
@@ -484,10 +488,10 @@ class LinkedList implements Countable, IteratorAggregate, JsonSerializable
         $index = 0;
         
         while ($current !== null) {
-            if (!$predicate($current->value, $index)) {
+            if (!$predicate($current->getValue(), $index)) {
                 return false;
             }
-            $current = $current->next;
+            $current = $current->getNext();
             $index++;
         }
         
@@ -513,8 +517,8 @@ class LinkedList implements Countable, IteratorAggregate, JsonSerializable
         $index = 0;
         
         while ($current !== null) {
-            $carry = $reducer($carry, $current->value, $index);
-            $current = $current->next;
+            $carry = $reducer($carry, $current->getValue(), $index);
+            $current = $current->getNext();
             $index++;
         }
         
@@ -540,12 +544,12 @@ class LinkedList implements Countable, IteratorAggregate, JsonSerializable
         if ($current === null) {
             return $monoid->getEmpty();
         }
-        $result = $current->value;
-        $current = $current->next;
+        $result = $current->getValue();
+        $current = $current->getNext();
         
         while ($current !== null) {
-            $result = $monoid->concat($result, $current->value);
-            $current = $current->next;
+            $result = $monoid->concat($result, $current->getValue());
+            $current = $current->getNext();
         }
         
         return $result;
@@ -585,14 +589,14 @@ class LinkedList implements Countable, IteratorAggregate, JsonSerializable
         if ($current === null) {
             return Option::none();
         }
-        $min = $current->value;
-        $current = $current->next;
+        $min = $current->getValue();
+        $current = $current->getNext();
         
         while ($current !== null) {
-            if ($comparator($min, $current->value) > 0) {
-                $min = $current->value;
+            if ($comparator($min, $current->getValue()) > 0) {
+                $min = $current->getValue();
             }
-            $current = $current->next;
+            $current = $current->getNext();
         }
 
         return Option::some($min);
@@ -618,14 +622,14 @@ class LinkedList implements Countable, IteratorAggregate, JsonSerializable
         if ($current === null) {
             return Option::none();
         }
-        $max = $current->value;
-        $current = $current->next;
+        $max = $current->getValue();
+        $current = $current->getNext();
         
         while ($current !== null) {
-            if ($comparator($max, $current->value) < 0) {
-                $max = $current->value;
+            if ($comparator($max, $current->getValue()) < 0) {
+                $max = $current->getValue();
             }
-            $current = $current->next;
+            $current = $current->getNext();
         }
 
         return Option::some($max);
@@ -646,8 +650,8 @@ class LinkedList implements Countable, IteratorAggregate, JsonSerializable
         $index = 0;
         
         while ($current !== null) {
-            $sideEffect($current->value, $index);
-            $current = $current->next;
+            $sideEffect($current->getValue(), $index);
+            $current = $current->getNext();
             $index++;
         }
     }
@@ -677,7 +681,7 @@ class LinkedList implements Countable, IteratorAggregate, JsonSerializable
     public function head(): Option
     {
         if ($this->head !== null) {
-            return Option::some($this->head->value);
+            return Option::some($this->head->getValue());
         }
         
         return Option::none();
@@ -700,11 +704,11 @@ class LinkedList implements Countable, IteratorAggregate, JsonSerializable
         if ($current === null) {
             return Option::none();
         }
-        while ($current->next !== null) {
-            $current = $current->next;
+        while ($current->getNext() !== null) {
+            $current = $current->getNext();
         }
 
-        return Option::some($current->value);
+        return Option::some($current->getValue());
     }
 
     /**
@@ -720,35 +724,20 @@ class LinkedList implements Countable, IteratorAggregate, JsonSerializable
             return null;
         }
         
-        $newHead = new Node($this->head->value, null);
-        $current = $this->head->next;
+        $newHead = new Node($this->head->getValue(), null);
+        $current = $this->head->getNext();
         $newCurrent = $newHead;
         
         while ($current !== null) {
-            $newCurrent->next = new Node($current->value, null);
-            $newCurrent = $newCurrent->next;
-            $current = $current->next;
+            $newCurrent->setNext(new Node($current->getValue(), null));
+            $newCurrent = $newCurrent->getNext();
+            if ($newCurrent === null) {
+                break;
+            }
+            $current = $current->getNext();
         }
         
         return $newHead;
-    }
-
-    /**
-     * Finds the tail node of a copied linked list
-     *
-     * Complexity: O(n)
-     *
-     * @param Node<T> $head
-     *
-     * @return Node<T>
-     */
-    private function findTailOfCopy(Node $head): Node
-    {
-        $current = $head;
-        while ($current->next !== null) {
-            $current = $current->next;
-        }
-        return $current;
     }
 
     /**
@@ -775,8 +764,8 @@ class LinkedList implements Countable, IteratorAggregate, JsonSerializable
         $count = 0;
         
         while ($current !== null && $count < $size) {
-            $result[] = $current->value;
-            $current = $current->next;
+            $result[] = $current->getValue();
+            $current = $current->getNext();
             $count++;
         }
         
@@ -805,15 +794,15 @@ class LinkedList implements Countable, IteratorAggregate, JsonSerializable
         
         // Skip to offset
         while ($current !== null && $index < $offset) {
-            $current = $current->next;
+            $current = $current->getNext();
             $index++;
         }
         
         // Collect items up to limit
         $count = 0;
         while ($current !== null && ($limit === null || $count < $limit)) {
-            $result[] = $current->value;
-            $current = $current->next;
+            $result[] = $current->getValue();
+            $current = $current->getNext();
             $count++;
         }
         
@@ -851,14 +840,13 @@ class LinkedList implements Countable, IteratorAggregate, JsonSerializable
         }
         
         // Build the new head by prepending items in reverse order
+        /** @var Node<T|T2>|null $newHead */
         $newHead = $this->head;
         $newSize = $this->size;
         
         for ($i = count($items) - 1; $i >= 0; $i--) {
-            /** @var Node<T|T2> $newNode */
-            $newNode = new Node($items[$i], $newHead);
-            /** @var Node<T|T2>|null $newHead */
-            $newHead = $newNode;
+            $item = $items[$i];
+            $newHead = new Node($item, $newHead);
             $newSize++;
         }
         
@@ -867,8 +855,10 @@ class LinkedList implements Countable, IteratorAggregate, JsonSerializable
 
     /**
      * Efficient concatenation using structural sharing where possible
-     * For LinkedList instances: O(1) by sharing the second list's structure
-     * For other iterables: O(n) but more efficient than array conversion
+     *
+     * Complexity:
+     * - For LinkedList instances: O(m) + O(1) by copying first list (m nodes of first list) and sharing second list's structure (constant time)
+     * - For other iterables: O(n)
      *
      * @template T2
      *
@@ -876,57 +866,27 @@ class LinkedList implements Countable, IteratorAggregate, JsonSerializable
      *
      * @return static<T|T2>
      */
-    public function concat(iterable $itemsToAdd)
+    public function concat(iterable $itemsToAdd): self
     {
-        if ($this->isEmpty()) {
-            return self::fromIterable($itemsToAdd);
-        }
-        
-        // Handle LinkedList instances with O(1) structural sharing
-        if ($itemsToAdd instanceof self) {
-            if ($itemsToAdd->isEmpty()) {
-                return $this;
-            }
-            
-            // O(1) concatenation: create new list that shares the second list's structure
-            // This maintains immutability while being highly efficient
-            $newHead = $this->copyNodes();
-            if ($newHead === null) {
-                return self::fromEmpty();
-            }
-            
-            // Find the tail and link to the second list's head
-            $tail = $this->findTailOfCopy($newHead);
-            $tail->next = $itemsToAdd->head;
-            
-            /** @var static<T|T2> $result */
-            $result = new static($newHead, $this->size + $itemsToAdd->size);
-            return $result;
-        }
-        
-        // For other iterables, use efficient append approach
-        $items = self::convertIterableToArray($itemsToAdd);
-        if (count($items) === 0) {
+        if ($itemsToAdd instanceof Countable && $itemsToAdd->count() === 0) {
             return $this;
         }
         
-        // Build the new list efficiently by copying current nodes and appending new ones
+        /** @var static<T|T2> $items */
+        $items = self::fromIterable($itemsToAdd);
+        if ($this->isEmpty()) {
+            return $items;
+        }
+        
+        /** @var Node<T|T2>|null $newHead */
         $newHead = $this->copyNodes();
-        if ($newHead === null) {
-            return self::fromEmpty();
-        }
+        assert($newHead !== null); // Cannot be null, because it is not empty
         
-        $tail = $this->findTailOfCopy($newHead);
-        
-        // Add new items to the tail
-        for ($i = 0; $i < count($items); $i++) {
-            $tail->next = new Node($items[$i], null);
-            $tail = $tail->next;
-        }
-        
-        /** @var static<T|T2> $castedResult */
-        $castedResult = new static($newHead, $this->size + count($items));
-        return $castedResult;
+        // Find the tail and link to the second list's head
+        $tail = $newHead->findTail();
+        $tail->setNext($items->head);
+
+        return new static($newHead, $this->size + $items->size);
     }
 
     /**
@@ -956,8 +916,8 @@ class LinkedList implements Countable, IteratorAggregate, JsonSerializable
         $current = $this->head;
         
         while ($current !== null) {
-            $result[] = $current->value;
-            $current = $current->next;
+            $result[] = $current->getValue();
+            $current = $current->getNext();
         }
         
         return self::of(...array_reverse($result));
@@ -976,8 +936,8 @@ class LinkedList implements Countable, IteratorAggregate, JsonSerializable
         $current = $this->head;
         
         while ($current !== null) {
-            $result[] = $current->value;
-            $current = $current->next;
+            $result[] = $current->getValue();
+            $current = $current->getNext();
         }
         
         return $result;
