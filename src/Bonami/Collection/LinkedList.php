@@ -275,17 +275,24 @@ class LinkedList implements Countable, IteratorAggregate, JsonSerializable
      */
     public function map(callable $mapper): self
     {
-        $result = [];
+        /** @var Node<B>|null $newHead */
+        $newHead = null;
+        $newSize = 0;
         $current = $this->head;
         $index = 0;
         
         while ($current !== null) {
-            $result[] = $mapper($current->getValue(), $index);
+            /** @var B $mapped */
+            $mapped = $mapper($current->getValue(), $index);
+            $newHead = new Node($mapped, $newHead);
+            $newSize++;
             $current = $current->getNext();
             $index++;
         }
         
-        return self::of(...$result);
+        /** @var static<B> $result */
+        $result = (new static($newHead, $newSize))->reverse();
+        return $result;
     }
 
     /**
