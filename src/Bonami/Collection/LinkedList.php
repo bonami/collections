@@ -474,7 +474,9 @@ class LinkedList implements Countable, IteratorAggregate, JsonSerializable
      *
      * Complexity: O(n)
      *
-     * @param T $item
+     * @template A extends T
+     *
+     * @param A $item
      * @param bool|null $strictComparison
      *
      * @return bool
