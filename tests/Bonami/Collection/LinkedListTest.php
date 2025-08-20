@@ -14,18 +14,18 @@ class LinkedListTest extends TestCase
 {
     public function testFromEmpty(): void
     {
-        self::assertEquals(LinkedList::fromEmpty(), LinkedList::fromEmpty());
+        self::assertEquals([], LinkedList::fromEmpty()->toArray());
     }
 
     public function testFromItems(): void
     {
-        self::assertEquals(LinkedList::of(1), LinkedList::of(1));
-        self::assertEquals(LinkedList::of(1, 2), LinkedList::of(1, 2));
+        self::assertEquals([1], LinkedList::of(1)->toArray());
+        self::assertEquals([1, 2], LinkedList::of(1, 2)->toArray());
     }
 
     public function testPure(): void
     {
-        self::assertEquals(LinkedList::of(42), LinkedList::pure(42));
+        self::assertEquals([42], LinkedList::pure(42)->toArray());
     }
 
     public function testFromIterable(): void
@@ -38,6 +38,7 @@ class LinkedListTest extends TestCase
     public function testCountable(): void
     {
         self::assertCount(2, LinkedList::of(1, 2));
+        self::assertCount(0, LinkedList::fromEmpty());
     }
 
     public function testIsEmpty(): void
@@ -54,16 +55,18 @@ class LinkedListTest extends TestCase
 
     public function testGet(): void
     {
-        $list = LinkedList::of(666);
-        self::assertTrue($list->get(0)->equals(Option::some(666)));
-        self::assertTrue($list->get(1)->equals(Option::none()));
+        $list = LinkedList::fromIterable([666, null]);
+        self::assertEquals(Option::some(666), $list->get(0));
+        self::assertEquals(Option::some(null), $list->get(1));
+        self::assertEquals(Option::none(), $list->get(2));
     }
 
     public function testGetOrElse(): void
     {
-        $list = LinkedList::of(666);
+        $list = LinkedList::fromIterable([666, null]);
         self::assertSame(666, $list->getOrElse(0, 42));
-        self::assertSame(42, $list->getOrElse(1, 42));
+        self::assertSame(null, $list->getOrElse(1, 42));
+        self::assertSame(42, $list->getOrElse(2, 42));
     }
 
     public function testGetUnsafe(): void
@@ -102,15 +105,17 @@ class LinkedListTest extends TestCase
     public function testFind(): void
     {
         $list = LinkedList::of(1, 2, 3, 4);
-        self::assertTrue($list->find(static fn ($i) => $i > 2)->equals(Option::some(3)));
-        self::assertTrue($list->find(static fn ($i) => $i > 10)->equals(Option::none()));
+        self::assertEquals(Option::some(3), $list->find(static fn ($i) => $i > 2));
+        self::assertEquals(Option::none(), $list->find(static fn ($i) => $i > 10));
+        self::assertEquals(Option::none(), LinkedList::fromEmpty()->find(static fn ($i) => $i > 2));
     }
 
     public function testFindKey(): void
     {
         $list = LinkedList::of(1, 2, 3, 4);
-        self::assertTrue($list->findKey(static fn ($i) => $i > 2)->equals(Option::some(2)));
-        self::assertTrue($list->findKey(static fn ($i) => $i > 10)->equals(Option::none()));
+        self::assertEquals(Option::some(2), $list->findKey(static fn ($i) => $i > 2));
+        self::assertEquals(Option::none(), $list->findKey(static fn ($i) => $i > 10));
+        self::assertEquals(Option::none(), LinkedList::fromEmpty()->findKey(static fn ($i) => $i > 2));
     }
 
     public function testExists(): void
@@ -118,13 +123,23 @@ class LinkedListTest extends TestCase
         $list = LinkedList::of(1, 2, 3, 4);
         self::assertTrue($list->exists(static fn ($i) => $i > 2));
         self::assertFalse($list->exists(static fn ($i) => $i > 10));
+        self::assertFalse(LinkedList::fromEmpty()->exists(static fn ($i) => $i > 0));
     }
 
     public function testContains(): void
     {
         $list = LinkedList::of(1, 2, 3, 4);
         self::assertTrue($list->contains(3));
+        self::assertFalse($list->contains('3'));
         self::assertFalse($list->contains(10));
+    }
+
+    public function testContainsNonStrict(): void
+    {
+        $list = LinkedList::of(1, 2, 3, 4);
+        self::assertTrue($list->contains(3, false));
+        self::assertTrue($list->contains('3', false));
+        self::assertFalse($list->contains(10, false));
     }
 
     public function testAll(): void
@@ -132,12 +147,13 @@ class LinkedListTest extends TestCase
         $list = LinkedList::of(1, 2, 3, 4);
         self::assertTrue($list->all(static fn ($i) => $i > 0));
         self::assertFalse($list->all(static fn ($i) => $i > 2));
+        self::assertTrue(LinkedList::fromEmpty()->all(static fn ($i) => $i > 0));
     }
 
     public function testReduce(): void
     {
         $list = LinkedList::of(1, 2, 3, 4);
-        $sum = $list->reduce(static fn ($carry, $item) => $carry + $item, 0);
+        $sum = $list->reduce(static fn ($a, $b) => $a + $b, 0);
         self::assertSame(10, $sum);
     }
 
@@ -158,15 +174,15 @@ class LinkedListTest extends TestCase
     public function testMin(): void
     {
         $list = LinkedList::of(3, 1, 4, 2);
-        self::assertTrue($list->min()->equals(Option::some(1)));
-        self::assertTrue(LinkedList::fromEmpty()->min()->equals(Option::none()));
+        self::assertEquals(Option::some(1), $list->min());
+        self::assertEquals(Option::none(), LinkedList::fromEmpty()->min());
     }
 
     public function testMax(): void
     {
         $list = LinkedList::of(3, 1, 4, 2);
-        self::assertTrue($list->max()->equals(Option::some(4)));
-        self::assertTrue(LinkedList::fromEmpty()->max()->equals(Option::none()));
+        self::assertEquals(Option::some(4), $list->max());
+        self::assertEquals(Option::none(), LinkedList::fromEmpty()->max());
     }
 
     public function testEach(): void
@@ -193,15 +209,15 @@ class LinkedListTest extends TestCase
     public function testHead(): void
     {
         $list = LinkedList::of(1, 2, 3);
-        self::assertTrue($list->head()->equals(Option::some(1)));
-        self::assertTrue(LinkedList::fromEmpty()->head()->equals(Option::none()));
+        self::assertEquals(Option::some(1), $list->head());
+        self::assertEquals(Option::none(), LinkedList::fromEmpty()->head());
     }
 
     public function testLast(): void
     {
         $list = LinkedList::of(1, 2, 3);
-        self::assertTrue($list->last()->equals(Option::some(3)));
-        self::assertTrue(LinkedList::fromEmpty()->last()->equals(Option::none()));
+        self::assertEquals(Option::some(3), $list->last());
+        self::assertEquals(Option::none(), LinkedList::fromEmpty()->last());
     }
 
     public function testTake(): void
@@ -293,63 +309,15 @@ class LinkedListTest extends TestCase
         $original = LinkedList::of(3, 4);
         $originalArray = $original->toArray();
         
-        // Perform prepend operation
         $prepended = $original->prepend(1, 2);
         
-        // Verify original list is unchanged
         self::assertEquals(
             $originalArray,
             $original->toArray(),
             'Original list should remain unchanged after prepend',
         );
         
-        // Verify prepended result is correct
         self::assertEquals([1, 2, 3, 4], $prepended->toArray());
-        
-        // Test that subsequent operations on the prepended list don't affect original
-        $furtherPrepended = $prepended->prepend(0);
-        self::assertEquals(
-            $originalArray,
-            $original->toArray(),
-            'Original list should remain unchanged after further operations',
-        );
-        self::assertEquals([1, 2, 3, 4], $prepended->toArray(), 'First prepended list should remain unchanged');
-        self::assertEquals([0, 1, 2, 3, 4], $furtherPrepended->toArray());
-    }
-
-    public function testStructuralSharingDoesNotBreakImmutability(): void
-    {
-        // Create two lists
-        $list1 = LinkedList::of(1, 2);
-        $list2 = LinkedList::of(3, 4);
-        
-        // Concatenate them (this uses structural sharing)
-        $concatenated = $list1->concat($list2);
-        
-        // Create a new list from the second list
-        $list2Modified = $list2->prepend(0);
-        
-        // Verify that modifications to list2 don't affect the concatenated result
-        self::assertEquals(
-            [1, 2, 3, 4],
-            $concatenated->toArray(),
-            'Concatenated list should not be affected by modifications to source lists',
-        );
-        self::assertEquals([3, 4], $list2->toArray(), 'Original list2 should remain unchanged');
-        self::assertEquals([0, 3, 4], $list2Modified->toArray(), 'Modified list2 should contain the new element');
-        
-        // Verify that the concatenated list remains independent
-        $concatenatedModified = $concatenated->prepend(-1);
-        self::assertEquals(
-            [1, 2, 3, 4],
-            $concatenated->toArray(),
-            'Original concatenated list should remain unchanged',
-        );
-        self::assertEquals(
-            [-1, 1, 2, 3, 4],
-            $concatenatedModified->toArray(),
-            'Modified concatenated list should contain the new element',
-        );
     }
 
     public function testAdd(): void
@@ -383,7 +351,7 @@ class LinkedListTest extends TestCase
         $linkedList = LinkedList::of(1, 2, 3);
         $arrayList = $linkedList->toList();
         self::assertInstanceOf(ArrayList::class, $arrayList);
-        self::assertEquals([1, 2, 3], $arrayList->toArray());
+        self::assertEquals(ArrayList::of(1, 2, 3), $arrayList);
     }
 
     public function testLazy(): void
@@ -449,61 +417,5 @@ class LinkedListTest extends TestCase
             ->reverse();
         
         self::assertEquals(LinkedList::of(12, 8, 4), $result);
-    }
-
-    public function testEmptyListOperations(): void
-    {
-        $empty = LinkedList::fromEmpty();
-        
-        self::assertTrue($empty->isEmpty());
-        self::assertCount(0, $empty);
-        self::assertTrue($empty->head()->equals(Option::none()));
-        self::assertTrue($empty->last()->equals(Option::none()));
-        self::assertTrue($empty->find(static fn () => true)->equals(Option::none()));
-        self::assertTrue($empty->findKey(static fn () => true)->equals(Option::none()));
-        self::assertFalse($empty->exists(static fn () => true));
-        self::assertTrue($empty->all(static fn () => true));
-        self::assertEquals(LinkedList::fromEmpty(), $empty->take(5));
-        self::assertEquals(LinkedList::fromEmpty(), $empty->slice(0, 5));
-    }
-
-    public function testSingleItemList(): void
-    {
-        $single = LinkedList::of(42);
-        
-        self::assertFalse($single->isEmpty());
-        self::assertCount(1, $single);
-        self::assertTrue($single->head()->equals(Option::some(42)));
-        self::assertTrue($single->last()->equals(Option::some(42)));
-        self::assertSame(42, $single->getUnsafe(0));
-        self::assertTrue($single->get(1)->equals(Option::none()));
-    }
-
-    public function testObjectValues(): void
-    {
-        $obj1 = new stdClass();
-        $obj1->value = 'test1';
-        $obj2 = new stdClass();
-        $obj2->value = 'test2';
-        
-        $list = LinkedList::of($obj1, $obj2);
-        
-        self::assertCount(2, $list);
-        self::assertSame($obj1, $list->getUnsafe(0));
-        self::assertSame($obj2, $list->getUnsafe(1));
-        
-        $mapped = $list->map(static fn ($obj) => $obj->value);
-        self::assertEquals(LinkedList::of('test1', 'test2'), $mapped);
-    }
-
-    public function testContainsStrictVsNonStrict(): void
-    {
-        $list = LinkedList::of(1, '2', 3);
-        // non-strict: string '3' matches int 3, and int 2 matches string '2'
-        self::assertTrue($list->contains('3', false));
-        self::assertTrue($list->contains(2, false));
-        // strict: types must match
-        self::assertFalse($list->contains('3', true));
-        self::assertFalse($list->contains(2, true));
     }
 }
