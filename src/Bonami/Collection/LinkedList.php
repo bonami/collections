@@ -143,7 +143,6 @@ class LinkedList implements Countable, IteratorAggregate, JsonSerializable
     {
         return match (true) {
             is_array($iterable) => $iterable,
-            $iterable instanceof self => $iterable->toArray(),
             $iterable instanceof ArrayList => $iterable->toArray(),
             $iterable instanceof Map => $iterable->values()->toArray(),
             default => iterator_to_array($iterable, false),
