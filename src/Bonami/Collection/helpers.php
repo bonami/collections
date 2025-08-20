@@ -89,6 +89,9 @@ function hashKey(mixed $key): int|string
     if (is_bool($key)) {
          return (int)$key;
     }
+    if (is_string($key)) {
+        return sprintf('"%s"', $key);
+    }
 
     return $key;
 }
