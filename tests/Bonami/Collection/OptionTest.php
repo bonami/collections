@@ -428,6 +428,17 @@ class OptionTest extends TestCase
         self::assertSame([[]], $handleNoneSpy->getCalls());
     }
 
+    public function testEquals(): void
+    {
+        $some = Option::some(1);
+
+        self::assertTrue($some->equals($some));
+        self::assertTrue($some->equals(Option::some(1)));
+        self::assertFalse($some->equals(Option::none()));
+        self::assertFalse($some->equals(Option::some(2)));
+        self::assertFalse($some->equals(Option::some('1')));
+    }
+
     public function testLaws(): void
     {
 

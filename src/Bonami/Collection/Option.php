@@ -467,7 +467,9 @@ abstract class Option implements IHashable, IteratorAggregate
     abstract public function resolve(callable $handleNone, callable $handleSome);
 
     /**
-     * @param self<T> $value
+     * @template A extends T
+     *
+     * @param self<A> $value
      *
      * @return bool
      */
