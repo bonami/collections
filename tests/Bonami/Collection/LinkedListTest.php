@@ -378,7 +378,7 @@ class LinkedListTest extends TestCase
     public function testToString(): void
     {
         $list = LinkedList::of(1, 2, 3);
-        self::assertEquals('[1, 2, 3]', (string) $list);
+        self::assertEquals('[1 -> 2 -> 3]', (string) $list);
     }
 
     public function testIterator(): void

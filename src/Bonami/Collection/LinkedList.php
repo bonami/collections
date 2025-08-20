@@ -1063,6 +1063,6 @@ class LinkedList implements Countable, IteratorAggregate, JsonSerializable
     {
         return '[' . $this
                 ->map(fn ($item): string => $this->itemToString($item))
-                ->join(', ') . ']';
+                ->join(' -> ') . ']';
     }
 }
